@@ -6,7 +6,7 @@ plugins {
 
 loom {
     forge {
-        mixinConfigs = [ "walkers-forge.mixins.json", "walkers.mixins.json" ]
+        mixinConfigs = [ "craftedcore-forge.mixins.json", "craftedcore.mixins.json" ]
     }
 }
 
@@ -69,13 +69,13 @@ components.java {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = "woodwalkers"
+    projectId = "woodcraftedcore"
     versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     versionType = "release"
     uploadFile = remapJar
     gameVersions = [rootProject.minecraft_version]
     loaders = [project.name]
-    changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+    changelog = "https://github.com/ToCraft/woodcraftedcore-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
@@ -86,5 +86,5 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
-    mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+    mainFile.changelog = "https://github.com/ToCraft/woodcraftedcore-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
