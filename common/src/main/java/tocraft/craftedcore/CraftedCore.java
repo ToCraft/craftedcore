@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.network.chat.Component;
 import tocraft.craftedcore.events.common.PlayerEvents;
+import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 
 public class CraftedCore {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
 	public static final String MODID = "craftedcore";
-	private static String VERSION = "";
 	private static String versionURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.1/gradle.properties";
 
 	public void initialize() {
@@ -27,13 +27,10 @@ public class CraftedCore {
 			}
 		});
 		
-	}
-
-	public static void setVersion(String version) {
-		VERSION = version;
+		Platform.getMods();
 	}
 
 	public static String getVersion() {
-		return VERSION;
+		return Platform.getMod(MODID).getVersion();
 	}
 }
