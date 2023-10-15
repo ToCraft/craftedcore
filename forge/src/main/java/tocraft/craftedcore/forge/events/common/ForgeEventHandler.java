@@ -1,4 +1,4 @@
-package tocraft.craftedcore.forge.events;
+package tocraft.craftedcore.forge.events.common;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
@@ -6,7 +6,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tocraft.craftedcore.events.common.PlayerEvents;
 
-public class ForgeEvents {
+public class ForgeEventHandler {
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void event(PlayerLoggedInEvent event) {

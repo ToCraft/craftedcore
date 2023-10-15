@@ -4,9 +4,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import tocraft.craftedcore.platform.Dist;
 import tocraft.craftedcore.platform.Mod;
 
 public class PlatformImpl {
@@ -31,6 +33,10 @@ public class PlatformImpl {
     	});
     	
     	return mods;
+    }
+    
+    public static Dist getDist() {
+    	return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ? Dist.CLIENT : Dist.DEDICATED_SERVER;
     }
     
     private static class ModImpl implements Mod {

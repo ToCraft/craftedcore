@@ -6,8 +6,10 @@ import java.util.HashSet;
 
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forgespi.language.IModInfo;
+import tocraft.craftedcore.platform.Dist;
 import tocraft.craftedcore.platform.Mod;
 
 public class PlatformImpl {
@@ -32,6 +34,10 @@ public class PlatformImpl {
     	});
     	
     	return mods;
+    }
+    
+    public static Dist getDist() {
+    	return FMLEnvironment.dist.isClient() ? Dist.CLIENT : Dist.DEDICATED_SERVER;
     }
     
     private static class ModImpl implements Mod {

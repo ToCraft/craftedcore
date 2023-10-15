@@ -26,4 +26,9 @@ public class Platform {
     public static Collection<Mod> getMods() {
         throw new AssertionError();
     }
+    
+    @ExpectPlatform
+    public static Dist getDist() {
+    	throw new AssertionError();
+    }
 }
