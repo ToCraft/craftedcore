@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[45,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "craftedcore"
+version = "${version}"
+displayName = "CraftedCore"
+authors = "To_Craft"
+description = '''
+My libary mod to make mods more compatible with modloaders
+'''
+#logoFile = ""
+
+[[dependencies.craftedcore]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.craftedcore]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.craftedcore]]
+modId = "architectury"
+mandatory = true
+versionRange = "[9.1.10,)"
+ordering = "AFTER"
+side = "BOTH"

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "craftedcore",
+  "version": "${version}",
+  "name": "CraftedCore",
+  "description": "My libary mod to make mods more compatible with modloaders",
+  "authors": [
+    "To_Craft"
+  ],
+  "contributors": [
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "tocraft.craftedcore.fabric.CraftedCoreFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.8.7+build.201",
+    "fabric": "*",
+    "fabric-api": "*"
+  }
+}
