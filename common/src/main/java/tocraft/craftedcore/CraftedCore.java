@@ -26,8 +26,6 @@ public class CraftedCore {
 				player.sendSystemMessage(Component.translatable("craftedcore.update", newestVersion));
 			}
 		});
-		
-		Platform.getMods();
 	}
 
 	public static String getVersion() {
