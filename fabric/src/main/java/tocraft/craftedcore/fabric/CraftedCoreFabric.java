@@ -2,6 +2,7 @@ package tocraft.craftedcore.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.fabric.events.client.FabricEventHandlerClient;
 import tocraft.craftedcore.platform.Platform;
 
 public class CraftedCoreFabric implements ModInitializer {
@@ -11,6 +12,6 @@ public class CraftedCoreFabric implements ModInitializer {
 		new CraftedCore().initialize();
 		
 		if (Platform.getDist().isClient())
-			new CraftedCoreFabricClient();
+			new FabricEventHandlerClient();
 	}
 }

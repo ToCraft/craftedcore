@@ -1,12 +1,12 @@
-package tocraft.craftedcore.fabric;
+package tocraft.craftedcore.fabric.events.client;
 
 import dev.architectury.event.events.client.ClientGuiEvent;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
-public class CraftedCoreFabricClient {
+public class FabricEventHandlerClient {
 	
-	public CraftedCoreFabricClient() {
+	public FabricEventHandlerClient() {
 		ClientTickEvents.START_CLIENT_TICK.register(instance -> tocraft.craftedcore.events.client.ClientTickEvents.CLIENT_PRE.invoker().tick(instance));
         ClientTickEvents.END_CLIENT_TICK.register(instance -> tocraft.craftedcore.events.client.ClientTickEvents.CLIENT_POST.invoker().tick(instance));
         
