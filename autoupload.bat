@@ -2,13 +2,13 @@
 set /p version=Please enter the version (needed for github, also check gradle.properties): 
 
 :: add mcversion here
-set mcversions="1.20.1";"1.19.4"
+set mcversions="1.20.1"
 :: add loader here
 set modloader="fabric";"forge"
 
 :: loops
 for %%m in (%mcversions%) DO (
-    git checkout "arch-%%m"
+    git checkout "%%m"
     gh release create "%version%-%%m" --generate-notes
 
     for %%l in (%modloader%) DO (
