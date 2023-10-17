@@ -5,6 +5,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tocraft.craftedcore.events.client.ClientGuiEvents;
@@ -19,10 +20,10 @@ public class ForgeEventHandlerClient {
     }
 	
 	@SubscribeEvent(priority = EventPriority.HIGH)
-    public static void event(net.minecraftforge.event.TickEvent.ClientTickEvent event) {
-        if (event.phase == net.minecraftforge.event.TickEvent.Phase.START)
+    public static void event(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START)
             ClientTickEvents.CLIENT_PRE.invoker().tick(Minecraft.getInstance());
-        else if (event.phase == net.minecraftforge.event.TickEvent.Phase.END)
+        else if (event.phase == TickEvent.Phase.END)
             ClientTickEvents.CLIENT_POST.invoker().tick(Minecraft.getInstance());
     }
 	
