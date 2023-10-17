@@ -69,22 +69,22 @@ components.java {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = "woodcraftedcore"
+    projectId = "crafted-core"
     versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     versionType = "release"
     uploadFile = remapJar
     gameVersions = [rootProject.minecraft_version]
     loaders = [project.name]
-    changelog = "https://github.com/ToCraft/woodcraftedcore-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+    changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     
     // The main file to upload
-    def mainFile = upload(868922, remapJar)
+    def mainFile = upload(923377, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
-    mainFile.changelog = "https://github.com/ToCraft/woodcraftedcore-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+    mainFile.changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }

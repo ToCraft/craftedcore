@@ -66,27 +66,22 @@ components.java {
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = "woodwalkers"
+    projectId = "crafted-core"
     versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     versionType = "release"
     uploadFile = remapJar
     gameVersions = [rootProject.minecraft_version]
     loaders = [project.name]
     changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
-    dependencies {
-        required.project "fabric-api"
-        required.version "architectury-api", rootProject.architectury_version + "+" + project.name
-    }
 }
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     
     // The main file to upload
-    def mainFile = upload(868922, remapJar)
+    def mainFile = upload(923377, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
-    mainFile.addRequirement("architectury-api")
     mainFile.changelog = "https://github.com/ToCraft/woodwalkers-mod/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
