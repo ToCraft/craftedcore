@@ -4,10 +4,12 @@
   "package": "tocraft.craftedcore.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinPlayer",
     "MixinPlayerList"
   ],
   "client": [
-	  "client.MixinClientPacketListener"
+	  "client.MixinClientPacketListener",
+	  "client.MixinMultiPlayerGameMode"
   ],
   "injectors": {
     "defaultRequire": 1
