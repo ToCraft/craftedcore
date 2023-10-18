@@ -12,7 +12,7 @@ public class CraftedCore {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
 	public static final String MODID = "craftedcore";
-	private static String versionURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.1/gradle.properties";
+	private static String versionURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/gradle.properties";
 
 	public void initialize() {
 		PlayerEvents.PLAYER_JOIN.register(player -> {
