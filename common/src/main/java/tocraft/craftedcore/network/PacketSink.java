@@ -2,8 +2,6 @@ package tocraft.craftedcore.network;
 
 import java.util.Objects;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +19,6 @@ public interface PacketSink {
         };
     }
     
-    @Environment(EnvType.CLIENT)
     static PacketSink client() {
         return packet -> {
             if (Minecraft.getInstance().getConnection() != null) {

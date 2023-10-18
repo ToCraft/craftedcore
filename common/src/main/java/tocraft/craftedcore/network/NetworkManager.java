@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,12 +33,10 @@ public final class NetworkManager {
         collectPackets(PacketSink.ofPlayers(players), serverToClient(), id, buf);
     }
     
-    @Environment(EnvType.CLIENT)
     public static void sendToServer(ResourceLocation id, FriendlyByteBuf buf) {
         collectPackets(PacketSink.client(), clientToServer(), id, buf);
     }
     
-    @Environment(EnvType.CLIENT)
     @ExpectPlatform
     public static boolean canServerReceive(ResourceLocation id) {
         throw new AssertionError();
