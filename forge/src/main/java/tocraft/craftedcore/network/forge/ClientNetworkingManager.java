@@ -11,13 +11,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
 import tocraft.craftedcore.network.NetworkManager;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientNetworkingManager {
     public static void initClient() {
-        NetworkManagerImpl.CHANNEL.addListener(NetworkManagerImpl.createPacketHandler(NetworkEvent.ServerCustomPayloadEvent.class, NetworkManagerImpl.S2C_TRANSFORMERS));
+        NetworkManagerImpl.CHANNEL.addListener(NetworkManagerImpl.createPacketHandler(NetworkDirection.PLAY_TO_CLIENT, NetworkManagerImpl.S2C_TRANSFORMERS));
         MinecraftForge.EVENT_BUS.register(ClientNetworkingManager.class);
         
         NetworkManagerImpl.registerS2CReceiver(NetworkManagerImpl.SYNC_IDS, Collections.emptyList(), (buffer, context) -> {
