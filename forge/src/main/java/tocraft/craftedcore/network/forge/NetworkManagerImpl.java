@@ -1,4 +1,4 @@
-package tocraft.craftedcore.forge.network;
+package tocraft.craftedcore.network.forge;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,8 +20,10 @@ import com.mojang.logging.LogUtils;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,19 +31,16 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.event.EventNetworkChannel;
-import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.craftedcore.network.NetworkManager.NetworkReceiver;
 import tocraft.craftedcore.network.PacketSink;
 import tocraft.craftedcore.network.PacketTransformer;
-import tocraft.craftedcore.platform.Platform;
 
-@Mod.EventBusSubscriber(modid = CraftedCore.MODID)
 public class NetworkManagerImpl {
     public static void registerReceiver(NetworkManager.Side side, ResourceLocation id, List<PacketTransformer> packetTransformers, NetworkReceiver receiver) {
         Objects.requireNonNull(id, "Cannot register receiver with a null ID!");
@@ -73,8 +72,8 @@ public class NetworkManagerImpl {
     }
     
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final ResourceLocation CHANNEL_ID = new ResourceLocation("architectury:network");
-    static final ResourceLocation SYNC_IDS = new ResourceLocation("architectury:sync_ids");
+    private static final ResourceLocation CHANNEL_ID = new ResourceLocation("craftedcore:network");
+    static final ResourceLocation SYNC_IDS = new ResourceLocation("craftedcore:sync_ids");
     static final EventNetworkChannel CHANNEL = NetworkRegistry.newEventChannel(CHANNEL_ID, () -> "1", version -> true, version -> true);
     static final Map<ResourceLocation, NetworkReceiver> S2C = Maps.newHashMap();
     static final Map<ResourceLocation, NetworkReceiver> C2S = Maps.newHashMap();
@@ -113,12 +112,17 @@ public class NetworkManagerImpl {
                 NetworkManager.PacketContext packetContext = new NetworkManager.PacketContext() {
                     @Override
                     public Player getPlayer() {
-                        return Platform.getDist() == tocraft.craftedcore.platform.Dist.CLIENT ? getClientPlayer() : context.getSender();
+                        return getDist().isClient() ? getClientPlayer() : context.getSender();
                     }
                     
                     @Override
                     public void queue(Runnable runnable) {
                         context.enqueueWork(runnable);
+                    }
+                    
+                    @Override
+                    public tocraft.craftedcore.platform.Dist getDist() {
+                        return context.getDirection().getReceptionSide() == LogicalSide.CLIENT ? tocraft.craftedcore.platform.Dist.CLIENT : tocraft.craftedcore.platform.Dist.DEDICATED_SERVER;
                     }
                     
                     private Player getClientPlayer() {
@@ -163,6 +167,10 @@ public class NetworkManagerImpl {
         return clientReceivables.get(player).contains(id);
     }
     
+    public static Packet<ClientGamePacketListener> createAddEntityPacket(Entity entity) {
+        return (Packet<ClientGamePacketListener>) NetworkHooks.getEntitySpawningPacket(entity);
+    }
+    
     static FriendlyByteBuf sendSyncPacket(Map<ResourceLocation, NetworkReceiver> map) {
         List<ResourceLocation> availableIds = Lists.newArrayList(map.keySet());
         FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
@@ -183,3 +191,4 @@ public class NetworkManagerImpl {
         clientReceivables.removeAll(event.getEntity());
     }
 }
+

@@ -1,4 +1,4 @@
-package tocraft.craftedcore.fabric.mixin;
+package tocraft.craftedcore.mixin.fabric;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -26,6 +26,7 @@ import tocraft.craftedcore.network.NetworkManager;
 import tocraft.craftedcore.network.NetworkManager.NetworkReceiver;
 import tocraft.craftedcore.network.PacketSink;
 import tocraft.craftedcore.network.PacketTransformer;
+import tocraft.craftedcore.platform.Dist;
 
 public class NetworkManagerImpl {
     private static final Map<ResourceLocation, NetworkReceiver> C2S_RECEIVER = new HashMap<>();
@@ -63,7 +64,6 @@ public class NetworkManagerImpl {
         C2S_TRANSFORMERS.put(id, transformer);
     }
     
-    @SuppressWarnings("Convert2Lambda")
     @Environment(EnvType.CLIENT)
     private static void registerS2CReceiver(ResourceLocation id, List<PacketTransformer> packetTransformers, NetworkReceiver receiver) {
         LOGGER.info("Registering S2C receiver with id {}", id);
@@ -95,6 +95,11 @@ public class NetworkManagerImpl {
             @Override
             public void queue(Runnable runnable) {
                 taskQueue.execute(runnable);
+            }
+            
+            @Override
+            public Dist getDist() {
+                return client ? Dist.CLIENT : Dist.DEDICATED_SERVER;
             }
         };
     }

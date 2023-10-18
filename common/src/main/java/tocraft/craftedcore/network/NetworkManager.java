@@ -10,6 +10,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import tocraft.craftedcore.platform.Dist;
 
 public final class NetworkManager {
     public static void registerReceiver(Side side, ResourceLocation id, NetworkReceiver receiver) {
@@ -59,6 +60,8 @@ public final class NetworkManager {
         Player getPlayer();
         
         void queue(Runnable runnable);
+        
+        Dist getDist();
     }
     
     public static Side s2c() {

@@ -1,4 +1,4 @@
-package tocraft.craftedcore.forge.events.common;
+package tocraft.craftedcore.events.common.forge;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;

@@ -1,4 +1,4 @@
-package tocraft.craftedcore.forge.network;
+package tocraft.craftedcore.network.forge;
 
 import java.util.Collections;
 import java.util.Set;
