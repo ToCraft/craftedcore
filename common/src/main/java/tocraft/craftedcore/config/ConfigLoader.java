@@ -8,17 +8,16 @@ import java.nio.file.Paths;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.platform.Platform;
 
 public class ConfigLoader {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	public static <C extends Config> C read(Class<C> configClass) {
+	public static <C extends Config> C read(String configName, Class<C> configClass) {
 		try {
 			Path configFolder = Platform.getConfigPath();
-			Path configFile = Paths.get(configFolder.toString(), CraftedCore.MODID + ".json");
+			Path configFile = Paths.get(configFolder.toString(), configName + ".json");
 
 			// Write & return a configuration file
 			C config = configClass.getDeclaredConstructor().newInstance();
