@@ -16,7 +16,7 @@ for %%m in (%mcversions%) DO (
         call .\gradlew %%l:build
         .\gradlew %%l:modrinth
         .\gradlew %%l:curseforge
-        move "%%l\build\libs\craftedcore-1.8-%%l.jar" "%%l\build\craftedcore-%%m-%%l-%version%.jar"
+        move "%%l\build\libs\craftedcore-%version%-%%l.jar" "%%l\build\craftedcore-%%m-%%l-%version%.jar"
         rmdir /s /q "%%l\build\libs"
         gh release upload "%version%-%%m" "%%l\build\craftedcore-%%m-%%l-%version%.jar"
     )
