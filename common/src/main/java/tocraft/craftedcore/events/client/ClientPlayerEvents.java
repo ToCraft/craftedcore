@@ -7,6 +7,8 @@ import tocraft.craftedcore.events.EventBuilder;
 public interface ClientPlayerEvents {
 	
 	 Event<ClientPlayerJoin> CLIENT_PLAYER_JOIN = EventBuilder.createLoop();
+	 
+	 Event<ClientPlayerQuit> CLIENT_PLAYER_QUIT = EventBuilder.createLoop();
 
 	interface ClientPlayerJoin {
         /**
@@ -15,5 +17,14 @@ public interface ClientPlayerEvents {
          * @param player The joined player.
          */
         void join(LocalPlayer player);
+    }
+	
+	interface ClientPlayerQuit {
+        /**
+         * Invoked after a player logged out of a server level
+         *
+         * @param player The player who quit.
+         */
+        void quit(LocalPlayer player);
     }
 }

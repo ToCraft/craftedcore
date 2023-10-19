@@ -11,6 +11,8 @@ public interface PlayerEvents {
 	
 	 Event<PlayerJoin> PLAYER_JOIN = EventBuilder.createLoop();
 	 
+	 Event<PlayerQuit> PLAYER_QUIT = EventBuilder.createLoop();
+	 
 	 Event<InteractEntity> INTERACT_ENTITY = EventBuilder.createEventResult();
 
 	interface PlayerJoin {
@@ -20,6 +22,15 @@ public interface PlayerEvents {
          * @param player The joined player.
          */
         void join(ServerPlayer player);
+    }
+	
+	interface PlayerQuit {
+        /**
+         * Invoked after a player logged out of a server level
+         *
+         * @param player The player who quit.
+         */
+        void quit(ServerPlayer player);
     }
 	
 	interface InteractEntity {
