@@ -3,6 +3,7 @@ package tocraft.craftedcore.events.common.forge;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,5 +30,10 @@ public class ForgeEventHandler {
             event.setCanceled(true);
             event.setCancellationResult(result.asMinecraft());
         }
+    }
+	
+	@SubscribeEvent(priority = EventPriority.HIGH)
+    public static void event(PlayerLoggedOutEvent event) {
+        PlayerEvents.PLAYER_QUIT.invoker().quit((ServerPlayer) event.getEntity());
     }
 }

@@ -31,4 +31,9 @@ public class ForgeEventHandlerClient {
     public static void eventRenderGameOverlayEvent(RenderGuiEvent.Post event) {
         ClientGuiEvents.RENDER_HUD.invoker().renderHud(event.getGuiGraphics(), event.getPartialTick());
     }
+	
+	@SubscribeEvent(priority = EventPriority.HIGH)
+    public static void event(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientPlayerEvents.CLIENT_PLAYER_QUIT.invoker().quit(event.getPlayer());
+    }
 }

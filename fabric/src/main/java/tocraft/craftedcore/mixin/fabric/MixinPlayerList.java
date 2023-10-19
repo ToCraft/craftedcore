@@ -17,4 +17,9 @@ public class MixinPlayerList {
     private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
         PlayerEvents.PLAYER_JOIN.invoker().join(serverPlayer);
     }
+    
+    @Inject(method = "remove", at = @At("HEAD"))
+    private void remove(ServerPlayer serverPlayer, CallbackInfo ci) {
+        PlayerEvents.PLAYER_QUIT.invoker().quit(serverPlayer);
+    }
 }
