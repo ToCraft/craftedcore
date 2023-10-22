@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
 import tocraft.craftedcore.events.common.PlayerEvents;
 
@@ -14,7 +15,7 @@ import tocraft.craftedcore.events.common.PlayerEvents;
 public class MixinPlayerList {
 	
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
-    private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
+    private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
         PlayerEvents.PLAYER_JOIN.invoker().join(serverPlayer);
     }
     
