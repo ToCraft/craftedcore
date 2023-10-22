@@ -39,6 +39,7 @@ import net.minecraftforge.network.EventNetworkChannel;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkInitialization;
 import net.minecraftforge.network.PacketDistributor;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.NetworkManager;
 import tocraft.craftedcore.network.NetworkManager.NetworkReceiver;
 import tocraft.craftedcore.network.PacketSink;
@@ -75,9 +76,9 @@ public class NetworkManagerImpl {
     }
     
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final ResourceLocation CHANNEL_ID = new ResourceLocation("architectury:network");
-    static final ResourceLocation SYNC_IDS = new ResourceLocation("architectury:sync_ids");
-    static final EventNetworkChannel CHANNEL = ChannelBuilder.named(CHANNEL_ID).acceptedVersions((status, version) -> true).optional().eventNetworkChannel();
+    private static final ResourceLocation CHANNEL_ID = CraftedCore.id("network");
+    static final ResourceLocation SYNC_IDS = CraftedCore.id("sync_ids");
+    static final EventNetworkChannel CHANNEL = NetworkRegistry.newEventChannel(CHANNEL_ID, () -> "1", version -> true, version -> true);
     static final Map<ResourceLocation, NetworkReceiver> S2C = Maps.newHashMap();
     static final Map<ResourceLocation, NetworkReceiver> C2S = Maps.newHashMap();
     static final Map<ResourceLocation, PacketTransformer> S2C_TRANSFORMERS = Maps.newHashMap();

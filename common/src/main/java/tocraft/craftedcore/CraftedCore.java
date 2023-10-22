@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
@@ -30,5 +31,9 @@ public class CraftedCore {
 
 	public static String getVersion() {
 		return Platform.getMod(MODID).getVersion();
+	}
+	
+	public static ResourceLocation id(String name) {
+		return new ResourceLocation(MODID, name);
 	}
 }
