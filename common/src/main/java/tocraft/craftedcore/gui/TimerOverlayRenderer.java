@@ -5,9 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class TimerOverlayRenderer {
 
@@ -17,30 +16,28 @@ public class TimerOverlayRenderer {
     private static boolean isFading = false;
     private static int fadingProgress = 0;
 
-    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown) {
-        
+    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {    	
         Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
 
         if(client.screen instanceof ChatScreen) {
             return;
         }
 
         double d = client.getWindow().getGuiScale();
-        float cooldownScale = 1 - currentCooldown / maxCooldown;
+        float cooldownScale = 1 - currentCooldown / (float) maxCooldown;
 
-        // CD has NOT updated since last tick. It is most likely full.
+        // cooldown has NOT updated since last tick. It is most likely full.
         if(currentCooldown == lastCooldown) {
             ticksSinceUpdate++;
 
-            // If the CD has not updated, we are above the requirement, and we are not fading, start fading.
+            // If the cooldown has not updated, we are above the requirement, and we are not fading, start fading.
             if(ticksSinceUpdate > fadingTickRequirement && !isFading) {
                 isFading = true;
                 fadingProgress = 0;
             }
         }
 
-        // CD updated in the last tick, and we are fading. Stop fading.
+        // cooldown updated in the last tick, and we are fading. Stop fading.
         else if(ticksSinceUpdate > fadingProgress) {
             ticksSinceUpdate = 0;
             isFading = false;
@@ -53,7 +50,7 @@ public class TimerOverlayRenderer {
             fadingProgress = Math.max(0, fadingProgress - 1);
         }
 
-        if(player != null) {
+        if(client.player != null) {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
@@ -74,11 +71,7 @@ public class TimerOverlayRenderer {
                 graphics.pose().scale(scale, scale, scale);
             }
 
-            // TODO: cache ability stack?
-//                MinecraftClient.getInstance().getItemRenderer().renderGuiItemIcon(new ItemStack(shapeAbility.getIcon()), (int) (width * .95f), (int) (height * .92f));
-            ItemStack stack = new ItemStack(Items.GOLDEN_APPLE);
-//                BakedModel heldItemModel = MinecraftClient.getInstance().getItemRenderer().getHeldItemModel(stack, client.world, player);
-//                renderGuiItemModel(matrices, stack, (int) (width * .95f), (int) (height * .92f), heldItemModel);
+            ItemStack stack = new ItemStack(item);
             graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
 
             RenderSystem.disableScissor();
