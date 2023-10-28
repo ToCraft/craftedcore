@@ -12,6 +12,7 @@
   "license": "MIT",
   "environment": "*",
   "mixins": [
+    "craftedcore.mixins.json",
     "craftedcore-fabric.mixins.json"
   ],
   "entrypoints": {
