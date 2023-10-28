@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
@@ -19,10 +20,10 @@ public class CraftedCore {
 	public void initialize() {
 		// ensure the client will receive and handle the configuration package 
 		if (Platform.getDist().isClient()) {
-			ConfigLoader.registerConfigSyncHandler();
+			new CraftedCoreClient().initialize();
 		}
-				
-		PlayerEvents.PLAYER_JOIN.register(player -> {	
+						
+		PlayerEvents.PLAYER_JOIN.register(player -> {
 			// get newest version from Uri
 			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
 			// Warns in the log, if checking failed
