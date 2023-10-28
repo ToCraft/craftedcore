@@ -31,7 +31,7 @@ public class CraftedCore {
 				CraftedCore.LOGGER.warn("Version check failed");
 			// Notifies the joined player, that newer version is available
 			else if (!newestVersion.equals(CraftedCore.getVersion())) {
-				player.sendSystemMessage(Component.translatable("craftedcore.update", newestVersion));
+				player.sendSystemMessage(Component.literal("A new Version for CraftedCore is available: " + newestVersion));
 			}
 			
 			// send configurations to client
