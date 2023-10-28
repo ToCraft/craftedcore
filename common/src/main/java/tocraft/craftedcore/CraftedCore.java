@@ -22,8 +22,8 @@ public class CraftedCore {
 			ConfigLoader.registerConfigSyncHandler();
 		}
 				
-		PlayerEvents.PLAYER_JOIN.register(player -> {
-			// get newest version from url
+		PlayerEvents.PLAYER_JOIN.register(player -> {	
+			// get newest version from Uri
 			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
 			// Warns in the log, if checking failed
 			if (newestVersion == null)
