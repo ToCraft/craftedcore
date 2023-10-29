@@ -28,12 +28,4 @@ public class CraftedCoreForge {
 	public static void sendSwapRequest() {
 		NetworkManager.sendToServer( new ResourceLocation(CraftedCore.MODID, "test"), new FriendlyByteBuf(Unpooled.buffer()));
 	}
-	
-	public static void registerWalkersRequestPacketHandler() {
-		NetworkManager.registerReceiver(NetworkManager.Side.C2S, new ResourceLocation(CraftedCore.MODID, "test"), (buf, context) -> {
-				context.getPlayer().getServer().execute(() -> {
-					context.getPlayer().sendSystemMessage(Component.literal("BRUH"));
-				});
-		});
-	}
 }
