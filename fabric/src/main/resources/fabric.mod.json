@@ -9,7 +9,7 @@
   ],
   "contributors": [
   ],
-  "license": "MIT",
+  "license": "LGPL-3.0",
   "environment": "*",
   "mixins": [
     "craftedcore.mixins.json",

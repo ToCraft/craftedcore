@@ -1,7 +1,7 @@
 modLoader = "javafml"
-loaderVersion = "[45,)"
+loaderVersion = "[48,)"
 #issueTrackerURL = ""
-license = "MIT"
+license = "LGPL-3.0"
 
 [[mods]]
 modId = "craftedcore"
@@ -16,7 +16,7 @@ My libary mod to make mods more compatible with modloaders
 [[dependencies.craftedcore]]
 modId = "forge"
 mandatory = true
-versionRange = "[47,)"
+versionRange = "[48,)"
 ordering = "NONE"
 side = "BOTH"
 
