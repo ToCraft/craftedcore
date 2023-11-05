@@ -19,7 +19,7 @@ public class TimerOverlayRenderer {
     public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {    	
         Minecraft client = Minecraft.getInstance();
 
-        if(client.screen instanceof ChatScreen) {
+        if(client.screen instanceof ChatScreen || currentCooldown <= 0 || item == null) {
             return;
         }
 
