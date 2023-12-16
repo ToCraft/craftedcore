@@ -62,7 +62,7 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 		if (playerData.get(key) instanceof CompoundTag)
 			return (CompoundTag) playerData.get(key);
 		else
-			return new CompoundTag();
+			return null;
 	}
 	
 	@Unique
@@ -71,7 +71,7 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 		if (playerData.get(key) instanceof ListTag)
 			return (ListTag) playerData.get(key);
 		else
-			return new ListTag();
+			return null;
 	}
 	
 	@Unique
