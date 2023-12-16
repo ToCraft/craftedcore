@@ -1,8 +1,8 @@
 package tocraft.craftedcore.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +15,7 @@ public class TimerOverlayRenderer {
     private static boolean isFading = false;
     private static int fadingProgress = 0;
 
-    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
+    public static void register(PoseStack graphics, int currentCooldown, int maxCooldown, Item item) {
         Minecraft client = Minecraft.getInstance();
 
         if (client.screen instanceof ChatScreen || currentCooldown <= 0 || item == null) {
@@ -53,7 +53,7 @@ public class TimerOverlayRenderer {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            graphics.pose().pushPose();
+            graphics.pushPose();
             if (cooldownScale != 1) {
                 RenderSystem.enableScissor(
                         (int) ((double) 0 * d),
@@ -67,14 +67,14 @@ public class TimerOverlayRenderer {
                 float fadeScalar = fadingProgress / 50f; // 0f -> 1f, 0 is start, 1 is end
                 float scale = 1f + (float) Math.sin(fadeScalar * 1.5 * Math.PI) - .25f;
                 scale = Math.max(scale, 0);
-                graphics.pose().scale(scale, scale, scale);
+                graphics.scale(scale, scale, scale);
             }
 
             ItemStack stack = new ItemStack(item);
-            graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
+            Minecraft.getInstance().getItemRenderer().renderGuiItem(graphics, stack, (int) (width * .95f), (int) (height * .92f));
 
             RenderSystem.disableScissor();
-            graphics.pose().popPose();
+            graphics.popPose();
         }
     }
 }
