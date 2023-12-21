@@ -1,5 +1,5 @@
 @echo off
-set /p version=Please enter the version (needed for github, also check gradle.properties and mods.toml): 
+set /p version=Please enter the version (needed for github, also check gradle.properties and mods.toml, Neoforge must be uploaded manually): 
 
 :: add mcversion here
 set mcversions="1.16.5";"1.18.2";"1.19.4";"1.20.1";"1.20.2"

@@ -1,0 +1,26 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+#issueTrackerURL = ""
+license = "LGPL-3.0"
+
+[[mixins]]
+config = "craftedcore.mixins.json"
+[[mixins]]
+config = "craftedcore-forge.mixins.json"
+
+[[mods]]
+modId = "craftedcore"
+version = "${version}"
+displayName = "CraftedCore"
+authors = "To_Craft"
+description = '''
+My libary mod to make mods more compatible with modloaders
+'''
+#logoFile = ""
+
+[[dependencies.craftedcore]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.2,)"
+ordering = "NONE"
+side = "BOTH"
