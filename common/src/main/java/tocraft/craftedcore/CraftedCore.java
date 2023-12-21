@@ -22,26 +22,14 @@ public class CraftedCore {
 		if (Platform.getDist().isClient()) {
 			new CraftedCoreClient().initialize();
 		}
-						
-		PlayerEvents.PLAYER_JOIN.register(player -> {
-			// get newest version from Uri
-			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
-			// Warns in the log, if checking failed
-			if (newestVersion == null)
-				CraftedCore.LOGGER.warn("Version check failed");
-			// Notifies the joined player, that newer version is available
-			else if (!newestVersion.equals(CraftedCore.getVersion())) {
-				player.sendSystemMessage(Component.literal("A new Version for CraftedCore is available: " + newestVersion));
-			}
-			
+		
+		VersionChecker.registerChecker(MODID, versionURL, Component.literal("CraftedCore"));
+		
+		PlayerEvents.PLAYER_JOIN.register(player -> {			
 			// send configurations to client
 			ConfigLoader.sendConfigSyncPackages(player);
 			
 		});
-	}
-
-	public static String getVersion() {
-		return Platform.getMod(MODID).getVersion();
 	}
 	
 	public static ResourceLocation id(String name) {
