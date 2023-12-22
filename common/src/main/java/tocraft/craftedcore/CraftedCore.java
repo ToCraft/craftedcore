@@ -15,7 +15,7 @@ public class CraftedCore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
     public static final String MODID = "craftedcore";
-    private static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/gradle.properties";
+    private static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.1/gradle.properties";
 
     public void initialize() {
         try {
