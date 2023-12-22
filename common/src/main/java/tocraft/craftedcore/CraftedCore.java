@@ -28,7 +28,6 @@ public class CraftedCore {
 		PlayerEvents.PLAYER_JOIN.register(player -> {			
 			// send configurations to client
 			ConfigLoader.sendConfigSyncPackages(player);
-			
 		});
 	}
 	

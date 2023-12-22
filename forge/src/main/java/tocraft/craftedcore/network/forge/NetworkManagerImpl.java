@@ -34,6 +34,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.EventNetworkChannel;
 import net.minecraftforge.network.NetworkDirection;
@@ -45,6 +46,7 @@ import tocraft.craftedcore.network.NetworkManager.NetworkReceiver;
 import tocraft.craftedcore.network.PacketSink;
 import tocraft.craftedcore.network.PacketTransformer;
 
+@Mod.EventBusSubscriber(modid = CraftedCore.MODID)
 public class NetworkManagerImpl {
     public static void registerReceiver(NetworkManager.Side side, ResourceLocation id, List<PacketTransformer> packetTransformers, NetworkReceiver receiver) {
         Objects.requireNonNull(id, "Cannot register receiver with a null ID!");
@@ -189,6 +191,9 @@ public class NetworkManagerImpl {
     
     static FriendlyByteBuf sendSyncPacket(Map<ResourceLocation, NetworkReceiver> map) {
         List<ResourceLocation> availableIds = Lists.newArrayList(map.keySet());
+        if (availableIds.isEmpty())
+        	return null;
+        
         FriendlyByteBuf packetBuffer = new FriendlyByteBuf(Unpooled.buffer());
         packetBuffer.writeInt(availableIds.size());
         for (ResourceLocation availableId : availableIds) {
@@ -199,7 +204,9 @@ public class NetworkManagerImpl {
     
     @SubscribeEvent
     public static void loggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        NetworkManager.sendToPlayer((ServerPlayer) event.getEntity(), SYNC_IDS, sendSyncPacket(C2S));
+    	FriendlyByteBuf buf = sendSyncPacket(C2S);
+    	if (buf != null)
+    		NetworkManager.sendToPlayer((ServerPlayer) event.getEntity(), SYNC_IDS, buf);
     }
     
     @SubscribeEvent

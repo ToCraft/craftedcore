@@ -130,7 +130,8 @@ public class ConfigLoader {
 		};
 		tag.put("configs", list);
         packet.writeNbt(tag);
-        NetworkManager.sendToPlayer(target, CONFIG_SYNC, packet);
+        if (!list.isEmpty())
+        	NetworkManager.sendToPlayer(target, CONFIG_SYNC, packet);
     }
 	
 	private static void handleConfigSyncPackage(FriendlyByteBuf packet, NetworkManager.PacketContext contex) {

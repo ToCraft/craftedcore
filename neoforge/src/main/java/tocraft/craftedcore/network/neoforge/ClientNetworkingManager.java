@@ -13,7 +13,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PlayNetworkDirection;
 import tocraft.craftedcore.network.NetworkManager;
 
-@OnlyIns(@OnlyIn(Dist.CLIENT))
+@OnlyIn(Dist.CLIENT)
 public class ClientNetworkingManager {
     public static void initClient() {
         NetworkManagerImpl.CHANNEL.addListener(NetworkManagerImpl.createPacketHandler(PlayNetworkDirection.PLAY_TO_CLIENT, NetworkManagerImpl.S2C_TRANSFORMERS));
