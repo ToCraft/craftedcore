@@ -23,10 +23,10 @@ public class ServerPlayerMixin {
         PlayerDataProvider oldDataProvider = (PlayerDataProvider) oldPlayer;
         PlayerDataProvider newDataProvider = (PlayerDataProvider) (Object) this;
         
-        oldDataProvider.foreachKeyAndValue((key, entry) -> {
+        oldDataProvider.keySet().forEach(key -> {
         	// is the entry persistent (will it be saved after death) ?
         	if (PlayerDataRegistry.isKeyPersistant(key)) {
-        		newDataProvider.writePlayerData(key, entry);
+        		newDataProvider.writeTag(key, oldDataProvider.readTag(key));
         	}
         });
     }

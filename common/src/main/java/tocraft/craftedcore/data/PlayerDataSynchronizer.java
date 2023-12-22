@@ -20,7 +20,7 @@ public class PlayerDataSynchronizer {
 			list.forEach(entry -> {
 				((CompoundTag) entry).getAllKeys().forEach(key -> {
 					ClientNetworking.runOrQueue(context, player -> {
-						((PlayerDataProvider) player).writePlayerData(key, ((CompoundTag) entry).get(key));
+						((PlayerDataProvider) player).writeTag(key, ((CompoundTag) entry).get(key));
 					});
 				});
 			});
@@ -34,13 +34,16 @@ public class PlayerDataSynchronizer {
         FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
-        ((PlayerDataProvider) player).foreachKeyAndValue((key, value) -> {
+        
+        PlayerDataProvider playerData = ((PlayerDataProvider) player);
+        
+        ((PlayerDataProvider) player).keySet().forEach(key -> {
         	// ignore key if it shouldn't be synchronized to the client
-        	if (!PlayerDataRegistry.shouldKeySync(key))
+        	if (!PlayerDataRegistry.shouldSyncKey(key))
         		return;
         	
         	CompoundTag entry = new CompoundTag();
-        	entry.put(key, value);
+        	entry.put(key, playerData.readTag(key));
         	list.add(entry);
         });
         tag.put(PLAYER_DATA_SYNC, list);
