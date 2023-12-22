@@ -71,7 +71,7 @@ modrinth {
     versionType = "release"
     uploadFile = remapJar
     gameVersions = [rootProject.minecraft_version]
-    loaders = [project.name]
+    loaders = ["fabric", "quilt"]
     changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
 
@@ -82,6 +82,6 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     def mainFile = upload(923377, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
-    mainFile.addModLoader(project.name)
+    mainFile.addModLoader("fabric", "quilt")
     mainFile.changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
 }
