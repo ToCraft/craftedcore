@@ -11,9 +11,16 @@ import java.util.UUID;
 
 public class VIPs {
 	public static final String patreonURL = "https://tocraft.ddns.net/patreons.txt";
+	private static final List<UUID> CACHED_PATREONS = new ArrayList<UUID>();
+	
+	public static List<UUID> getCachedPatreons() {
+		return CACHED_PATREONS;
+	}
 	
     public static List<UUID> getPatreons() {
-    	return getUUIDOfPeople(patreonURL);
+    	CACHED_PATREONS.clear();
+    	CACHED_PATREONS.addAll(getUUIDOfPeople(patreonURL));
+    	return CACHED_PATREONS;
     }
     
     public static List<UUID> getUUIDOfPeople(String URL) {
