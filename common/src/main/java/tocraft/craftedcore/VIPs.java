@@ -14,13 +14,13 @@ public class VIPs {
 	private static final List<UUID> CACHED_PATREONS = new ArrayList<UUID>();
 	
 	public static List<UUID> getCachedPatreons() {
+		if (CACHED_PATREONS.isEmpty())
+			CACHED_PATREONS.addAll(getPatreons());
 		return CACHED_PATREONS;
 	}
 	
     public static List<UUID> getPatreons() {
-    	CACHED_PATREONS.clear();
-    	CACHED_PATREONS.addAll(getUUIDOfPeople(patreonURL));
-    	return CACHED_PATREONS;
+    	return getUUIDOfPeople(patreonURL);
     }
     
     public static List<UUID> getUUIDOfPeople(String URL) {
