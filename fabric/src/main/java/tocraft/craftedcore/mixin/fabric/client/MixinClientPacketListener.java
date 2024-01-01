@@ -18,7 +18,7 @@ public abstract class MixinClientPacketListener {
     @Final
     private Minecraft minecraft;
     
-    @Inject(method = "handleLogin", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;setServerRenderDistance(I)V", shift = At.Shift.AFTER))
+    @Inject(method = "handleLogin", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;broadcastOptions()V", shift = At.Shift.AFTER))
     private void handleLogin(ClientboundLoginPacket packet, CallbackInfo ci) {
         ClientPlayerEvents.CLIENT_PLAYER_JOIN.invoker().join(minecraft.player);
     }
