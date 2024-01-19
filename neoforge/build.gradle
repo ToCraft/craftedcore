@@ -19,6 +19,7 @@ configurations {
 
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
@@ -74,7 +75,7 @@ modrinth {
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
-    
+
     // The main file to upload
     def mainFile = upload(923377, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version

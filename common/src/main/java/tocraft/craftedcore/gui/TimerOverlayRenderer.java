@@ -1,7 +1,6 @@
 package tocraft.craftedcore.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -16,10 +15,10 @@ public class TimerOverlayRenderer {
     private static boolean isFading = false;
     private static int fadingProgress = 0;
 
-    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {    	
+    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
         Minecraft client = Minecraft.getInstance();
 
-        if(client.screen instanceof ChatScreen || currentCooldown <= 0 || item == null) {
+        if (client.screen instanceof ChatScreen || currentCooldown <= 0 || item == null) {
             return;
         }
 
@@ -27,35 +26,35 @@ public class TimerOverlayRenderer {
         float cooldownScale = 1 - currentCooldown / (float) maxCooldown;
 
         // cooldown has NOT updated since last tick. It is most likely full.
-        if(currentCooldown == lastCooldown) {
+        if (currentCooldown == lastCooldown) {
             ticksSinceUpdate++;
 
             // If the cooldown has not updated, we are above the requirement, and we are not fading, start fading.
-            if(ticksSinceUpdate > fadingTickRequirement && !isFading) {
+            if (ticksSinceUpdate > fadingTickRequirement && !isFading) {
                 isFading = true;
                 fadingProgress = 0;
             }
         }
 
         // cooldown updated in the last tick, and we are fading. Stop fading.
-        else if(ticksSinceUpdate > fadingProgress) {
+        else if (ticksSinceUpdate > fadingProgress) {
             ticksSinceUpdate = 0;
             isFading = false;
         }
 
         // Tick fading
-        if(isFading) {
+        if (isFading) {
             fadingProgress = Math.min(50, fadingProgress + 1);
         } else {
             fadingProgress = Math.max(0, fadingProgress - 1);
         }
 
-        if(client.player != null) {
+        if (client.player != null) {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             graphics.pose().pushPose();
-            if(cooldownScale != 1) {
+            if (cooldownScale != 1) {
                 RenderSystem.enableScissor(
                         (int) ((double) 0 * d),
                         (int) ((double) 0 * d),
@@ -64,7 +63,7 @@ public class TimerOverlayRenderer {
             }
 
             // ending pop
-            if(isFading) {
+            if (isFading) {
                 float fadeScalar = fadingProgress / 50f; // 0f -> 1f, 0 is start, 1 is end
                 float scale = 1f + (float) Math.sin(fadeScalar * 1.5 * Math.PI) - .25f;
                 scale = Math.max(scale, 0);

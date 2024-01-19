@@ -1,37 +1,27 @@
 package tocraft.craftedcore;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import tocraft.craftedcore.client.CraftedCoreClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.events.common.PlayerEvents;
-import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 
 public class CraftedCore {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
-	public static final String MODID = "craftedcore";
-	private static String versionURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/gradle.properties";
-	
-	public void initialize() {
-		// ensure the client will receive and handle the configuration package 
-		if (Platform.getDist().isClient()) {
-			new CraftedCoreClient().initialize();
-		}
-		
-		VersionChecker.registerChecker(MODID, versionURL, Component.literal("CraftedCore"));
-		
-		PlayerEvents.PLAYER_JOIN.register(player -> {			
-			// send configurations to client
-			ConfigLoader.sendConfigSyncPackages(player);
-		});
-	}
-	
-	public static ResourceLocation id(String name) {
-		return new ResourceLocation(MODID, name);
-	}
+    public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
+    public static final String MODID = "craftedcore";
+    private static final String versionURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/gradle.properties";
+
+    public void initialize() {
+        VersionChecker.registerChecker(MODID, versionURL, Component.literal("CraftedCore"));
+
+        // send configurations to client
+        PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
+    }
+
+    public static ResourceLocation id(String name) {
+        return new ResourceLocation(MODID, name);
+    }
 }

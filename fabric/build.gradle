@@ -15,12 +15,13 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
-   }
+}
 
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive = false }
@@ -77,7 +78,7 @@ modrinth {
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
-    
+
     // The main file to upload
     def mainFile = upload(923377, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version

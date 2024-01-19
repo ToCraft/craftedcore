@@ -3,7 +3,7 @@
   "id": "craftedcore",
   "version": "${version}",
   "name": "CraftedCore",
-  "description": "My libary mod to make mods more compatible with modloaders",
+  "description": "My library mod to make mods more compatible with mod loaders",
   "authors": [
     "To_Craft"
   ],
@@ -12,12 +12,14 @@
   "license": "LGPL-3.0",
   "environment": "*",
   "mixins": [
-    "craftedcore.mixins.json",
-    "craftedcore-fabric.mixins.json"
+    "craftedcore.mixins.json"
   ],
   "entrypoints": {
     "main": [
       "tocraft.craftedcore.fabric.CraftedCoreFabric"
+    ],
+    "client": [
+      "tocraft.craftedcore.fabric.CraftedCoreFabricClient"
     ]
   },
   "depends": {
