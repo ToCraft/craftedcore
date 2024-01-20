@@ -1,7 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.modrinth.minotaur" version "2.+"
-    id 'net.darkhax.curseforgegradle' version '1.1.15'
+    id "me.shedaniel.unified-publishing"
 }
 
 architectury {
@@ -65,24 +64,42 @@ components.java {
     }
 }
 
-modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
-    projectId = "crafted-core"
-    versionNumber = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-    versionType = "release"
-    uploadFile = remapJar
-    gameVersions = [rootProject.minecraft_version]
-    loaders = ["fabric", "quilt"]
-    changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
-}
+unifiedPublishing {
+    project {
+        displayName = "$rootProject.minecraft_version-$project.name-$rootProject.mod_version"
+        releaseType = "$rootProject.artifact_type"
+        changelog = releaseChangelog()
+        gameVersions = []
+        gameLoaders = ["fabric", "quilt"]
+        mainPublication renameJarForPublication
+        relations {
+            depends {
+                curseforge = "fabric-api"
+                modrinth = "fabric-api"
+            }
+            depends {
+                curseforge = "architectury-api"
+                modrinth = "architectury-api"
+            }
+        }
 
-task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
-    apiToken = System.getenv("CURSEFORGE_TOKEN")
+        var CURSE_API_KEY = project.findProperty("CURSEFORGE_TOKEN") ?: System.getenv("CURSEFORGE_TOKEN")
+        if (CURSE_API_KEY != null) {
+            curseforge {
+                token = CURSE_API_KEY
+                id = rootProject.curseforge_id
+                gameVersions.addAll "Java 17", rootProject.supported_versions
+            }
+        }
 
-    // The main file to upload
-    def mainFile = upload(923377, remapJar)
-    mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
-    mainFile.releaseType = 'release'
-    mainFile.addModLoader("fabric", "quilt")
-    mainFile.changelog = "https://github.com/ToCraft/craftedcore/releases/tag/" + rootProject.mod_version + "-" + rootProject.minecraft_version
+        var MODRINTH_TOKEN = project.findProperty("MODRINTH_TOKEN") ?: System.getenv("MODRINTH_TOKEN")
+        if (MODRINTH_TOKEN != null) {
+            modrinth {
+                token = MODRINTH_TOKEN
+                id = rootProject.modrinth_id
+                version = "$project.version+$project.name"
+                gameVersions.addAll project.minecraft_version
+            }
+        }
+    }
 }
