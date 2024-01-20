@@ -1,7 +1,6 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "com.modrinth.minotaur" version "2.+"
-    id 'net.darkhax.curseforgegradle' version '1.1.15'
+    id "me.shedaniel.unified-publishing"
 }
 
 loom {
@@ -68,6 +67,28 @@ components.java {
     }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = rootProject.maven_group
+            artifactId = rootProject.archives_base_name
+            version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name "tocraftMavenReleases"
+            url "https://tocraft.ddns.net/maven/releases"
+
+            credentials {
+                username = "tocraft"
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
+}
+
 unifiedPublishing {
     project {
         displayName = "$rootProject.minecraft_version-$project.name-$rootProject.mod_version"
@@ -75,7 +96,7 @@ unifiedPublishing {
         changelog = releaseChangelog()
         gameVersions = []
         gameLoaders = ["neoforge"]
-        mainPublication renameJarForPublication
+        mainPublication remapJar
         relations {
             depends {
                 curseforge = "architectury-api"
