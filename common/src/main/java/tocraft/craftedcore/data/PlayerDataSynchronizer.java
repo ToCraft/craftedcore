@@ -20,7 +20,7 @@ public class PlayerDataSynchronizer {
             list.forEach(entry -> {
                 ((CompoundTag) entry).getAllKeys().forEach(key -> {
                     ClientNetworking.runOrQueue(context, player -> {
-                        ((PlayerDataProvider) player).writeTag(key, ((CompoundTag) entry).get(key));
+                        ((PlayerDataProvider) player).craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
                     });
                 });
             });
@@ -37,13 +37,13 @@ public class PlayerDataSynchronizer {
 
         PlayerDataProvider playerData = ((PlayerDataProvider) player);
 
-        ((PlayerDataProvider) player).keySet().forEach(key -> {
+        ((PlayerDataProvider) player).craftedcore$keySet().forEach(key -> {
             // ignore key if it shouldn't be synchronized to the client
             if (!PlayerDataRegistry.shouldSyncKey(key))
                 return;
 
             CompoundTag entry = new CompoundTag();
-            entry.put(key, playerData.readTag(key));
+            entry.put(key, playerData.craftedcore$readTag(key));
             list.add(entry);
         });
         tag.put(PLAYER_DATA_SYNC, list);

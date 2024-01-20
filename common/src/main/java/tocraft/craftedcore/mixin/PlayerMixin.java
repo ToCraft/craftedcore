@@ -17,40 +17,41 @@ import java.util.Set;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin implements PlayerDataProvider {
-    private final Map<String, Tag> playerData = new HashMap<String, Tag>();
+    @Unique
+    private final Map<String, Tag> craftedcore$playerData = new HashMap<String, Tag>();
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readNbt(CompoundTag tag, CallbackInfo info) {
         PlayerDataRegistry.keySet().forEach(key -> {
-            playerData.put(key, tag.getCompound(key));
+            craftedcore$playerData.put(key, tag.getCompound(key));
         });
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeNbt(CompoundTag tag, CallbackInfo info) {
-        playerData.forEach((key, value) -> {
-            tag.put(key, this.readTag(key));
+        craftedcore$playerData.forEach((key, value) -> {
+            tag.put(key, this.craftedcore$readTag(key));
         });
     }
 
     @Unique
     @Override
-    public Set<String> keySet() {
-        return playerData.keySet();
+    public Set<String> craftedcore$keySet() {
+        return craftedcore$playerData.keySet();
     }
 
     @Unique
     @Override
-    public void writeTag(String key, Tag tag) {
+    public void craftedcore$writeTag(String key, Tag tag) {
         if (!PlayerDataRegistry.keySet().contains(key))
             PlayerDataRegistry.registerKey(key, false);
 
-        playerData.put(key, tag);
+        craftedcore$playerData.put(key, tag);
     }
 
     @Unique
     @Override
-    public Tag readTag(String key) {
-        return playerData.get(key);
+    public Tag craftedcore$readTag(String key) {
+        return craftedcore$playerData.get(key);
     }
 }

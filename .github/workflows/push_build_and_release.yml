@@ -10,7 +10,7 @@ on:
       - "*"
   workflow_dispatch:
     inputs:
-      norelease:
+      release:
         description: 'Do not publish'
         required: true
         default: 'false'
@@ -39,15 +39,15 @@ jobs:
       - name: Setup and Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build --stacktrace --no-daemon
+          arguments: check build --stacktrace --no-daemon
 
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^base_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - name: Create package name
-        run: echo "package_name=[$minecraft_version] $archives_base_name-$base_version.${{ github.run_number }}" >> $GITHUB_ENV
+        run: echo "package_name=[$minecraft_version] $archives_base_name-$mod_version" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ env.package_name }}
@@ -61,7 +61,7 @@ jobs:
       - name: Release to Maven, CurseForge & Modrinth
         uses: gradle/gradle-build-action@v2
         if: |
-          !contains(github.event.head_commit.message, '[norelease]') && github.event.inputs.norelease != 'true'
+          !contains(github.event.head_commit.message, '[release]') && github.event.inputs.release == 'true'
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}

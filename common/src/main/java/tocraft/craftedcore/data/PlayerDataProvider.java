@@ -7,11 +7,11 @@ import net.minecraft.nbt.Tag;
 import java.util.Set;
 
 public interface PlayerDataProvider {
-    void writeTag(String key, Tag value);
+    void craftedcore$writeTag(String key, Tag value);
 
-    Set<String> keySet();
+    Set<String> craftedcore$keySet();
 
-    Tag readTag(String key);
+    Tag craftedcore$readTag(String key);
 
     CompoundTag readPlayerDataTagCompound(String key);
 

@@ -67,18 +67,21 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = rootProject.archivesBaseName + "-fabric"
+            artifactId = rootProject.archivesBaseName + "-$project.name"
+            version = rootProject.minecraft_version + "-" + rootProject.mod_version
             from components.java
         }
     }
     repositories {
-        maven {
-            name "tocraftMavenReleases"
-            url "https://tocraft.ddns.net/maven/releases"
+        if (System.getenv("MAVEN_PASS") != null) {
+            maven {
+                name "tocraftMavenReleases"
+                url "https://tocraft.ddns.net/maven/releases"
 
-            credentials {
-                username = "tocraft"
-                password = System.getenv("MAVEN_PASS")
+                credentials {
+                    username = "tocraft"
+                    password = System.getenv("MAVEN_PASS")
+                }
             }
         }
     }

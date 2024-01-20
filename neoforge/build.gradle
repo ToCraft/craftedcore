@@ -64,18 +64,22 @@ components.java {
 publishing {
     publications {
         mavenForge(MavenPublication) {
-            artifactId = rootProject.archivesBaseName + "-forge"
+            artifactId = rootProject.archivesBaseName + "-$project.name"
+            version = rootProject.minecraft_version + "-" + rootProject.mod_version
             from components.java
         }
     }
     repositories {
-        maven {
-            name "tocraftMavenReleases"
-            url "https://tocraft.ddns.net/maven/releases"
+        if (System.getenv("" +
+                "") != null) {
+            maven {
+                name "tocraftMavenReleases"
+                url "https://tocraft.ddns.net/maven/releases"
 
-            credentials {
-                username = "tocraft"
-                password = System.getenv("MAVEN_PASS")
+                credentials {
+                    username = "tocraft"
+                    password = System.getenv("MAVEN_PASS")
+                }
             }
         }
     }
