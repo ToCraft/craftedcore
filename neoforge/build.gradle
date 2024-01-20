@@ -70,8 +70,7 @@ publishing {
         }
     }
     repositories {
-        if (System.getenv("" +
-                "") != null) {
+        if (System.getenv("MAVEN_PASS") != null) {
             maven {
                 name "tocraftMavenReleases"
                 url "https://tocraft.ddns.net/maven/releases"
