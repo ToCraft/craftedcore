@@ -1,7 +1,7 @@
-[![Build](https://github.com/ToCraft/craftedcore/actions/workflows/gradle-1.19.4.yml/badge.svg)](https://github.com/ToCraft/craftedcore/actions/workflows/gradle-1.19.4.yml)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.19.4-common&label=CraftedCore)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.19.4-forge&label=CraftedCore)
-![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.19.4-fabric&label=CraftedCore)
+[![Build](https://github.com/ToCraft/craftedcore/actions/workflows/gradle-1.18.2.yml/badge.svg)](https://github.com/ToCraft/craftedcore/actions/workflows/gradle-1.18.2.yml)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.18.2-common&label=CraftedCore)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.18.2-forge&label=CraftedCore)
+![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fcraftedcore%2Fmaven-metadata.xml&versionPrefix=1.18.2-fabric&label=CraftedCore)
 
 # CraftedCore
 
@@ -29,19 +29,19 @@ modApi "dev.tocraft:craftedcore:${minecraft_version}-project.name-${craftedcore_
 common:
 
 ```Groovy
-modApi "dev.tocraft:craftedcore:1.19.4-common-1.0"
+modApi "dev.tocraft:craftedcore:1.18.2-common-1.0"
 ```
 
 fabric:
 
 ```Groovy
-modApi "dev.tocraft:craftedcore:1.19.4-fabric-1.0"
+modApi "dev.tocraft:craftedcore:1.18.2-fabric-1.0"
 ```
 
 forge:
 
 ```Groovy
-modApi "dev.tocraft:craftedcore:1.19.4-forge-1.0"
+modApi "dev.tocraft:craftedcore:1.18.2-forge-1.0"
 ```
 
 ## Legal note

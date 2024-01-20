@@ -71,7 +71,7 @@ public class TimerOverlayRenderer {
             }
 
             ItemStack stack = new ItemStack(item);
-            Minecraft.getInstance().getItemRenderer().renderGuiItem(graphics, stack, (int) (width * .95f), (int) (height * .92f));
+            Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, (int) (width * .95f), (int) (height * .92f));
 
             RenderSystem.disableScissor();
             graphics.popPose();

@@ -1,7 +1,7 @@
 package tocraft.craftedcore.math;
 
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 public class math {
     final public static Vector3f POSITIVE_X() {
@@ -16,7 +16,7 @@ public class math {
         return new Vector3f(0, 0, 1);
     }
 
-    public static Quaternionf getDegreesQuaternion(Vector3f axis, float angle) {
-        return new Quaternionf().fromAxisAngleDeg(axis, angle);
+    public static Quaternion getDegreesQuaternion(Vector3f axis, float angle) {
+        return axis.rotation(angle);
     }
 }

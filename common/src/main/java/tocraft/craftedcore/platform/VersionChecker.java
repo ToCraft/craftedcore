@@ -3,6 +3,7 @@ package tocraft.craftedcore.platform;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import tocraft.craftedcore.CraftedCore;
 
 import java.io.BufferedReader;
@@ -30,7 +31,7 @@ public class VersionChecker {
                 CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + versionURL + ": " + e.getMessage());
             }
             if (!newestVersion.equals(Platform.getMod(modid).getVersion())) {
-                player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
+                player.displayClientMessage(new TranslatableComponent(CraftedCore.MODID + ".update", modName, newestVersion), false);
             }
         });
     }

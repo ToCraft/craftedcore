@@ -1,7 +1,7 @@
 package tocraft.craftedcore;
 
 import dev.architectury.event.events.common.PlayerEvent;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class CraftedCore {
 
     public void initialize() {
         try {
-            VersionChecker.registerChecker(MODID, new URL(VERSION_URL), Component.literal("CraftedCore"));
+            VersionChecker.registerChecker(MODID, new URL(VERSION_URL), new TextComponent("CraftedCore"));
         } catch (MalformedURLException ignored) {
         }
 
