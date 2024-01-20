@@ -34,17 +34,6 @@ public class VersionChecker {
     }
 
     @Nullable
-    @Deprecated
-    public static String checkForNewVersion(String urlToCheck) {
-        try {
-            return checkForNewVersion(CraftedCore.MODID, (new URI(urlToCheck).toURL()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Nullable
     public static String checkForNewVersion(String modid, String urlToCheck) {
         try {
             return checkForNewVersion(modid, (new URI(urlToCheck).toURL()));
