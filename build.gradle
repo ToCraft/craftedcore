@@ -31,8 +31,10 @@ allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
 
+    def runNumber = (System.getenv("GITHUB_RUN_NUMBER") == null ? "9999" : System.getenv("GITHUB_RUN_NUMBER"))
+
     archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
+    version = rootProject.base_version + "." + runNumber
     group = rootProject.maven_group
 
     repositories {

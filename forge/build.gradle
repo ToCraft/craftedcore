@@ -69,10 +69,8 @@ components.java {
 
 publishing {
     publications {
-        maven(MavenPublication) {
-            groupId = rootProject.maven_group
-            artifactId = rootProject.archives_base_name
-            version = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
+        mavenForge(MavenPublication) {
+            artifactId = rootProject.archivesBaseName + "-forge"
             from components.java
         }
     }
@@ -91,7 +89,7 @@ publishing {
 
 unifiedPublishing {
     project {
-        displayName = "$rootProject.minecraft_version-$project.name-$rootProject.mod_version"
+        displayName = "$rootProject.minecraft_version-$project.name-$project.version"
         releaseType = "$rootProject.artifact_type"
         changelog = releaseChangelog()
         gameVersions = []

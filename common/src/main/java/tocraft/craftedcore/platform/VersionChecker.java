@@ -3,23 +3,34 @@ package tocraft.craftedcore.platform;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 
 
 public class VersionChecker {
 
+    @Deprecated
     public static void registerChecker(String modid, String versionURL) {
         registerChecker(modid, versionURL, Component.literal(modid));
     }
 
+    @Deprecated
     public static void registerChecker(String modid, String versionURL, Component modName) {
+        try {
+            registerChecker(modid, new URI(versionURL).toURL(), modName);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException ignored) {
+        }
+    }
+
+    public static void registerChecker(String modid, URL versionURL, Component modName) {
         PlayerEvent.PLAYER_JOIN.register(player -> {
             // get newest version from Uri
             String newestVersion = VersionChecker.checkForNewVersion(modid, versionURL);
@@ -33,34 +44,30 @@ public class VersionChecker {
         });
     }
 
-    @Nullable
+    @Deprecated
     public static String checkForNewVersion(String modid, String urlToCheck) {
         try {
             return checkForNewVersion(modid, (new URI(urlToCheck).toURL()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (URISyntaxException | MalformedURLException e) {
+            return Platform.getMod(modid).getVersion();
         }
     }
 
-    @Nullable
     public static String checkForNewVersion(String modid, URL urlToCheck) {
-        try {
-            String line;
-            URL url = urlToCheck;
-            BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-            String updateVersion = Platform.getMod(modid).getVersion();
-            while ((line = updateReader.readLine()) != null) {
-                if (line.startsWith("mod_version=")) {
-                    updateVersion = line.split("mod_version=")[1];
-                    break;
-                }
+        String version = Platform.getMod(modid).getVersion();
+
+        // try to load from maven properties first
+        Properties p = new Properties();
+
+        if (urlToCheck != null) {
+            try {
+                p.load(urlToCheck.openStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            updateReader.close();
-            return updateVersion;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            version = p.getProperty("version", "");
         }
+
+        return version;
     }
 }
