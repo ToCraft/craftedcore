@@ -14,20 +14,24 @@ import java.nio.charset.StandardCharsets;
 
 public class VersionChecker {
 
-    public static void registerChecker(String modid, URL versionURL, Component modName) {
+    public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
+        registerChecker(modid, mavenURL, "<version>" + Platform.getMinecraftVersion() + "-", "</version>", modName);
+    }
+
+    public static void registerChecker(String modid, URL urlToCheck, String linePrefix, String lineSuffix, Component modName) {
         PlayerEvent.PLAYER_JOIN.register(player -> {
             // get newest version from Uri
             String newestVersion = Platform.getMod(modid).getVersion();
             try {
-                newestVersion = VersionChecker.checkForNewVersion(versionURL, "mod_version=");
+                newestVersion = VersionChecker.checkForNewVersion(urlToCheck, linePrefix, lineSuffix);
 
                 if (newestVersion.isBlank()) {
-                    CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + versionURL + ".");
+                    CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ".");
                     return;
                 }
             } catch (IOException e) {
                 // Warns in the log, if checking failed
-                CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + versionURL + ": " + e.getMessage());
+                CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ": " + e.getMessage());
             }
             if (!newestVersion.equals(Platform.getMod(modid).getVersion())) {
                 player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
@@ -35,15 +39,18 @@ public class VersionChecker {
         });
     }
 
-    public static String checkForNewVersion(URL urlToCheck, String linePrefix) throws IOException {
+    public static String checkForNewVersion(URL urlToCheck, String linePrefix, String lineSuffix) throws IOException {
         String line;
         BufferedReader updateReader = new BufferedReader(new InputStreamReader(urlToCheck.openStream(), StandardCharsets.UTF_8));
         while ((line = updateReader.readLine()) != null) {
-            if (line.startsWith(linePrefix)) {
-                return line.split(linePrefix)[1];
+            line = line.replaceAll(" ", "");
+            if (line.startsWith(linePrefix) && line.endsWith(lineSuffix)) {
+                return line.split(linePrefix)[1].split(lineSuffix)[0];
             }
         }
         updateReader.close();
+
         return "";
+
     }
 }

@@ -15,11 +15,11 @@ public class CraftedCore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
     public static final String MODID = "craftedcore";
-    private static final String VERSION_URL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/gradle.properties";
+    private static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/craftedcore/maven-metadata.xml";
 
     public void initialize() {
         try {
-            VersionChecker.registerChecker(MODID, new URL(VERSION_URL), Component.literal("CraftedCore"));
+            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.literal("CraftedCore"));
         } catch (MalformedURLException ignored) {
         }
 
