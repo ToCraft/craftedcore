@@ -20,21 +20,23 @@ public class VersionChecker {
 
     public static void registerChecker(String modid, URL urlToCheck, String linePrefix, String lineSuffix, Component modName) {
         PlayerEvent.PLAYER_JOIN.register(player -> {
-            // get newest version from Uri
-            String newestVersion = Platform.getMod(modid).getVersion();
-            try {
-                newestVersion = VersionChecker.checkForNewVersion(urlToCheck, linePrefix, lineSuffix);
+            if (CraftedCore.CONFIG != null && CraftedCore.CONFIG.enableVersionChecking) {
+                // get newest version from Uri
+                String newestVersion = Platform.getMod(modid).getVersion();
+                try {
+                    newestVersion = VersionChecker.checkForNewVersion(urlToCheck, linePrefix, lineSuffix);
 
-                if (newestVersion.isBlank()) {
-                    CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ".");
-                    return;
+                    if (newestVersion.isBlank()) {
+                        CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ".");
+                        return;
+                    }
+                } catch (IOException e) {
+                    // Warns in the log, if checking failed
+                    CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ": " + e.getMessage());
                 }
-            } catch (IOException e) {
-                // Warns in the log, if checking failed
-                CraftedCore.LOGGER.warn("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ": " + e.getMessage());
-            }
-            if (!newestVersion.equals(Platform.getMod(modid).getVersion())) {
-                player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
+                if (!newestVersion.equals(Platform.getMod(modid).getVersion())) {
+                    player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
+                }
             }
         });
     }
