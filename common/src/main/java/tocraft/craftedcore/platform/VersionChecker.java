@@ -43,16 +43,17 @@ public class VersionChecker {
 
     public static String checkForNewVersion(URL urlToCheck, String linePrefix, String lineSuffix) throws IOException {
         String line;
+        String latestValue = "";
         BufferedReader updateReader = new BufferedReader(new InputStreamReader(urlToCheck.openStream(), StandardCharsets.UTF_8));
         while ((line = updateReader.readLine()) != null) {
             line = line.replaceAll(" ", "");
             if (line.startsWith(linePrefix) && line.endsWith(lineSuffix)) {
-                return line.split(linePrefix)[1].split(lineSuffix)[0];
+                latestValue = line.split(linePrefix)[1].split(lineSuffix)[0];
             }
         }
         updateReader.close();
 
-        return "";
+        return latestValue;
 
     }
 }
