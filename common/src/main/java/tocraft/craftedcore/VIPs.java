@@ -1,6 +1,7 @@
 package tocraft.craftedcore;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
@@ -20,32 +21,26 @@ public class VIPs {
     }
 
     public static List<UUID> getPatreons() {
-        return getUUIDOfPeople(patreonURL);
-    }
-
-    public static List<UUID> getUUIDOfPeople(String URL) {
         try {
-            return getUUIDOfPeople(new URI(URL).toURL());
+            return getUUIDOfPeople(new URI(patreonURL).toURL());
         } catch (Exception e) {
-            CraftedCore.LOGGER.error("Couldn't get people from " + URL);
-            e.printStackTrace();
-            return new ArrayList<UUID>();
+            CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL);
+            CraftedCore.LOGGER.error(e.getLocalizedMessage());
+            return new ArrayList<>();
         }
     }
 
-    public static List<UUID> getUUIDOfPeople(URL url) {
-        try {
-            String line;
-            BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-            List<UUID> people = new ArrayList<UUID>();
-            while ((line = updateReader.readLine()) != null) {
+    public static List<UUID> getUUIDOfPeople(URL url) throws IOException {
+        String line;
+        BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        List<UUID> people = new ArrayList<>();
+        while ((line = updateReader.readLine()) != null) {
+            line = line.replaceAll("/n", "").replaceAll(" ", "");
+            if (!line.isBlank()) {
                 people.add(UUID.fromString(line));
             }
-            updateReader.close();
-            return people;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<UUID>();
         }
+        updateReader.close();
+        return people;
     }
 }
