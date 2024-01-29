@@ -106,7 +106,7 @@ unifiedPublishing {
         }
 
         String[] tasksToUseAsDefault = rootProject.supported_versions.split(",")
-        tasksToUseAsDefault.each {gameVersions.add(it.trim())}
+        tasksToUseAsDefault.each { gameVersions.add(it.trim()) }
 
         var CURSE_API_KEY = project.findProperty("CURSEFORGE_TOKEN") ?: System.getenv("CURSEFORGE_TOKEN")
         if (CURSE_API_KEY != null) {
