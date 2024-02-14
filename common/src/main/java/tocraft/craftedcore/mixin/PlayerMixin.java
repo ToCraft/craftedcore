@@ -22,16 +22,12 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readNbt(CompoundTag tag, CallbackInfo info) {
-        PlayerDataRegistry.keySet().forEach(key -> {
-            craftedcore$playerData.put(key, tag.getCompound(key));
-        });
+        PlayerDataRegistry.keySet().forEach(key -> craftedcore$playerData.put(key, tag.getCompound(key)));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeNbt(CompoundTag tag, CallbackInfo info) {
-        craftedcore$playerData.forEach((key, value) -> {
-            tag.put(key, this.craftedcore$readTag(key));
-        });
+        craftedcore$playerData.forEach((key, value) -> tag.put(key, this.craftedcore$readTag(key)));
     }
 
     @Unique
