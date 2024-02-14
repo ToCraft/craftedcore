@@ -19,6 +19,9 @@ public class CraftedCore {
     public static final CraftedCoreConfig CONFIG = ConfigLoader.read(MODID, CraftedCoreConfig.class);
 
     public void initialize() {
+        // cache patreons in an extra thread to prevent longer loading times while connecting
+        new Thread(VIPs::getCachedPatreons).start();
+
         try {
             VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.literal("CraftedCore"));
         } catch (MalformedURLException ignored) {
