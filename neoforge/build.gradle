@@ -25,15 +25,12 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
-
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand project.properties
     }
 }
 
 shadowJar {
-    exclude "fabric.mod.json"
     configurations = [project.configurations.shadowCommon]
     archiveClassifier.set("dev-shadow")
 }
