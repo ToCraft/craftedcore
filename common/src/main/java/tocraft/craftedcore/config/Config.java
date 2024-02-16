@@ -1,5 +1,6 @@
 package tocraft.craftedcore.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -14,7 +15,7 @@ public interface Config {
 
     @Nullable
     default Path getPath() {
-        return ConfigLoader.getConfigPath(getName());
+        return getName() != null ? ConfigLoader.getConfigPath(getName()) : null;
     }
 
     default void save() {

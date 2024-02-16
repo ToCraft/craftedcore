@@ -22,13 +22,15 @@ public class CraftedCore {
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::getCachedPatreons).start();
 
-        try {
-            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.literal("CraftedCore"));
-        } catch (MalformedURLException ignored) {
-        }
-
         // send configurations to client
         PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
+
+        // check for new version
+        try {
+            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), Component.literal("CraftedCore"));
+        } catch (MalformedURLException e) {
+            CraftedCore.LOGGER.error("Failed to register the version checker", e);
+        }
     }
 
     public static ResourceLocation id(String name) {
