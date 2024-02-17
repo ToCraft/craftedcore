@@ -8,12 +8,15 @@ import tocraft.craftedcore.CraftedCore;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.module.ModuleDescriptor;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class VersionChecker {
-
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
         registerChecker(modid, mavenURL, "<version>" + Platform.getMinecraftVersion() + "-", "</version>", modName);
     }
@@ -22,44 +25,51 @@ public class VersionChecker {
         PlayerEvent.PLAYER_JOIN.register(player -> {
             if (CraftedCore.CONFIG != null && CraftedCore.CONFIG.enableVersionChecking) {
                 // get newest version from Uri
-                String newestVersion = Platform.getMod(modid).getVersion();
+                String localVersion = Platform.getMod(modid).getVersion();
+                String newestVersion = localVersion;
                 try {
-                    newestVersion = VersionChecker.checkForNewVersion(urlToCheck, linePrefix, lineSuffix);
-
-                    if (newestVersion.isBlank()) {
-                        throwError(modName, urlToCheck, null);
-                        return;
-                    }
+                    List<String> versions = checkForNewVersionFromMaven(urlToCheck, linePrefix, lineSuffix, localVersion);
+                    if (!versions.isEmpty()) newestVersion = versions.get(versions.size() - 1);
                 } catch (IOException e) {
                     // Warns in the log, if checking failed
-                    throwError(modName, urlToCheck, e);
+                    CraftedCore.LOGGER.error("Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ".", e);
                 }
-                if (!newestVersion.equals(Platform.getMod(modid).getVersion())) {
+
+                if (!newestVersion.equals(localVersion)) {
                     player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
                 }
             }
         });
     }
 
+    @Deprecated
     public static String checkForNewVersion(URL urlToCheck, String linePrefix, String lineSuffix) throws IOException {
+        List<String> versions = checkForNewVersionFromMaven(urlToCheck, linePrefix, lineSuffix);
+        return !versions.isEmpty() ? versions.get(versions.size() - 1) : "";
+    }
+
+    public static List<String> checkForNewVersionFromMaven(URL mavenURL, String linePrefix, String lineSuffix, String... localVersions) throws IOException {
         String line;
-        String latestValue = "";
-        BufferedReader updateReader = new BufferedReader(new InputStreamReader(urlToCheck.openStream(), StandardCharsets.UTF_8));
+        List<String> versions = new ArrayList<>();
+        BufferedReader updateReader = new BufferedReader(new InputStreamReader(mavenURL.openStream(), StandardCharsets.UTF_8));
         while ((line = updateReader.readLine()) != null) {
             line = line.replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "");
             if (line.startsWith(linePrefix) && line.endsWith(lineSuffix)) {
-                latestValue = line.split(linePrefix)[1].split(lineSuffix)[0];
+                versions.add(line.split(linePrefix)[1].split(lineSuffix)[0]);
             }
         }
         updateReader.close();
-
-        return latestValue;
-
+        versions.addAll(Arrays.asList(localVersions));
+        return Arrays.asList(sortVersions(versions.toArray(String[]::new)));
     }
 
-    private static void throwError(Component modName, URL urlToCheck, Exception e) {
-        String message = "Failed to get the newest version for " + modName.getString() + " from " + urlToCheck + ".";
-        if (e != null) CraftedCore.LOGGER.error(message, e);
-        else CraftedCore.LOGGER.error(message);
+    /**
+     * Sorts the specified versions
+     *
+     * @param versions the versions to be sorted
+     * @return {@link java.lang.String String[]} containing the versions, sorted low to high / old to new
+     */
+    public static String[] sortVersions(String... versions) {
+        return Arrays.stream(versions).map(ModuleDescriptor.Version::parse).sorted().map(ModuleDescriptor.Version::toString).toArray(String[]::new);
     }
 }
