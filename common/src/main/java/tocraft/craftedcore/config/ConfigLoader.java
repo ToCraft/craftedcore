@@ -76,6 +76,12 @@ public class ConfigLoader {
             } else {
                 C newConfig = GSON.fromJson(Files.readString(configFile), configClass);
 
+                // some files might be malfunctions
+                if (newConfig == null) {
+                    newConfig = configClass.getDeclaredConstructor().newInstance();
+                    CraftedCore.LOGGER.error("The Configuration '" + configName + ".json' is null. This isn't normal. It will overwritten be with default values.");
+                }
+
                 // If the configuration existed, it's read now. This overrides it again to ensure every field is represented
                 writeConfigFile(configFile, newConfig);
 

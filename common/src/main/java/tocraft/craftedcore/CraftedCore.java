@@ -12,11 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CraftedCore {
-
     public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
     public static final String MODID = "craftedcore";
     private static final String MAVEN_URL = "https://maven.tocraft.dev/public/dev/tocraft/craftedcore/maven-metadata.xml";
-    public static final CraftedCoreConfig CONFIG = ConfigLoader.read(MODID, CraftedCoreConfig.class);
 
     public void initialize() {
         // cache patreons in an extra thread to prevent longer loading times while connecting

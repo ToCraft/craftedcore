@@ -4,6 +4,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.CraftedCoreConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class VersionChecker {
 
         // notify player about outdated version
         PlayerEvent.PLAYER_JOIN.register(player -> {
-            if (CraftedCore.CONFIG != null && CraftedCore.CONFIG.enableVersionChecking) {
+            if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
                 String localVersion = Platform.getMod(modid).getVersion();
                 String newestVersion = cacheNewestVersion(modid, urlToCheck, linePrefix, lineSuffix);
