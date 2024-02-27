@@ -17,13 +17,7 @@ public class PlayerDataSynchronizer {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CraftedCore.id(PLAYER_DATA_SYNC), (packet, context) -> {
             CompoundTag tag = packet.readNbt();
             ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
-            list.forEach(entry -> {
-                ((CompoundTag) entry).getAllKeys().forEach(key -> {
-                    ClientNetworking.runOrQueue(context, player -> {
-                        ((PlayerDataProvider) player).craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
-                    });
-                });
-            });
+            list.forEach(entry -> ((CompoundTag) entry).getAllKeys().forEach(key -> ClientNetworking.runOrQueue(context, player -> ((PlayerDataProvider) player).craftedcore$writeTag(key, ((CompoundTag) entry).get(key)))));
         });
     }
 
@@ -37,7 +31,7 @@ public class PlayerDataSynchronizer {
 
         PlayerDataProvider playerData = ((PlayerDataProvider) player);
 
-        ((PlayerDataProvider) player).craftedcore$keySet().forEach(key -> {
+        for (String key : ((PlayerDataProvider) player).craftedcore$keySet()) {
             // ignore key if it shouldn't be synchronized to the client
             if (!PlayerDataRegistry.shouldSyncKey(key))
                 return;
@@ -45,7 +39,7 @@ public class PlayerDataSynchronizer {
             CompoundTag entry = new CompoundTag();
             entry.put(key, playerData.craftedcore$readTag(key));
             list.add(entry);
-        });
+        }
         tag.put(PLAYER_DATA_SYNC, list);
         packet.writeNbt(tag);
         NetworkManager.sendToPlayer(player, CraftedCore.id(PLAYER_DATA_SYNC), packet);

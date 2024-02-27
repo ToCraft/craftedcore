@@ -9,12 +9,6 @@ architectury {
     common("fabric", "forge")
 }
 
-//afterEvaluate {
-//    remapJar {
-//        remapAccessWidener = false
-//    }
-//}
-
 configurations {
     dev
 }

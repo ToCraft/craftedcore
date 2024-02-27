@@ -1,9 +1,14 @@
 package tocraft.craftedcore;
 
+import com.mojang.util.UUIDTypeAdapter;
+import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
+import net.minecraft.client.Minecraft;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -12,35 +17,45 @@ import java.util.UUID;
 
 public class VIPs {
     public static final String patreonURL = "https://tocraft.dev/patreons.txt";
-    private static final List<UUID> CACHED_PATREONS = new ArrayList<UUID>();
+    private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
 
     public static List<UUID> getCachedPatreons() {
-        if (CACHED_PATREONS.isEmpty())
+        if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
+        }
         return CACHED_PATREONS;
     }
 
     public static List<UUID> getPatreons() {
         try {
-            return getUUIDOfPeople(new URI(patreonURL).toURL());
-        } catch (Exception e) {
-            CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL);
-            CraftedCore.LOGGER.error(e.getLocalizedMessage());
+            return getUUIDOfPeople(new URL(patreonURL));
+        } catch (MalformedURLException e) {
+            throwError(e);
             return new ArrayList<>();
         }
     }
 
-    public static List<UUID> getUUIDOfPeople(URL url) throws IOException {
+    public static List<UUID> getUUIDOfPeople(URL url) {
         String line;
-        BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         List<UUID> people = new ArrayList<>();
-        while ((line = updateReader.readLine()) != null) {
-            line = line.replaceAll("/n", "").replaceAll(" ", "");
-            if (!line.isBlank()) {
+        try {
+            BufferedReader updateReader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            while ((line = updateReader.readLine()) != null && (line = line.replaceAll("\n", "")).isBlank()) {
                 people.add(UUID.fromString(line));
             }
+            updateReader.close();
+        } catch (IOException e) {
+            throwError(e);
         }
-        updateReader.close();
+        if (Platform.getEnvironment() == Env.CLIENT && people.contains(UUIDTypeAdapter.fromString(Minecraft.getInstance().getUser().getUuid()))) {
+            CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");
+        }
+
         return people;
+    }
+
+    private static void throwError(IOException e) {
+        CraftedCore.LOGGER.error("Couldn't get all patreons from " + patreonURL);
+        CraftedCore.LOGGER.error(e.getLocalizedMessage());
     }
 }

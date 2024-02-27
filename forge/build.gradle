@@ -31,10 +31,15 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
+    Map<String, ?> replaceProperties = [
+            minecraft_version: minecraft_version, version: version,
+            architectury_version: architectury_version,
+    ]
+
+    inputs.properties replaceProperties
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand replaceProperties + [project: project]
     }
 }
 
