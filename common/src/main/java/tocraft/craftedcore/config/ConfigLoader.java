@@ -25,10 +25,9 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ConfigLoader {
-    private static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
+    public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
     private static final Map<String, Config> LOADED_CONFIGS = new HashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
 
@@ -76,6 +75,12 @@ public class ConfigLoader {
             } else {
                 C newConfig = GSON.fromJson(Files.readString(configFile), configClass);
 
+                // some files might be malfunctions
+                if (newConfig == null) {
+                    newConfig = configClass.getDeclaredConstructor().newInstance();
+                    CraftedCore.LOGGER.error("The Configuration '" + configName + ".json' is null. This isn't normal. It will overwritten be with default values.");
+                }
+
                 // If the configuration existed, it's read now. This overrides it again to ensure every field is represented
                 writeConfigFile(configFile, newConfig);
 
@@ -86,7 +91,6 @@ public class ConfigLoader {
             e.printStackTrace();
         }
         return null;
-
     }
 
     private static <C extends Config> void writeConfigFile(Path file, C config) {
@@ -96,9 +100,27 @@ public class ConfigLoader {
             }
 
             Files.writeString(file, GSON.toJson(config));
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public static CompoundTag getConfigSyncTag(Config config) {
+        CompoundTag configTag = new CompoundTag();
+        // Synchronize whole class if triggered
+        if (Arrays.stream(config.getClass().getDeclaredAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
+            configTag.putString("ConfigName", config.getClass().getSimpleName());
+            configTag.putString("Serialized", GSON.toJson(config));
+            configTag.putBoolean("AllSync", true);
+        }
+        // triggered if not the whole class is to be synchronized
+        else {
+            configTag.putString("ConfigName", config.getClass().getSimpleName());
+            configTag.putString("Serialized", SYNC_ONLY_GSON.toJson(config));
+            configTag.putBoolean("AllSync", false);
+        }
+
+        return configTag;
     }
 
     public static void sendConfigSyncPackages(ServerPlayer target) {
@@ -107,23 +129,9 @@ public class ConfigLoader {
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         for (Config config : LOADED_CONFIGS.values()) {
-            CompoundTag configTag = new CompoundTag();
-            // Synchronize whole class if trigerred
-            if (Arrays.stream(config.getClass().getDeclaredAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
-                configTag.putString("ConfigName", config.getClass().getSimpleName());
-                configTag.putString("Serialized", GSON.toJson(config));
-                configTag.putBoolean("AllSync", true);
-            }
-            // trigerred if not the whole class is to be synchronized
-            else {
-                configTag.putString("ConfigName", config.getClass().getSimpleName());
-                configTag.putString("Serialized", SYNC_ONLY_GSON.toJson(config));
-                configTag.putBoolean("AllSync", false);
-            }
-
-            list.add(configTag);
+            list.add(getConfigSyncTag(config));
         }
-        ;
+
         tag.put("configs", list);
         packet.writeNbt(tag);
         if (!list.isEmpty()) NetworkManager.sendToPlayer(target, CONFIG_SYNC, packet);
@@ -133,38 +141,49 @@ public class ConfigLoader {
         CLIENT_CONFIGS.clear();
 
         CompoundTag tag = packet.readNbt();
-        ListTag list = (ListTag) tag.get("configs");
 
-        for (Tag compound : list) {
-            CompoundTag syncedConfiguration = (CompoundTag) compound;
-            String name = syncedConfiguration.getString("ConfigName");
-            String json = syncedConfiguration.getString("Serialized");
-            boolean allSync = syncedConfiguration.getBoolean("AllSync");
+        if (tag.contains("configs")) {
+            ListTag list = (ListTag) tag.get("configs");
 
-            // get all loaded configs
-            for (Config config : LOADED_CONFIGS.values()) {
-                if (config.getClass().getSimpleName().equals(name)) {
-                    // get send configuration as serverConfig
-                    Config serverConfig = GSON.fromJson(json, config.getClass());
+            for (Tag compound : list) {
+                handleConfigTag((CompoundTag) compound);
+            }
+        } else if (tag.contains("ConfigName")) {
+            handleConfigTag(tag);
+        } else {
+            CraftedCore.LOGGER.error("Failed to handle Config Sync Package.");
+        }
 
-                    Config cachedClient = GSON.fromJson(GSON.toJson(config), config.getClass());
-                    CLIENT_CONFIGS.add(cachedClient);
+    }
 
-                    // override local fields with server ones
-                    for (Field field : serverConfig.getClass().getDeclaredFields()) {
-                        if (allSync || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
-                            try {
-                                field.setAccessible(true);
-                                Object serverValue = field.get(serverConfig);
-                                field.set(config, serverValue);
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
+    private static void handleConfigTag(CompoundTag syncedConfiguration) {
+        String name = syncedConfiguration.getString("ConfigName");
+        String json = syncedConfiguration.getString("Serialized");
+        boolean allSync = syncedConfiguration.getBoolean("AllSync");
+
+        // get all loaded configs
+        for (Config config : LOADED_CONFIGS.values()) {
+            if (config.getClass().getSimpleName().equals(name)) {
+                // get send configuration as serverConfig
+                Config serverConfig = GSON.fromJson(json, config.getClass());
+
+                Config cachedClient = GSON.fromJson(GSON.toJson(config), config.getClass());
+                CLIENT_CONFIGS.add(cachedClient);
+
+                // override local fields with server ones
+                for (Field field : serverConfig.getClass().getDeclaredFields()) {
+                    if (allSync || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
+                        try {
+                            field.setAccessible(true);
+                            Object serverValue = field.get(serverConfig);
+                            field.set(config, serverValue);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
                         }
                     }
-
-                    break;
                 }
+
+                break;
             }
         }
     }
