@@ -22,11 +22,11 @@ public class ServerPlayerMixin {
         PlayerDataProvider oldDataProvider = (PlayerDataProvider) oldPlayer;
         PlayerDataProvider newDataProvider = (PlayerDataProvider) (Object) this;
 
-        oldDataProvider.craftedcore$keySet().forEach(key -> {
+        for (String key : oldDataProvider.craftedcore$keySet()) {
             // is the entry persistent (will it be saved after death) ?
             if (PlayerDataRegistry.isKeyPersistant(key)) {
                 newDataProvider.craftedcore$writeTag(key, oldDataProvider.craftedcore$readTag(key));
             }
-        });
+        }
     }
 }
