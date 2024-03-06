@@ -18,7 +18,7 @@ public class CraftedCore {
 
     public void initialize() {
         // cache patreons in an extra thread to prevent longer loading times while connecting
-        new Thread(VIPs::getCachedPatreons).start();
+        new Thread(VIPs::cachePatreons).start();
 
         // send configurations to client
         PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);

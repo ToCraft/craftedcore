@@ -19,6 +19,10 @@ public class VIPs {
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
 
     public static List<UUID> getCachedPatreons() {
+        return CACHED_PATREONS;
+    }
+
+    public static List<UUID> cachePatreons() {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
         }
