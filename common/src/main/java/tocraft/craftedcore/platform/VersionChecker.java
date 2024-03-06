@@ -27,7 +27,7 @@ public class VersionChecker {
         new Thread(() -> cacheNewestVersion(modid, urlToCheck, linePrefix, lineSuffix)).start();
 
         // notify player about outdated version
-        PlayerEvent.PLAYER_JOIN.register(player -> {
+        PlayerEvent.PLAYER_JOIN.register(player -> new Thread(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
                 String localVersion = Platform.getMod(modid).getVersion();
@@ -37,7 +37,7 @@ public class VersionChecker {
                     player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName, newestVersion));
                 }
             }
-        });
+        }).start());
     }
 
     public static String cacheNewestVersion(String modid, URL urlToCheck, String linePrefix, String lineSuffix) {
