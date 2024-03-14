@@ -1,3 +1,7 @@
+craftedcore 3.1.2
+================
+- fix crash on Legacy Forge
+
 craftedcore 3.1
 ================
 This is just a small crash patch to prevent infinite loading times while joining the game.
