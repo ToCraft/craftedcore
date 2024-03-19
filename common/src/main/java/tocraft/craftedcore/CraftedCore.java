@@ -1,6 +1,7 @@
 package tocraft.craftedcore;
 
 import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -24,11 +25,7 @@ public class CraftedCore {
         PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
 
         // check for new version
-        try {
-            VersionChecker.registerMavenChecker(MODID, new URL(MAVEN_URL), new TextComponent("CraftedCore"));
-        } catch (MalformedURLException e) {
-            CraftedCore.LOGGER.error("Failed to register the version checker", e);
-        }
+        VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", MODID, new TextComponent("CraftedCore"));
     }
 
     public static ResourceLocation id(String name) {
