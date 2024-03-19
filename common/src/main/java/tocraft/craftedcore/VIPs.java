@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class VIPs {
-    public static final String patreonURL = "https://tocraft.dev/patreons.txt";
+    public static final String patreonURL = "https://tocraft.github.io/patreons.txt";
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
 
     public static List<UUID> getCachedPatreons() {
