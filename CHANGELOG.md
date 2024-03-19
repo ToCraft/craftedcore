@@ -1,3 +1,8 @@
+craftedcore 3.2
+================
+- add new version checker option to check for new tags & releases on GitHub
+- Patreons are now on a github.io-Page
+
 craftedcore 3.1.2
 ================
 - fix crash on Legacy Forge
