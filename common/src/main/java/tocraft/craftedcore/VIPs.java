@@ -17,6 +17,14 @@ import java.util.UUID;
 public class VIPs {
     public static final String patreonURL = "https://tocraft.github.io/patreons.txt";
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
+    private static final List<UUID> LOCAL_PATREONS = new ArrayList<>() {
+        {
+            add(UUID.fromString("74b6d9b3-c8c1-40db-ab82-ccc290d1aa03"));
+            add(UUID.fromString("d4a50582-c44e-4a0d-ab0c-9711e2cf4b29"));
+            add(UUID.fromString("ccddb138-0b29-493f-9d27-0f51ed3a0578"));
+            add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
+        }
+    };
 
     public static List<UUID> getCachedPatreons() {
         return CACHED_PATREONS;
@@ -25,6 +33,7 @@ public class VIPs {
     public static List<UUID> cachePatreons() {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
+            CACHED_PATREONS.addAll(LOCAL_PATREONS);
         }
         return CACHED_PATREONS;
     }
@@ -33,7 +42,7 @@ public class VIPs {
         try {
             return getUUIDOfPeople(new URL(patreonURL));
         } catch (MalformedURLException e) {
-            throwError(e);
+            CraftedCore.LOGGER.error("Wrong patreon url: " + patreonURL, e);
             return new ArrayList<>();
         }
     }
@@ -48,17 +57,12 @@ public class VIPs {
             }
             updateReader.close();
         } catch (IOException e) {
-            throwError(e);
+            CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
         }
         if (Platform.getEnvironment() == Env.CLIENT && people.contains(Minecraft.getInstance().getUser().getProfileId())) {
             CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");
         }
 
         return people;
-    }
-
-    private static void throwError(IOException e) {
-        CraftedCore.LOGGER.error("Couldn't get all patreons from " + patreonURL);
-        CraftedCore.LOGGER.error(e.getLocalizedMessage());
     }
 }

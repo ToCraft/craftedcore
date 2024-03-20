@@ -1,3 +1,10 @@
+craftedcore 3.2.1
+================
+- version checker for maven meta data xml files is now updated & improved
+- small improvements to the player data saving system
+- better logging while config handling
+- add local patreons list
+
 craftedcore 3.2
 ================
 - add new version checker option to check for new tags & releases on GitHub
