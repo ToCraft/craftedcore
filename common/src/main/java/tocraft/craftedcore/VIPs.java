@@ -17,6 +17,14 @@ import java.util.UUID;
 public class VIPs {
     public static final String patreonURL = "https://tocraft.github.io/patreons.txt";
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
+    private static final List<UUID> LOCAL_PATREONS = new ArrayList<>() {
+        {
+            add(UUID.fromString("74b6d9b3-c8c1-40db-ab82-ccc290d1aa03"));
+            add(UUID.fromString("d4a50582-c44e-4a0d-ab0c-9711e2cf4b29"));
+            add(UUID.fromString("ccddb138-0b29-493f-9d27-0f51ed3a0578"));
+            add(UUID.fromString("1f63e38e-4059-4a4f-b7c4-0fac4a48e744"));
+        }
+    };
 
     public static List<UUID> getCachedPatreons() {
         return CACHED_PATREONS;
@@ -25,6 +33,7 @@ public class VIPs {
     public static List<UUID> cachePatreons() {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
+            CACHED_PATREONS.addAll(LOCAL_PATREONS);
         }
         return CACHED_PATREONS;
     }
