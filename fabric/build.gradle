@@ -6,4 +6,10 @@ apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/fabric.
 
 dependencies {
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+
+    // use latest apache http client 5
+    include 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    include 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    include 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    include 'org.slf4j:slf4j-api:2.0.12'
 }
