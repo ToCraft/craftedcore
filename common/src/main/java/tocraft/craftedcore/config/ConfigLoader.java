@@ -50,7 +50,7 @@ public class ConfigLoader {
                                     Object preSyncValue = field.get(config);
                                     field.set(potentiallySynced, preSyncValue);
                                 } catch (IllegalAccessException e) {
-                                    e.printStackTrace();
+                                    CraftedCore.LOGGER.error("Failed reverting modifications on config " + config.getClass().getSimpleName(), e);
                                 }
                             }
                         }
@@ -88,7 +88,7 @@ public class ConfigLoader {
                 return newConfig;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            CraftedCore.LOGGER.error("Failed reading config " + configName, e);
         }
         return null;
     }
@@ -101,7 +101,7 @@ public class ConfigLoader {
 
             Files.writeString(file, GSON.toJson(config));
         } catch (IOException e) {
-            e.printStackTrace();
+            CraftedCore.LOGGER.error("Failed saving config at " + file, e);
         }
     }
 
@@ -142,13 +142,15 @@ public class ConfigLoader {
 
         CompoundTag tag = packet.readNbt();
 
-        if (tag.contains("configs")) {
+        if (tag != null && tag.contains("configs")) {
             ListTag list = (ListTag) tag.get("configs");
 
-            for (Tag compound : list) {
-                handleConfigTag((CompoundTag) compound);
+            if (list != null) {
+                for (Tag compound : list) {
+                    handleConfigTag((CompoundTag) compound);
+                }
             }
-        } else if (tag.contains("ConfigName")) {
+        } else if (tag != null && tag.contains("ConfigName")) {
             handleConfigTag(tag);
         } else {
             CraftedCore.LOGGER.error("Failed to handle Config Sync Package.");
@@ -178,7 +180,7 @@ public class ConfigLoader {
                             Object serverValue = field.get(serverConfig);
                             field.set(config, serverValue);
                         } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            CraftedCore.LOGGER.error("Failed modifying on config " + config.getClass().getSimpleName(), e);
                         }
                     }
                 }

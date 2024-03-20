@@ -24,7 +24,7 @@ public class ServerPlayerMixin {
 
         for (String key : oldDataProvider.craftedcore$keySet()) {
             // is the entry persistent (will it be saved after death) ?
-            if (PlayerDataRegistry.isKeyPersistant(key)) {
+            if (PlayerDataRegistry.isKeyPersistent(key)) {
                 newDataProvider.craftedcore$writeTag(key, oldDataProvider.craftedcore$readTag(key));
             }
         }
