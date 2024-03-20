@@ -29,14 +29,14 @@ public class PlayerDataRegistry {
      * @param sync       should the tag be synchronized to the client?
      */
     public static void registerKey(String key, boolean persistent, boolean sync) {
-        CraftedTagKeys.put(key, new SimpleEntry<Boolean, Boolean>(persistent, sync));
+        CraftedTagKeys.put(key, new SimpleEntry<>(persistent, sync));
     }
 
     public static Set<String> keySet() {
         return CraftedTagKeys.keySet();
     }
 
-    public static boolean isKeyPersistant(String key) {
+    public static boolean isKeyPersistent(String key) {
         return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).getKey();
     }
 
