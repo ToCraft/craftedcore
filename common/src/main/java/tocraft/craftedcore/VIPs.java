@@ -33,7 +33,7 @@ public class VIPs {
         try {
             return getUUIDOfPeople(new URL(patreonURL));
         } catch (MalformedURLException e) {
-            throwError(e);
+            CraftedCore.LOGGER.error("Wrong patreon url: " + patreonURL, e);
             return new ArrayList<>();
         }
     }
@@ -48,17 +48,12 @@ public class VIPs {
             }
             updateReader.close();
         } catch (IOException e) {
-            throwError(e);
+            CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
         }
         if (Platform.getEnvironment() == Env.CLIENT && people.contains(Minecraft.getInstance().getUser().getProfileId())) {
             CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");
         }
 
         return people;
-    }
-
-    private static void throwError(IOException e) {
-        CraftedCore.LOGGER.error("Couldn't get all patreons from " + patreonURL);
-        CraftedCore.LOGGER.error(e.getLocalizedMessage());
     }
 }
