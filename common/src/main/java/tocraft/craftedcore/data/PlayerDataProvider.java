@@ -12,8 +12,4 @@ public interface PlayerDataProvider {
     Set<String> craftedcore$keySet();
 
     Tag craftedcore$readTag(String key);
-
-    CompoundTag readPlayerDataTagCompound(String key);
-
-    ListTag readPlayerDataTagList(String key);
 }
