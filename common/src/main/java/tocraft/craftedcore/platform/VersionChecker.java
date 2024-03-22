@@ -13,7 +13,6 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -139,7 +138,7 @@ public class VersionChecker {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
 
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
             CraftedCore.LOGGER.error("Caught an error while getting the newest " + (releasesInsteadOfTags ? "releases" : "tags") + " from " + url, e);
         }
 
