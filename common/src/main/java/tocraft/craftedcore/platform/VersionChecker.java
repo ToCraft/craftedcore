@@ -9,11 +9,12 @@ import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -45,8 +46,7 @@ public class VersionChecker {
 
                 if (CACHED_VERSION.containsKey(modid)) {
                     newestVersion = CACHED_VERSION.get(modid);
-                }
-                else {
+                } else {
                     List<String> remoteVersions = new ArrayList<>();
                     try {
                         // handle XML file
@@ -132,14 +132,14 @@ public class VersionChecker {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet request = new HttpGet(url);
             request.addHeader("Accept", "application/vnd.github.v3+json");
-            HttpResponse result = httpClient.execute(request);
+            CloseableHttpResponse result = httpClient.execute(request);
             String json = EntityUtils.toString(result.getEntity(), "UTF-8");
             JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
 
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             CraftedCore.LOGGER.error("Caught an error while getting the newest " + (releasesInsteadOfTags ? "releases" : "tags") + " from " + url, e);
         }
 
