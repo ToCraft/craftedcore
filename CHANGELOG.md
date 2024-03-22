@@ -1,5 +1,9 @@
 craftedcore 3.2.2
 ================
+- fix crash on neoforge & dev versions
+
+craftedcore 3.2.2
+================
 - merge to apache http client 5
 
 craftedcore 3.2.1
