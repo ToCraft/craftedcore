@@ -1,3 +1,7 @@
+craftedcore 3.2.2
+================
+- merge to apache http client 5
+
 craftedcore 3.2.1
 ================
 - version checker for maven meta data xml files is now updated & improved
