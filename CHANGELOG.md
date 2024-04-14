@@ -1,4 +1,8 @@
-craftedcore 3.2.2
+craftedcore 3.2.4
+================
+- fix "Invalid Player Data" on first world join with multiple mods
+
+craftedcore 3.2.3
 ================
 - fix crash on neoforge & dev versions
 

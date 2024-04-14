@@ -33,18 +33,18 @@ public class VIPs {
     public static List<UUID> cachePatreons() {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
-            CACHED_PATREONS.addAll(LOCAL_PATREONS);
         }
         return CACHED_PATREONS;
     }
 
     public static List<UUID> getPatreons() {
+        List<UUID> patreons = new ArrayList<>(LOCAL_PATREONS);
         try {
-            return getUUIDOfPeople(new URL(patreonURL));
+            patreons.addAll(getUUIDOfPeople(new URL(patreonURL)));
         } catch (MalformedURLException e) {
-            CraftedCore.LOGGER.error("Wrong patreon url: " + patreonURL, e);
-            return new ArrayList<>();
+            CraftedCore.LOGGER.error("Invalid patreon url: " + patreonURL, e);
         }
+        return patreons;
     }
 
     public static List<UUID> getUUIDOfPeople(URL url) {
