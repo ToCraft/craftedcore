@@ -128,9 +128,8 @@ public class ConfigLoader {
 
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
-        for (Config config : LOADED_CONFIGS.values()) {
-            list.add(getConfigSyncTag(config));
-        }
+        // forEach is required for some iteration stuff to prevent "CurrentModificationException"
+        LOADED_CONFIGS.values().forEach(config -> list.add(getConfigSyncTag(config)));
 
         tag.put("configs", list);
         packet.writeNbt(tag);
@@ -180,7 +179,7 @@ public class ConfigLoader {
                             Object serverValue = field.get(serverConfig);
                             field.set(config, serverValue);
                         } catch (IllegalAccessException e) {
-                            CraftedCore.LOGGER.error("Failed modifying on config " + config.getClass().getSimpleName(), e);
+                            CraftedCore.LOGGER.error("Failed modifying config " + config.getClass().getSimpleName(), e);
                         }
                     }
                 }
