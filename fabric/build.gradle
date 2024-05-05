@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/fabric.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/fabric.gradle"
 
 dependencies {
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"

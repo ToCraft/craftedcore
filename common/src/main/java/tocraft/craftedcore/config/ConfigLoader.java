@@ -5,11 +5,12 @@ import com.google.gson.GsonBuilder;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
-import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -26,14 +27,15 @@ import java.util.*;
 
 public class ConfigLoader {
     public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
+    private static final CustomPacketPayload.Type<PacketPayload> PACKET_TYPE = new CustomPacketPayload.Type<>(CONFIG_SYNC);
+    private static final StreamCodec<RegistryFriendlyByteBuf, PacketPayload> PACKET_CODEC = CustomPacketPayload.codec(PacketPayload::write, PacketPayload::new);
     private static final Map<String, Config> LOADED_CONFIGS = new HashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
 
     public static void registerConfigSyncHandler() {
-
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, PACKET_TYPE, PACKET_CODEC, ConfigLoader::handleConfigSyncPackage);
 
         // unload configs and load local ones
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
@@ -124,22 +126,19 @@ public class ConfigLoader {
     }
 
     public static void sendConfigSyncPackages(ServerPlayer target) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         // forEach is required for some iteration stuff to prevent "CurrentModificationException"
         LOADED_CONFIGS.values().forEach(config -> list.add(getConfigSyncTag(config)));
 
         tag.put("configs", list);
-        packet.writeNbt(tag);
-        if (!list.isEmpty()) NetworkManager.sendToPlayer(target, CONFIG_SYNC, packet);
+        if (!list.isEmpty()) NetworkManager.sendToPlayer(target, new PacketPayload(tag));
     }
 
-    private static void handleConfigSyncPackage(FriendlyByteBuf packet, NetworkManager.PacketContext contex) {
+    private static void handleConfigSyncPackage(PacketPayload packet, NetworkManager.PacketContext contex) {
         CLIENT_CONFIGS.clear();
 
-        CompoundTag tag = packet.readNbt();
+        CompoundTag tag = packet.nbt();
 
         if (tag != null && tag.contains("configs")) {
             ListTag list = (ListTag) tag.get("configs");
@@ -189,6 +188,7 @@ public class ConfigLoader {
         }
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public static Config getConfigByName(String configName) {
         return LOADED_CONFIGS.get(configName);
@@ -205,5 +205,20 @@ public class ConfigLoader {
 
     public static <C extends Config> List<String> getConfigNames(C config) {
         return LOADED_CONFIGS.entrySet().stream().filter(entry -> entry.getValue().equals(config)).map(Map.Entry::getKey).toList();
+    }
+
+    public record PacketPayload(CompoundTag nbt) implements CustomPacketPayload {
+        public PacketPayload(RegistryFriendlyByteBuf buf) {
+            this(buf.readNbt());
+        }
+
+        public void write(RegistryFriendlyByteBuf buf) {
+            buf.writeNbt(nbt);
+        }
+
+        @Override
+        public @NotNull Type<? extends CustomPacketPayload> type() {
+            return PACKET_TYPE;
+        }
     }
 }

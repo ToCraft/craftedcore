@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/common.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/common.gradle"
 
 dependencies {
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
