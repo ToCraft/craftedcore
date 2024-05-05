@@ -1,9 +1,9 @@
 package tocraft.craftedcore.config;
 
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.network.ModernNetworking;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +28,7 @@ public interface Config {
     }
 
     default void sendToPlayer(ServerPlayer target) {
-        NetworkManager.sendToPlayer(target, new ConfigLoader.PacketPayload(ConfigLoader.getConfigSyncTag(this)));
+        ModernNetworking.sendToPlayer(target, ConfigLoader.CONFIG_SYNC, ConfigLoader.getConfigSyncTag(this));
     }
 
     default void sendToAllPlayers(ServerLevel serverLevel) {

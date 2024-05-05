@@ -1,6 +1,7 @@
 craftedcore 3.3
 ================
 - add SynchronizedJsonReloadListener
+- implement new custom networking
 
 craftedcore 3.2.4
 ================
