@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.config.annotions.Synchronize;
+import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class ConfigLoader {
         ModernNetworking.registerReceiver(NetworkManager.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
 
         // unload configs and load local ones
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
+        ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> {
             for (Config config : ConfigLoader.CLIENT_CONFIGS) {
                 for (Config potentiallySynced : ConfigLoader.LOADED_CONFIGS.values()) {
                     if (config.getClass().getSimpleName().equals(potentiallySynced.getClass().getSimpleName())) {

@@ -1,12 +1,13 @@
 package tocraft.craftedcore.event;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public class Event<T> {
     private final Function<List<T>, T> invoker;
-    private List<T> handlers;
+    private final List<T> handlers = new ArrayList<>();
 
     protected Event(Function<List<T>, T> invoker) {
         this.invoker = invoker;
