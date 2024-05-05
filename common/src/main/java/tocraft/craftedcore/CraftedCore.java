@@ -1,11 +1,11 @@
 package tocraft.craftedcore;
 
-import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
@@ -18,10 +18,10 @@ public class CraftedCore {
         new Thread(VIPs::cachePatreons).start();
 
         // send configurations to client
-        PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
+        PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
 
         // sync data pack packets on player join
-        PlayerEvent.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
+        PlayerEvents.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
 
         // check for new version
         VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "craftedcore", Component.literal("CraftedCore"));
