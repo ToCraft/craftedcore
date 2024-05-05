@@ -1,7 +1,5 @@
 package tocraft.craftedcore.data;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
 import java.util.Set;

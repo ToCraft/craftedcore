@@ -21,7 +21,6 @@ import tocraft.craftedcore.CraftedCoreConfig;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.IOException;
 import java.lang.module.ModuleDescriptor.Version;
 import java.net.URL;
 import java.util.ArrayList;

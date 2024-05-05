@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.platform.VersionChecker;
+import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 public class CraftedCore {
     public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
@@ -18,6 +19,9 @@ public class CraftedCore {
 
         // send configurations to client
         PlayerEvent.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
+
+        // sync data pack packets on player join
+        PlayerEvent.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
 
         // check for new version
         VersionChecker.registerDefaultGitHubChecker(MODID, "ToCraft", "craftedcore", Component.literal("CraftedCore"));
