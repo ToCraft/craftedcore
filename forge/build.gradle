@@ -7,7 +7,7 @@ loom {
 }
 
 dependencies {
-    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
+    modApi "dev.architectury:architectury-forge:11.1.17"
     include(implementation('org.apache.httpcomponents.client5:httpclient5:5.3.1'))
     include(implementation('org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'))
     include(implementation('org.apache.httpcomponents.core5:httpcore5:5.2.4'))

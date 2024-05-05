@@ -4,6 +4,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
 
 @SuppressWarnings("unused")
 @Mod(CraftedCore.MODID)

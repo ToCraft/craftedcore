@@ -1,14 +1,13 @@
 package tocraft.craftedcore.event.client;
 
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.client.player.AbstractClientPlayer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.server.level.ServerPlayer;
 import tocraft.craftedcore.event.Event;
 import tocraft.craftedcore.event.EventFactory;
 
 @SuppressWarnings("unused")
+@Environment(EnvType.CLIENT)
 public class ClientPlayerEvents {
     public static final Event<ClientPlayerJoin> CLIENT_PLAYER_JOIN = EventFactory.createWithVoid();
     public static final Event<ClientPlayerQuit> CLIENT_PLAYER_QUIT = EventFactory.createWithVoid();
