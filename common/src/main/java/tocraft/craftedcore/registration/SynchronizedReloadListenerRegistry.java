@@ -1,14 +1,14 @@
 package tocraft.craftedcore.registration;
 
 import dev.architectury.platform.Platform;
-import dev.architectury.registry.ReloadListenerRegistry;
 import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SynchronizedReloadListenerRegistry {
@@ -19,14 +19,16 @@ public class SynchronizedReloadListenerRegistry {
      */
     @SuppressWarnings("unused")
     public static void register(SynchronizedJsonReloadListener reloadListener, ResourceLocation id) {
-
-        ReloadListenerRegistry.register(PackType.SERVER_DATA, reloadListener, id);
         listener.put(id, reloadListener);
 
         // Register Data Packet receiver
         if (Platform.getEnv() == EnvType.CLIENT) {
             reloadListener.registerPacketReceiver();
         }
+    }
+
+    public static List<SynchronizedJsonReloadListener> getAllListener() {
+        return new ArrayList<>(listener.values());
     }
 
     @SuppressWarnings("unused")
