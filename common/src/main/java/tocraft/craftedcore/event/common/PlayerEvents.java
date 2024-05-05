@@ -33,11 +33,11 @@ public class PlayerEvents {
 
     @FunctionalInterface
     public interface AwardAdvancement {
-        void award(AdvancementHolder advancement, String criterionKey);
+        void award(ServerPlayer player, AdvancementHolder advancement, String criterionKey);
     }
 
     @FunctionalInterface
     public interface RevokeAdvancement {
-        void revoke(AdvancementHolder advancement, String criterionKey);
+        void revoke(ServerPlayer player, AdvancementHolder advancement, String criterionKey);
     }
 }

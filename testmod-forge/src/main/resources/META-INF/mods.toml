@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+#issueTrackerURL = ""
+license = "LGPL-3.0"
+
+[[mods]]
+modId = "testmod"
+version = "N/A"
+displayName = "TestMod"
+authors = "To_Craft"
+description = '''
+Mod to test CraftedCore
+'''
+#logoFile = ""
+
+[[dependencies.testmod]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.testmod]]
+modId = "architectury"
+mandatory = true
+versionRange = "[1,)"
+ordering = "AFTER"
+side = "BOTH"

@@ -1,0 +1,13 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+dependencies {
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
+
+    implementation project(path: ":common", configuration: "namedElements")
+
+    // use latest apache http client 5
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+}
