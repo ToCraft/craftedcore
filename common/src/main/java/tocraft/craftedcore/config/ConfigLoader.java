@@ -2,9 +2,7 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.platform.Platform;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -16,6 +14,7 @@ import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.config.annotions.Synchronize;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -32,7 +31,7 @@ public class ConfigLoader {
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
 
     public static void registerConfigSyncHandler() {
-        ModernNetworking.registerReceiver(NetworkManager.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
 
         // unload configs and load local ones
         ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> {
@@ -191,7 +190,7 @@ public class ConfigLoader {
 
     @NotNull
     public static Path getConfigPath(String configName) {
-        return Paths.get(Platform.getConfigFolder().toString(), configName + ".json");
+        return Paths.get(PlatformData.getConfigPath().toString(), configName + ".json");
     }
 
     public static <C extends Config> void writeConfigFile(C config) {

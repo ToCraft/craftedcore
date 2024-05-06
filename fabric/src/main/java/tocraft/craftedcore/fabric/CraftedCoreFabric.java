@@ -1,6 +1,5 @@
 package tocraft.craftedcore.fabric;
 
-import dev.architectury.registry.client.keymappings.fabric.KeyMappingRegistryImpl;
 import net.fabricmc.api.ModInitializer;
 import tocraft.craftedcore.CraftedCore;
 

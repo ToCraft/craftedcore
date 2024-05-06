@@ -1,7 +1,6 @@
 package tocraft.craftedcore.testmod;
 
 import com.mojang.logging.LogUtils;
-import dev.architectury.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionResult;
@@ -10,6 +9,7 @@ import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.Objects;
 
@@ -30,7 +30,7 @@ public class TestMod {
             return InteractionResult.PASS;
         });
 
-        if (Platform.getEnv() == EnvType.CLIENT) {
+        if (PlatformData.getEnv() == EnvType.CLIENT) {
             TestModClient.initialize();
         }
     }

@@ -1,6 +1,5 @@
 package tocraft.craftedcore.data;
 
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -16,7 +15,7 @@ public class PlayerDataSynchronizer {
     private static final ResourceLocation PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
 
     public static void registerPacketHandler() {
-        ModernNetworking.registerReceiver(NetworkManager.Side.S2C, PLAYER_DATA_SYNC_ID, (tag, context) -> {
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, PLAYER_DATA_SYNC_ID, (tag, context) -> {
             if (tag != null) {
                 ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
                 if (list != null) {

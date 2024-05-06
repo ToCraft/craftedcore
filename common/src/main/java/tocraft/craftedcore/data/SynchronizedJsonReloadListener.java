@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +14,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,13 +62,13 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
                 this.map.put(new ResourceLocation(key), JsonParser.parseString(compound.getString(key)));
             }
         }
-        if (Platform.getEnv() == EnvType.CLIENT) {
+        if (PlatformData.getEnv() == EnvType.CLIENT) {
             this.onApply(map);
         }
     }
 
     @Environment(EnvType.CLIENT)
     public void registerPacketReceiver() {
-        ModernNetworking.registerReceiver(NetworkManager.Side.S2C, RELOAD_SYNC, this::onPacketReceive);
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, RELOAD_SYNC, this::onPacketReceive);
     }
 }

@@ -1,6 +1,5 @@
 package tocraft.craftedcore.client;
 
-import dev.architectury.event.events.client.ClientPlayerEvent;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.ArchitecturyImpl;

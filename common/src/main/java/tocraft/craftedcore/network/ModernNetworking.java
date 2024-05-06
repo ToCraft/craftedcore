@@ -17,9 +17,9 @@ import java.util.Map;
 public final class ModernNetworking {
     private static final Map<ResourceLocation, CustomPacketPayload.Type<PacketPayload>> TYPES = new HashMap<>();
 
-    public static void registerReceiver(NetworkManager.Side side, ResourceLocation id, Receiver receiver) {
+    public static void registerReceiver(Side side, ResourceLocation id, Receiver receiver) {
         TYPES.put(id, new CustomPacketPayload.Type<>(id));
-        NetworkManager.registerReceiver(side, TYPES.get(id), CustomPacketPayload.codec(PacketPayload::write, PacketPayload::new), (packet, context) -> receiver.receive(packet.nbt(), context));
+        NetworkManager.registerReceiver(side == Side.C2S ? NetworkManager.Side.C2S : NetworkManager.Side.S2C, TYPES.get(id), CustomPacketPayload.codec(PacketPayload::write, PacketPayload::new), (packet, context) -> receiver.receive(packet.nbt(), context));
     }
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
@@ -40,6 +40,10 @@ public final class ModernNetworking {
     @FunctionalInterface
     public interface Receiver {
         void receive(CompoundTag data, NetworkManager.PacketContext context);
+    }
+
+    public enum Side {
+        S2C, C2S
     }
 
     private record PacketPayload(ResourceLocation id,
