@@ -4,8 +4,11 @@ import com.mojang.logging.LogUtils;
 import dev.architectury.platform.Platform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
+import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 
 import java.util.Objects;
@@ -33,6 +36,8 @@ public class TestMod {
             ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(player -> LOGGER.info("client player " + (player != null ? Objects.requireNonNull(player.getDisplayName()).getString() : "") + " joined."));
             ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> LOGGER.info("client player " + (player != null ? Objects.requireNonNull(player.getDisplayName()).getString() : "") + " quit."));
             ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.info((newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "") + " respawned and was previously named " + (oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : "")));
+
+            RenderEvents.RENDER_MOUNT_HEALTH.register(player -> InteractionResult.FAIL);
         }
     }
 }

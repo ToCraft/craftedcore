@@ -12,7 +12,8 @@
   "license": "LGPL-3.0",
   "environment": "*",
   "mixins": [
-    "craftedcore.mixins.json"
+    "craftedcore.mixins.json",
+    "craftedcore-fabric.mixins.json"
   ],
   "entrypoints": {
     "main": [

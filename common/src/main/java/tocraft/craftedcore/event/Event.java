@@ -1,5 +1,7 @@
 package tocraft.craftedcore.event;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -9,6 +11,7 @@ public class Event<T> {
     private final Function<List<T>, T> invoker;
     private final List<T> handlers = new ArrayList<>();
 
+    @ApiStatus.Internal
     protected Event(Function<List<T>, T> invoker) {
         this.invoker = invoker;
     }

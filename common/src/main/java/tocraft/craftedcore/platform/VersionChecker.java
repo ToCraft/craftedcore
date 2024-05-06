@@ -10,7 +10,6 @@ import net.minecraft.util.GsonHelper;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -130,8 +129,7 @@ public class VersionChecker {
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet request = new HttpGet(url);
             request.addHeader("Accept", "application/vnd.github.v3+json");
-            ClassicHttpResponse result = httpClient.execute(request, response -> response);
-            String json = EntityUtils.toString(result.getEntity(), "UTF-8");
+            String json = httpClient.execute(request, response -> EntityUtils.toString(response.getEntity(), "UTF-8"));
             JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());

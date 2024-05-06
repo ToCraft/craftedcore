@@ -40,10 +40,10 @@ public final class EventFactory {
      * @param <T>   a functional interface used for invocation
      * @return the created event you can use for invocation
      */
-    @Contract(value = "_ -> new", pure = true)
     @SuppressWarnings({"unchecked"})
+    @Contract(value = "_ -> new", pure = true)
     public static <T> @NotNull Event<T> createWithInteractionResult(Class<T> clazz) {
-        return new Event<>(listeners -> (T) Proxy.newProxyInstance(dev.architectury.event.EventFactory.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
+        return new Event<>(listeners -> (T) Proxy.newProxyInstance(EventFactory.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
             for (T listener : listeners) {
                 Object result = MethodHandles.lookup().unreflect(method)
                         .bindTo(listener).invokeWithArguments(args);
@@ -72,10 +72,10 @@ public final class EventFactory {
      * @param <T>   a functional interface used for invocation
      * @return the created event you can use for invocation
      */
+    @SuppressWarnings({"unchecked", "SuspiciousInvocationHandlerImplementation"})
     @Contract(value = "_ -> new", pure = true)
-    @SuppressWarnings({"SuspiciousInvocationHandlerImplementation", "unchecked"})
     public static <T> @NotNull Event<T> createWithVoid(Class<T> clazz) {
-        return new Event<>(listeners -> (T) Proxy.newProxyInstance(dev.architectury.event.EventFactory.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
+        return new Event<>(listeners -> (T) Proxy.newProxyInstance(EventFactory.class.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
             for (T listener : listeners) {
                 MethodHandles.lookup().unreflect(method)
                         .bindTo(listener).invokeWithArguments(args);
