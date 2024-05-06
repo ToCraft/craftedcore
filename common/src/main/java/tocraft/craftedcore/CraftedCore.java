@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.event.ArchitecturyImpl;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
@@ -17,6 +18,9 @@ public class CraftedCore {
     public void initialize() {
         // initialize mixin extras
         MixinExtrasBootstrap.init();
+
+        ArchitecturyImpl.initialize();
+
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();
 

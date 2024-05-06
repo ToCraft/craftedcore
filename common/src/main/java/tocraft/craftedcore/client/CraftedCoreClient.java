@@ -3,6 +3,7 @@ package tocraft.craftedcore.client;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
+import tocraft.craftedcore.event.ArchitecturyImpl;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 
@@ -13,6 +14,8 @@ public class CraftedCoreClient {
     private static final Set<ApplicablePacket> SYNC_PACKET_QUEUE = new HashSet<>();
 
     public void initialize() {
+        ArchitecturyImpl.clientInitialize();
+
         ConfigLoader.registerConfigSyncHandler();
         PlayerDataSynchronizer.registerPacketHandler();
 
