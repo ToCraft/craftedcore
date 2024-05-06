@@ -1,5 +1,6 @@
 package tocraft.craftedcore;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ public class CraftedCore {
     public static final String MODID = "craftedcore";
 
     public void initialize() {
+        // initialize mixin extras
+        MixinExtrasBootstrap.init();
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();
 
