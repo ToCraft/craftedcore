@@ -2,7 +2,6 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.architectury.networking.NetworkManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -131,7 +130,7 @@ public class ConfigLoader {
         if (!list.isEmpty()) ModernNetworking.sendToPlayer(target, CONFIG_SYNC, tag);
     }
 
-    private static void handleConfigSyncPackage(CompoundTag tag, NetworkManager.PacketContext contex) {
+    private static void handleConfigSyncPackage(ModernNetworking.Context context, CompoundTag tag) {
         CLIENT_CONFIGS.clear();
 
         if (tag != null && tag.contains("configs")) {

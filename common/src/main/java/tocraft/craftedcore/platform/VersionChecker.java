@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import dev.architectury.platform.Platform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -65,7 +64,7 @@ public class VersionChecker {
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 }
-                if (newestVersion.compareTo(localVersion) > 0) {
+                if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
                     CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
                     player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
                 }
@@ -83,7 +82,7 @@ public class VersionChecker {
         PlayerEvents.PLAYER_JOIN.register(player -> new Thread(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
-                Version localVersion = Version.parse(Platform.getMod(modid).getVersion());
+                Version localVersion = PlatformData.getModVersion(modid);
                 Version newestVersion = localVersion;
 
                 if (!CACHED_VERSION.containsKey(modid)) {
@@ -97,7 +96,7 @@ public class VersionChecker {
                     newestVersion = CACHED_VERSION.get(modid);
                 }
 
-                if (newestVersion.compareTo(localVersion) > 0) {
+                if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
                     CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
                     player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
                 }
@@ -165,7 +164,7 @@ public class VersionChecker {
         PlayerEvents.PLAYER_JOIN.register(player -> new Thread(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
-                Version localVersion = Version.parse(Platform.getMod(modid).getVersion());
+                Version localVersion = PlatformData.getModVersion(modid);
                 Version newestVersion = localVersion;
 
                 if (!CACHED_VERSION.containsKey(modid)) {
@@ -180,7 +179,7 @@ public class VersionChecker {
                     newestVersion = CACHED_VERSION.get(modid);
                 }
 
-                if (newestVersion.compareTo(localVersion) > 0) {
+                if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
                     CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
                     player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
                 }

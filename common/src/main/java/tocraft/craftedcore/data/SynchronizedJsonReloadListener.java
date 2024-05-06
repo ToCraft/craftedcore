@@ -3,7 +3,6 @@ package tocraft.craftedcore.data;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import dev.architectury.networking.NetworkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -55,7 +54,7 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
     }
 
     @Environment(EnvType.CLIENT)
-    private void onPacketReceive(CompoundTag compound, NetworkManager.PacketContext context) {
+    private void onPacketReceive(ModernNetworking.Context context, CompoundTag compound) {
         this.map.clear();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {

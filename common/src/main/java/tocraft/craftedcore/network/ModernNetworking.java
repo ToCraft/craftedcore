@@ -8,6 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -19,7 +20,22 @@ public final class ModernNetworking {
 
     public static void registerReceiver(Side side, ResourceLocation id, Receiver receiver) {
         TYPES.put(id, new CustomPacketPayload.Type<>(id));
-        NetworkManager.registerReceiver(side == Side.C2S ? NetworkManager.Side.C2S : NetworkManager.Side.S2C, TYPES.get(id), CustomPacketPayload.codec(PacketPayload::write, PacketPayload::new), (packet, context) -> receiver.receive(packet.nbt(), context));
+        NetworkManager.registerReceiver(side == Side.C2S ? NetworkManager.Side.C2S : NetworkManager.Side.S2C, TYPES.get(id), CustomPacketPayload.codec(PacketPayload::write, PacketPayload::new), (packet, context) -> receiver.receive(new Context() {
+            @Override
+            public Player getPlayer() {
+                return context.getPlayer();
+            }
+
+            @Override
+            public EnvType getEnv() {
+                return context.getEnv();
+            }
+
+            @Override
+            public void queue(Runnable runnable) {
+                context.queue(runnable);
+            }
+        }, packet.nbt()));
     }
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
@@ -39,7 +55,15 @@ public final class ModernNetworking {
 
     @FunctionalInterface
     public interface Receiver {
-        void receive(CompoundTag data, NetworkManager.PacketContext context);
+        void receive(Context context, CompoundTag data);
+    }
+
+    public interface Context {
+        Player getPlayer();
+
+        EnvType getEnv();
+
+        void queue(Runnable runnable);
     }
 
     public enum Side {
