@@ -4,6 +4,7 @@
   "package": "tocraft.craftedcore.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "LivingDeathMixin"
   ],
   "client": [
     "client.GuiMixin"
