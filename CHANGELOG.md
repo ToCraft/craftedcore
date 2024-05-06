@@ -2,6 +2,8 @@ craftedcore 3.3
 ================
 - add SynchronizedJsonReloadListener
 - implement new custom networking
+- create custom Event system
+- add VersionChecker for Modrinth API
 
 craftedcore 3.2.4
 ================

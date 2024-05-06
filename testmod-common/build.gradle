@@ -1,6 +1,7 @@
 architectury {
     common(rootProject.enabled_platforms.split("," as String))
 }
+
 dependencies {
     implementation project(path: ":common", configuration: "namedElements")
 

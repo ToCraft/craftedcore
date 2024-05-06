@@ -43,6 +43,8 @@ public class TestMod {
             ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.info((newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "") + " respawned and was previously named " + (oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : "")));
 
             RenderEvents.RENDER_MOUNT_HEALTH.register((player, graphics) -> InteractionResult.FAIL);
+
+            RenderEvents.HUD_RENDERING.register((graphics, tickDelta) -> LOGGER.info("Rendering HUD..."));
         }
     }
 }

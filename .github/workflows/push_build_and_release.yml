@@ -54,6 +54,7 @@ jobs:
             !**/*-dev.jar
             !**/*-shadow.jar
             !**/*-transformProduction*.jar
+            !**/testmod*/
   release:
     name: "Release"
     needs: build
