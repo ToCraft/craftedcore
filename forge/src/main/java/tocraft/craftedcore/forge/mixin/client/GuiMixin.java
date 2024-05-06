@@ -23,7 +23,7 @@ public abstract class GuiMixin {
 
     @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
     private boolean shouldRenderBreath(boolean isEyeInFluid) {
-        InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(this.getCameraPlayer());
+        InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(null, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
             return false;
         } else {
@@ -33,7 +33,7 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderHearts", at = @At(value = "HEAD"), cancellable = true)
     private void shouldRenderHealth(GuiGraphics guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(player, guiGraphics);
+        InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(guiGraphics, null);
         if (result == InteractionResult.FAIL) {
             ci.cancel();
         }
@@ -41,7 +41,7 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
     private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(this.getCameraPlayer(), guiGraphics);
+        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
         if (result == InteractionResult.FAIL) {
             ci.cancel();
         }
@@ -49,7 +49,7 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderVehicleHealth", at = @At(value = "HEAD"), cancellable = true)
     private void shouldRenderMountHealth(GuiGraphics guiGraphics, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(this.getCameraPlayer(), guiGraphics);
+        InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(guiGraphics, null);
         if (result == InteractionResult.FAIL) {
             ci.cancel();
         }

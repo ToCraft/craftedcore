@@ -17,10 +17,9 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:${gradle.rootProject.architectury.minecraft}-${rootProject.forge_version}"
 
-    implementation project(path: ":neoforge", configuration: "namedElements")
+    implementation project(path: ":forge", configuration: "namedElements")
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
-    common(project(path: ":forge", configuration: "namedElements")) { transitive false }
 
     // mixin extras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))

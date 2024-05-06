@@ -21,25 +21,25 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     public void event(RenderGuiLayerEvent.Pre event) {
         switch (event.getName().getPath()) {
             case "player_health" -> {
-                InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(Minecraft.getInstance().player, event.getGuiGraphics());
+                InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
                 if (result == InteractionResult.FAIL) {
                     event.setCanceled(true);
                 }
             }
             case "food_level" -> {
-                InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(Minecraft.getInstance().player, event.getGuiGraphics());
+                InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
                 if (result == InteractionResult.FAIL) {
                     event.setCanceled(true);
                 }
             }
             case "air_level" -> {
-                InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(Minecraft.getInstance().player);
+                InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
                 if (result == InteractionResult.FAIL) {
                     event.setCanceled(true);
                 }
             }
             case "vehicle_health" -> {
-                InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(Minecraft.getInstance().player, event.getGuiGraphics());
+                InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
                 if (result == InteractionResult.FAIL) {
                     event.setCanceled(true);
                 }

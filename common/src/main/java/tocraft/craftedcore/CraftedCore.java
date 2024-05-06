@@ -31,7 +31,7 @@ public class CraftedCore {
         PlayerEvents.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
 
         // check for new version
-        VersionChecker.registerModrinthChecker(MODID, "woodwalkers", Component.literal("CraftedCore"));
+        VersionChecker.registerModrinthChecker(MODID, "crafted-core", Component.literal("CraftedCore"));
     }
 
     public static ResourceLocation id(String name) {
