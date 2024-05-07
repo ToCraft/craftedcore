@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class PlayerDataRegistry {
     private static final Map<String, Map.Entry<Boolean, Boolean>> CraftedTagKeys = new HashMap<String, Map.Entry<Boolean, Boolean>>();
 

@@ -1,8 +1,8 @@
 package tocraft.craftedcore;
 
-import dev.architectury.platform.Platform;
-import dev.architectury.utils.Env;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class VIPs {
         } catch (IOException e) {
             CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
         }
-        if (Platform.getEnvironment() == Env.CLIENT && people.contains(Minecraft.getInstance().getUser().getProfileId())) {
+        if (PlatformData.getEnv() == EnvType.CLIENT && people.contains(Minecraft.getInstance().getUser().getProfileId())) {
             CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");
         }
 
