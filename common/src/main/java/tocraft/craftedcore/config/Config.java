@@ -1,11 +1,9 @@
 package tocraft.craftedcore.config;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.network.ModernNetworking;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -30,10 +28,7 @@ public interface Config {
     }
 
     default void sendToPlayer(ServerPlayer target) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-
-        packet.writeNbt(ConfigLoader.getConfigSyncTag(this));
-        NetworkManager.sendToPlayer(target, ConfigLoader.CONFIG_SYNC, packet);
+        ModernNetworking.sendToPlayer(target, ConfigLoader.CONFIG_SYNC, ConfigLoader.getConfigSyncTag(this));
     }
 
     default void sendToAllPlayers(ServerLevel serverLevel) {

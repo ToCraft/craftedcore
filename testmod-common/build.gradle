@@ -1,0 +1,14 @@
+architectury {
+    common(rootProject.enabled_platforms.split("," as String))
+}
+
+dependencies {
+    implementation project(path: ":common", configuration: "namedElements")
+
+    // mixin extras
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))
+    // use latest apache http client 5
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+}
