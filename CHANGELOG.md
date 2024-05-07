@@ -1,4 +1,4 @@
-craftedcore 3.3
+craftedcore 4.0
 ================
 - add SynchronizedJsonReloadListener
 - implement new custom networking
