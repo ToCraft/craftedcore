@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "tocraft.craftedcore.fabric.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "LivingDeathMixin"
+  ],
+  "client": [
+    "client.GuiMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -2,20 +2,18 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.networking.NetworkManager;
-import dev.architectury.platform.Platform;
-import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.config.annotions.Synchronize;
+import tocraft.craftedcore.event.client.ClientPlayerEvents;
+import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -33,10 +31,10 @@ public class ConfigLoader {
 
     public static void registerConfigSyncHandler() {
 
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
 
         // unload configs and load local ones
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
+        ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> {
             for (Config config : ConfigLoader.CLIENT_CONFIGS) {
                 for (Config potentiallySynced : ConfigLoader.LOADED_CONFIGS.values()) {
                     if (config.getClass().getSimpleName().equals(potentiallySynced.getClass().getSimpleName())) {
@@ -124,22 +122,17 @@ public class ConfigLoader {
     }
 
     public static void sendConfigSyncPackages(ServerPlayer target) {
-        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
         // forEach is required for some iteration stuff to prevent "CurrentModificationException"
         LOADED_CONFIGS.values().forEach(config -> list.add(getConfigSyncTag(config)));
 
         tag.put("configs", list);
-        packet.writeNbt(tag);
-        if (!list.isEmpty()) NetworkManager.sendToPlayer(target, CONFIG_SYNC, packet);
+        if (!list.isEmpty()) ModernNetworking.sendToPlayer(target, CONFIG_SYNC, tag);
     }
 
-    private static void handleConfigSyncPackage(FriendlyByteBuf packet, NetworkManager.PacketContext contex) {
+    private static void handleConfigSyncPackage(ModernNetworking.Context context, CompoundTag tag) {
         CLIENT_CONFIGS.clear();
-
-        CompoundTag tag = packet.readNbt();
 
         if (tag != null && tag.contains("configs")) {
             ListTag list = (ListTag) tag.get("configs");
@@ -189,6 +182,7 @@ public class ConfigLoader {
         }
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public static Config getConfigByName(String configName) {
         return LOADED_CONFIGS.get(configName);
@@ -196,7 +190,7 @@ public class ConfigLoader {
 
     @NotNull
     public static Path getConfigPath(String configName) {
-        return Paths.get(Platform.getConfigFolder().toString(), configName + ".json");
+        return Paths.get(PlatformData.getConfigPath().toString(), configName + ".json");
     }
 
     public static <C extends Config> void writeConfigFile(C config) {

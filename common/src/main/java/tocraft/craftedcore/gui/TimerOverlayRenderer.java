@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+@SuppressWarnings("unused")
 public class TimerOverlayRenderer {
 
     private static final int fadingTickRequirement = 0;
