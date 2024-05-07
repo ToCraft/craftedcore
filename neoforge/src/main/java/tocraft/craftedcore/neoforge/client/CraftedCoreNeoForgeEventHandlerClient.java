@@ -6,7 +6,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
 import tocraft.craftedcore.event.client.RenderEvents;
 
 @SuppressWarnings("unused")
@@ -18,8 +18,8 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void event(RenderGuiLayerEvent.Pre event) {
-        switch (event.getName().getPath()) {
+    public void event(RenderGuiOverlayEvent.Pre event) {
+        switch (event.getOverlay().id().getPath()) {
             case "player_health" -> {
                 InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
                 if (result == InteractionResult.FAIL) {

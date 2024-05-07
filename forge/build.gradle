@@ -1,8 +1,8 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/forge.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
 
 loom {
     forge {
-        mixinConfigs = ["craftedcore.mixins.json", "craftedcore-forge.mixins.json"]
+        mixinConfigs = ["craftedcore.mixins.json"]
     }
 }
 

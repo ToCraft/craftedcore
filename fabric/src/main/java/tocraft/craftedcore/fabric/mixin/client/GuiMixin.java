@@ -3,6 +3,7 @@ package tocraft.craftedcore.fabric.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.InteractionResult;
@@ -39,12 +40,13 @@ public abstract class GuiMixin {
         }
     }
 
-    @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
-    private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
+    @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int shouldRenderFood(int health) {
+        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(null, Minecraft.getInstance().player);
         if (result == InteractionResult.FAIL) {
-            ci.cancel();
+            return -1;
         }
+        return health;
     }
 
     @Inject(method = "renderVehicleHealth", at = @At(value = "HEAD"), cancellable = true)

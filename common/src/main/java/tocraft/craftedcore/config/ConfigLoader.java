@@ -30,6 +30,7 @@ public class ConfigLoader {
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
 
     public static void registerConfigSyncHandler() {
+
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);
 
         // unload configs and load local ones

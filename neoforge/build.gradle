@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/neoforge.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforge.gradle"
 
 dependencies {
     // architectury api

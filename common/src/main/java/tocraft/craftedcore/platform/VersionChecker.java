@@ -60,7 +60,7 @@ public class VersionChecker {
                     }
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, true, INVALID_VERSIONS));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 }
@@ -89,7 +89,7 @@ public class VersionChecker {
                     List<String> remoteVersions = getVersionsFromGitHub(owner, repo, releasesInsteadOfTags);
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, useLastPartOfVersion, invalidVersions));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 } else {
@@ -171,7 +171,7 @@ public class VersionChecker {
                     List<String> remoteVersions = getVersionsFromModrinth(slug);
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, useLastPartOfVersion, invalidVersions));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                         CraftedCore.LOGGER.warn(Arrays.toString(versions.toArray(Version[]::new)));
                     }
                     CACHED_VERSION.put(modid, newestVersion);
