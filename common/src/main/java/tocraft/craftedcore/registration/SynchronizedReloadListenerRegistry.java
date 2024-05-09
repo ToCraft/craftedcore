@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.ArrayList;
@@ -25,6 +26,10 @@ public class SynchronizedReloadListenerRegistry {
         if (PlatformData.getEnv() == EnvType.CLIENT) {
             reloadListener.registerPacketReceiver();
         }
+
+
+        // register Network packet
+        ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
     }
 
     public static List<SynchronizedJsonReloadListener> getAllListener() {

@@ -5,16 +5,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("ALL")
 public final class ModernNetworking {
     private static final Map<ResourceLocation, CustomPacketPayload.Type<PacketPayload>> TYPES = new HashMap<>();
 
@@ -36,6 +39,15 @@ public final class ModernNetworking {
                 context.queue(runnable);
             }
         }, packet.nbt()));
+    }
+
+    public static void registerType(ResourceLocation id) {
+        if (PlatformData.getEnv() == EnvType.SERVER) {
+            if (!TYPES.containsKey(id)) {
+                TYPES.put(id, new CustomPacketPayload.Type<>(id));
+            }
+            NetworkManager.registerS2CPayloadType(TYPES.get(id), PacketPayload.streamCodec(TYPES.get(id)), List.of());
+        }
     }
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
@@ -84,7 +96,22 @@ public final class ModernNetworking {
 
         @Override
         public @NotNull Type<? extends CustomPacketPayload> type() {
-            return TYPES.get(id());
+            return TYPES.get(id);
+        }
+
+        public static StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec(Type<PacketPayload> type) {
+            return new StreamCodec<RegistryFriendlyByteBuf, PacketPayload>() {
+                @Override
+                public PacketPayload decode(RegistryFriendlyByteBuf buf) {
+                    return new PacketPayload(buf);
+                }
+
+                @Override
+                public void encode(RegistryFriendlyByteBuf buf, PacketPayload payload) {
+                    buf.writeResourceLocation(payload.id());
+                    buf.writeNbt(payload.nbt());
+                }
+            };
         }
     }
 }
