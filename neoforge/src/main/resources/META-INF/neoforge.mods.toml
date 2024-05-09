@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/ToCraft/craftedcore/issues"
 license = "LGPL-3.0"
 
 [[mixins]]

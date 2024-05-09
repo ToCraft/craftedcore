@@ -1,4 +1,4 @@
-apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/Java21/forge.gradle"
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
 
 loom {
     forge {
