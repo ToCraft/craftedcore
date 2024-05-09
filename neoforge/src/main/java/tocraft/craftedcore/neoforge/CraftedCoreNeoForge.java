@@ -11,8 +11,9 @@ import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
 public class CraftedCoreNeoForge {
 
     public CraftedCoreNeoForge() {
-        if (FMLEnvironment.dist.isClient())
+        if (FMLEnvironment.dist.isClient()) {
             new CraftedCoreNeoForgeClient();
+        }
         new CraftedCore().initialize();
 
         NeoForge.EVENT_BUS.register(new CraftedCoreNeoForgeEventHandler());

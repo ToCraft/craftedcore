@@ -12,7 +12,7 @@ import tocraft.craftedcore.registration.PlayerDataRegistry;
 
 public class PlayerDataSynchronizer {
     private static final String PLAYER_DATA_SYNC = "player_data_sync";
-    private static final ResourceLocation PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
+    public static final ResourceLocation PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
 
     public static void registerPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, PLAYER_DATA_SYNC_ID, (context, tag) -> {

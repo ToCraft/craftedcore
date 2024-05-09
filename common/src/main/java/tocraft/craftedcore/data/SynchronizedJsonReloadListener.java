@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceReloadListener {
-    protected final ResourceLocation RELOAD_SYNC;
+    public final ResourceLocation RELOAD_SYNC;
     protected final String directory;
     protected final Gson gson;
     private final Map<ResourceLocation, JsonElement> map = new HashMap<>();
