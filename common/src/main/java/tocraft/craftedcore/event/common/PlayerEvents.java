@@ -1,7 +1,5 @@
 package tocraft.craftedcore.event.common;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.level.ServerPlayer;
 import tocraft.craftedcore.event.Event;
@@ -18,25 +16,21 @@ public final class PlayerEvents {
     public static final Event<AwardAdvancement> AWARD_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<RevokeAdvancement> REVOKE_ADVANCEMENT = EventFactory.createWithVoid();
 
-    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface PlayerJoin {
         void join(ServerPlayer player);
     }
 
-    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface PlayerQuit {
         void quit(ServerPlayer player);
     }
 
-    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface PlayerRespawn {
         void clone(ServerPlayer oldPlayer, ServerPlayer newPlayer);
     }
 
-    @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface AwardAdvancement {
         void award(ServerPlayer player, AdvancementHolder advancement, String criterionKey);
