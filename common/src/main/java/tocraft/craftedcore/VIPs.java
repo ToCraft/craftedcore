@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class VIPs {
         return CACHED_PATREONS;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static List<UUID> cachePatreons() {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
@@ -51,12 +54,12 @@ public class VIPs {
                     }
                 }
             }
-            for (UUID uuidOfPerson : getUUIDOfPeople(new URL(patreonURL))) {
+            for (UUID uuidOfPerson : getUUIDOfPeople(new URI(patreonURL).toURL())) {
                 if (!patreons.contains(uuidOfPerson)) {
                     patreons.add(uuidOfPerson);
                 }
             }
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             CraftedCore.LOGGER.error("Invalid patreon url: " + patreonURL, e);
         }
         return patreons;

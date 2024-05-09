@@ -2,6 +2,7 @@ package tocraft.craftedcore.event;
 
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import net.fabricmc.api.EnvType;
@@ -9,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionResult;
 import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.event.client.ClientTickEvents;
+import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.ServerLevelEvents;
 
@@ -17,6 +19,7 @@ public final class ArchitecturyImpl {
         LifecycleEvent.SERVER_LEVEL_LOAD.register(world -> ServerLevelEvents.LEVEL_LOAD.invoke().call(world));
         LifecycleEvent.SERVER_LEVEL_UNLOAD.register(world -> ServerLevelEvents.LEVEL_UNLOAD.invoke().call(world));
         InteractionEvent.INTERACT_ENTITY.register(((player, entity, hand) -> convertInteractionToEventResult(EntityEvents.INTERACT_WITH_PLAYER.invoke().interact(player, entity, hand))));
+        CommandRegistrationEvent.EVENT.register((dispatcher, selection) -> CommandEvents.REGISTRATION.invoke().register(dispatcher, selection));
     }
 
     @ApiStatus.Internal
