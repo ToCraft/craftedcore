@@ -2,6 +2,8 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -29,6 +31,7 @@ public class ConfigLoader {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
 
+    @Environment(EnvType.CLIENT)
     public static void registerConfigSyncHandler() {
 
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, CONFIG_SYNC, ConfigLoader::handleConfigSyncPackage);

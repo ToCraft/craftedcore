@@ -172,7 +172,6 @@ public class VersionChecker {
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, useLastPartOfVersion, invalidVersions));
                     if (!versions.isEmpty()) {
                         newestVersion = versions.get(versions.size() - 1);
-                        CraftedCore.LOGGER.warn(Arrays.toString(versions.toArray(Version[]::new)));
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 } else {
