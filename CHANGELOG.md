@@ -1,3 +1,11 @@
+craftedcore 4.1
+================
+- fix crash on dedicated server
+- fix networking issues on 1.20.6
+- fix NeoForge not detecting mod
+- add Command-Registration-Event
+- add Player Sleep Events
+
 craftedcore 4.0
 ================
 - add SynchronizedJsonReloadListener

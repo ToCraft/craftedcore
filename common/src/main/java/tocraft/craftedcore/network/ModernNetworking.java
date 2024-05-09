@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-@SuppressWarnings("unused")
+@SuppressWarnings("ALL")
 public final class ModernNetworking {
     public static void registerReceiver(Side side, ResourceLocation id, Receiver receiver) {
         NetworkManager.registerReceiver(side == Side.C2S ? NetworkManager.Side.C2S : NetworkManager.Side.S2C, id, (packet, context) -> receiver.receive(new Context() {
