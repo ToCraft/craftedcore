@@ -1,6 +1,5 @@
 package tocraft.craftedcore.forge.mixin.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.InteractionResult;

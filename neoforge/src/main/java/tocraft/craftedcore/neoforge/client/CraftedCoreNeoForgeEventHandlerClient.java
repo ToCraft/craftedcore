@@ -1,13 +1,16 @@
 package tocraft.craftedcore.neoforge.client;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import tocraft.craftedcore.event.client.RenderEvents;
+import tocraft.craftedcore.registration.neoforge.KeyBindingRegistryImpl;
 
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
@@ -15,6 +18,13 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     @SubscribeEvent
     public void event(RenderGuiEvent.Post event) {
         RenderEvents.HUD_RENDERING.invoke().render(event.getGuiGraphics(), event.getPartialTick());
+    }
+
+    @SubscribeEvent
+    public void event(RegisterKeyMappingsEvent event) {
+        for (KeyMapping mapping : KeyBindingRegistryImpl.getMappingsForEvent()) {
+            event.register(mapping);
+        }
     }
 
     @SubscribeEvent
