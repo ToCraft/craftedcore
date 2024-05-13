@@ -1,5 +1,6 @@
 package tocraft.craftedcore.neoforge;
 
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
@@ -10,9 +11,9 @@ import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
 @Mod(CraftedCore.MODID)
 public class CraftedCoreNeoForge {
 
-    public CraftedCoreNeoForge() {
+    public CraftedCoreNeoForge(IEventBus bus) {
         if (FMLEnvironment.dist.isClient()) {
-            new CraftedCoreNeoForgeClient();
+            new CraftedCoreNeoForgeClient(bus);
         }
         new CraftedCore().initialize();
 

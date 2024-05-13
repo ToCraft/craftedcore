@@ -1,6 +1,8 @@
 package tocraft.craftedcore.testmod;
 
 import com.mojang.logging.LogUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
@@ -47,12 +49,12 @@ public class TestMod {
 
             RenderEvents.RENDER_MOUNT_HEALTH.register((player, graphics) -> InteractionResult.FAIL);
 
-            RenderEvents.HUD_RENDERING.register((graphics, tickDelta) -> LOGGER.info("Rendering HUD..."));
+            RenderEvents.HUD_RENDERING.register((graphics, tickDelta) -> LOGGER.debug("Rendering HUD..."));
 
             ClientTickEvents.CLIENT_LEVEL_PRE.register(level -> LOGGER.debug("tick"));
             ClientTickEvents.CLIENT_LEVEL_PRE.register(level -> LOGGER.debug("tock"));
             ClientTickEvents.CLIENT_PRE.register(mc -> LOGGER.debug("TICK"));
-            ClientTickEvents.CLIENT_POST.register(mc -> LOGGER.debug("TICK"));
+            ClientTickEvents.CLIENT_POST.register(mc -> LOGGER.debug("TOCK"));
         }
     }
 }

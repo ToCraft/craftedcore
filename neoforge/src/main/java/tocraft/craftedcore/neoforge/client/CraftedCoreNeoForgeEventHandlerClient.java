@@ -23,13 +23,6 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void event(RegisterKeyMappingsEvent event) {
-        for (KeyMapping mapping : KeyBindingRegistryImpl.getMappingsForEvent()) {
-            event.register(mapping);
-        }
-    }
-
-    @SubscribeEvent
     public void event(ClientTickEvent.Pre event) {
         ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
     }

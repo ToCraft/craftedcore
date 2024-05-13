@@ -1,5 +1,6 @@
 package tocraft.craftedcore;
 
+import net.fabricmc.api.EnvType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.platform.PlatformData;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
@@ -17,8 +19,10 @@ public class CraftedCore {
 
     public void initialize() {
         // register Network Types
-        ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
-        ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
+        //if (PlatformData.getEnv() == EnvType.SERVER) {
+            ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
+            ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
+        //}
 
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();

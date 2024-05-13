@@ -7,9 +7,7 @@ import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SynchronizedReloadListenerRegistry {
@@ -29,7 +27,10 @@ public class SynchronizedReloadListenerRegistry {
 
 
         // register Network packet
-        ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
+
+        //if (PlatformData.getEnv() == EnvType.SERVER) {
+            ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
+        //}
     }
 
     public static Map<ResourceLocation, SynchronizedJsonReloadListener> getAllListener() {

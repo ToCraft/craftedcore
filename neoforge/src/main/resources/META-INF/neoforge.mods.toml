@@ -23,11 +23,3 @@ type = "required"
 versionRange = "[${minecraft_version},)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.craftedcore]]
-modId = "architectury"
-mandatory = true
-type = "required"
-versionRange = "[${architectury_version},)"
-ordering = "AFTER"
-side = "BOTH"
