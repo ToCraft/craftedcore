@@ -26,7 +26,7 @@ public abstract class GuiMixin {
     private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci, Player player, int i, boolean bl, long l, int j, int k, int m, int n, float f, int o, int p, int q, int r, int s, LivingEntity livingEntity, int t, int u, int v) {
         InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
-           ci.cancel();
+            ci.cancel();
         }
     }
 

@@ -4,7 +4,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.EventNetworkChannel;
 import tocraft.craftedcore.CraftedCore;
@@ -13,7 +15,7 @@ import tocraft.craftedcore.network.ModernNetworking;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("unused")
 public class ModernNetworkingImpl {
     private static final EventNetworkChannel CHANNEL = ChannelBuilder.named(CraftedCore.id("network")).acceptedVersions((status, version) -> true).optional().eventNetworkChannel();
     private static final Map<ResourceLocation, ModernNetworking.Receiver> C2S_RECEIVER = new HashMap<>();
@@ -58,6 +60,14 @@ public class ModernNetworkingImpl {
             C2S_RECEIVER.put(id, receiver);
         } else if (side == ModernNetworking.Side.S2C) {
             S2C_RECEIVER.put(id, receiver);
+        }
+    }
+
+    public static void registerType(ResourceLocation id) {
+        if (FMLLoader.getDist() == Dist.DEDICATED_SERVER) {
+            ModernNetworking.getType(id);
+            registerReceiver(ModernNetworking.Side.S2C, id, (context, data) -> {
+            });
         }
     }
 }

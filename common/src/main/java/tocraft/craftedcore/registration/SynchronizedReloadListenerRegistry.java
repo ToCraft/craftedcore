@@ -27,10 +27,7 @@ public class SynchronizedReloadListenerRegistry {
 
 
         // register Network packet
-
-        //if (PlatformData.getEnv() == EnvType.SERVER) {
-            ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
-        //}
+        ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
     }
 
     public static Map<ResourceLocation, SynchronizedJsonReloadListener> getAllListener() {

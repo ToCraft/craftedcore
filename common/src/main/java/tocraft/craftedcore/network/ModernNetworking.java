@@ -27,8 +27,9 @@ public class ModernNetworking {
         throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static void registerType(ResourceLocation id) {
-        TYPES.put(id, new CustomPacketPayload.Type<>(id));
+        throw new AssertionError();
     }
 
     public static CustomPacketPayload.Type<PacketPayload> getType(ResourceLocation id) {
@@ -86,16 +87,16 @@ public class ModernNetworking {
         }
 
         public void write(RegistryFriendlyByteBuf buf) {
-            buf.writeResourceLocation(id());
+            buf.writeResourceLocation(id);
             buf.writeNbt(nbt);
         }
 
         @Override
         public @NotNull Type<? extends CustomPacketPayload> type() {
-            return TYPES.get(id);
+            return getType(id);
         }
 
-        public static StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec(Type<PacketPayload> type) {
+        public static StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec() {
             return new StreamCodec<>() {
                 @Override
                 public @NotNull PacketPayload decode(@NotNull RegistryFriendlyByteBuf buf) {
@@ -104,8 +105,8 @@ public class ModernNetworking {
 
                 @Override
                 public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull PacketPayload payload) {
-                    buf.writeResourceLocation(payload.id());
-                    buf.writeNbt(payload.nbt());
+                    buf.writeResourceLocation(payload.id);
+                    buf.writeNbt(payload.nbt);
                 }
             };
         }

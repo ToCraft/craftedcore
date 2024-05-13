@@ -1,8 +1,10 @@
 package tocraft.craftedcore.network.fabric;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.network.ModernNetworking;
@@ -14,7 +16,7 @@ import static tocraft.craftedcore.network.ModernNetworking.getType;
 public class ModernNetworkingImpl {
     public static void registerReceiver(ModernNetworking.Side side, ResourceLocation id, ModernNetworking.Receiver receiver) {
         if (side == ModernNetworking.Side.C2S) {
-            PayloadTypeRegistry.playC2S().register(getType(id), PacketPayload.streamCodec(getType(id)));
+            PayloadTypeRegistry.playC2S().register(getType(id), PacketPayload.streamCodec());
             ServerPlayNetworking.registerGlobalReceiver(getType(id), (payload, context) -> receiver.receive(new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
@@ -32,7 +34,7 @@ public class ModernNetworkingImpl {
                 }
             }, payload.nbt()));
         } else if (side == ModernNetworking.Side.S2C) {
-            PayloadTypeRegistry.playS2C().register(getType(id), PacketPayload.streamCodec(getType(id)));
+            PayloadTypeRegistry.playS2C().register(getType(id), PacketPayload.streamCodec());
             ClientPlayNetworking.registerGlobalReceiver(getType(id), (payload, context) -> receiver.receive(new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
@@ -49,6 +51,13 @@ public class ModernNetworkingImpl {
                     context.client().execute(runnable);
                 }
             }, payload.nbt()));
+        }
+    }
+
+    public static void registerType(ResourceLocation id) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            ModernNetworking.getType(id);
+            PayloadTypeRegistry.playS2C().register(getType(id), PacketPayload.streamCodec());
         }
     }
 }
