@@ -6,10 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -19,9 +16,18 @@ import tocraft.craftedcore.event.common.PlayerEvents;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.module.ModuleDescriptor.Version;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @SuppressWarnings("unused")
@@ -139,20 +145,37 @@ public class VersionChecker {
         Gson GSON = new GsonBuilder().setPrettyPrinting().create();
         List<String> versions = new ArrayList<>();
 
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet request = new HttpGet(url);
-            request.addHeader("Accept", "application/vnd.github.v3+json");
-            String json = httpClient.execute(request, response -> EntityUtils.toString(response.getEntity(), "UTF-8"));
+        try {
+            Map<String, String> header = new HashMap<>();
+            header.put("Accept", "application/vnd.github.v3+json");
+            String json = getResponse(header, url);
             JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
-
-        } catch (Exception e) {
+        } catch (IOException | URISyntaxException e) {
             CraftedCore.LOGGER.error("Caught an error while getting the newest " + (releasesInsteadOfTags ? "releases" : "tags") + " from " + url, e);
         }
 
         return versions;
+    }
+
+    @NotNull
+    private static String getResponse(Map<String, String> header, String url) throws IOException, URISyntaxException {
+        HttpURLConnection connection = (HttpURLConnection) new URI(url).toURL().openConnection();
+        for (Map.Entry<String, String> entry : header.entrySet()) {
+            connection.addRequestProperty(entry.getKey(), entry.getValue());
+        }
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(connection.getInputStream()));
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        connection.disconnect();
+        in.close();
+        return content.toString();
     }
 
     public static void registerModrinthChecker(String modid, String slug, Component modName) {
@@ -191,10 +214,10 @@ public class VersionChecker {
         Gson GSON = new GsonBuilder().setPrettyPrinting().create();
         List<String> versions = new ArrayList<>();
 
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet request = new HttpGet(url);
-            request.addHeader("User-Agent:", "crafted-core");
-            String json = httpClient.execute(request, response -> EntityUtils.toString(response.getEntity(), "UTF-8"));
+        try {
+            Map<String, String> header = new HashMap<>();
+            header.put("User-Agent", "crafted-core");
+            String json = getResponse(header, url);
             JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
