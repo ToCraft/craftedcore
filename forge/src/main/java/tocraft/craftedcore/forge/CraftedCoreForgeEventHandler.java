@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -68,5 +69,10 @@ public class CraftedCoreForgeEventHandler {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
         }
+    }
+
+    @SubscribeEvent
+    public void livingBreathe(LivingBreatheEvent event) {
+        event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
@@ -33,6 +34,21 @@ public class TestMod {
         EntityEvents.LIVING_DEATH.register((entity, source) -> {
             LOGGER.info((entity != null ? entity.getName().getString() : "") + "Oh, I just died in your arms tonight.");
             return InteractionResult.PASS;
+        });
+
+        EntityEvents.LIVING_BREATHE.register((entity, canBreathe) -> {
+            if (entity instanceof Player) {
+                if (canBreathe) {
+                    LOGGER.info("In and out.");
+                } else {
+                    LOGGER.info("I need air!");
+                }
+                // revert value, the players will need to breathe underwater now
+                return !canBreathe;
+            } else {
+                LOGGER.info("something is breathing here...");
+                return !canBreathe;
+            }
         });
 
         if (PlatformData.getEnv() == EnvType.CLIENT) {

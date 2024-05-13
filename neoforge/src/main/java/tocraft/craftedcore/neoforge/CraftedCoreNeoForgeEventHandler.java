@@ -6,10 +6,12 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
@@ -68,5 +70,10 @@ public class CraftedCoreNeoForgeEventHandler {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
         }
+    }
+
+    @SubscribeEvent
+    public void livingBreathe(LivingBreatheEvent event) {
+        event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
     }
 }
