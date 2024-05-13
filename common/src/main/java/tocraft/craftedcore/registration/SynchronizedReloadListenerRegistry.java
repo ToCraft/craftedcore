@@ -32,8 +32,8 @@ public class SynchronizedReloadListenerRegistry {
         ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
     }
 
-    public static List<SynchronizedJsonReloadListener> getAllListener() {
-        return new ArrayList<>(listener.values());
+    public static Map<ResourceLocation, SynchronizedJsonReloadListener> getAllListener() {
+        return new HashMap<>(listener);
     }
 
     @SuppressWarnings("unused")

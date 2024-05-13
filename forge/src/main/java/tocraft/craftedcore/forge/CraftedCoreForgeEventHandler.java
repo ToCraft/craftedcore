@@ -19,7 +19,7 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 public class CraftedCoreForgeEventHandler {
     @SubscribeEvent
     public void addReloadListenerEvent(AddReloadListenerEvent event) {
-        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener()) {
+        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener().values()) {
             event.addListener(lister);
         }
     }
