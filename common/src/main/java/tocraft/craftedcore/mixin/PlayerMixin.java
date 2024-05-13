@@ -2,13 +2,18 @@ package tocraft.craftedcore.mixin;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.craftedcore.data.PlayerDataProvider;
+import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.registration.PlayerDataRegistry;
 
 import java.util.HashMap;
@@ -30,6 +35,14 @@ public abstract class PlayerMixin implements PlayerDataProvider {
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeNbt(CompoundTag tag, CallbackInfo info) {
         craftedcore$playerData.forEach((key, value) -> tag.put(key, this.craftedcore$readTag(key)));
+    }
+
+    @Inject(method = "interactOn", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;",
+            ordinal = 0),
+            cancellable = true)
+    private void onInteraction(Entity entity, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
+        cir.setReturnValue(EntityEvents.INTERACT_WITH_PLAYER.invoke().interact((Player) (Object) this, entity, interactionHand));
     }
 
     @Unique

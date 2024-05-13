@@ -20,7 +20,7 @@
       "tocraft.craftedcore.fabric.CraftedCoreFabric"
     ],
     "client": [
-      "tocraft.craftedcore.fabric.CraftedCoreFabricClient"
+      "tocraft.craftedcore.fabric.client.CraftedCoreFabricClient"
     ]
   },
   "depends": {

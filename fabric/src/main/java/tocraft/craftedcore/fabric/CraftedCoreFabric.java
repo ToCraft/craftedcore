@@ -11,6 +11,6 @@ public class CraftedCoreFabric implements ModInitializer {
     public void onInitialize() {
         new CraftedCore().initialize();
 
-        EntitySleepEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, sleepingPos, vanillaResult));
+        CraftedCoreFabricEventHandler.initialize();
     }
 }

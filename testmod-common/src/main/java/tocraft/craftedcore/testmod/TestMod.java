@@ -24,6 +24,10 @@ public class TestMod {
         PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.info("player " + (player != null ? player.getName().getString() : "") + " quit."));
         PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info((player != null ? player.getDisplayName() : "") + " unlocked advancement " + criterionKey));
         PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info((player != null ? player.getDisplayName() : "") + " revoked advancement " + criterionKey));
+        EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
+            LOGGER.info("player " + (player != null ? player.getName().getString() : "") + "just interacted with " + entity.getName().getString());
+            return InteractionResult.PASS;
+        });
 
         EntityEvents.LIVING_DEATH.register((entity, source) -> {
             LOGGER.info((entity != null ? entity.getName().getString() : "") + "Oh, I just died in your arms tonight.");

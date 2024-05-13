@@ -3,12 +3,14 @@ package tocraft.craftedcore.forge;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
@@ -45,5 +47,10 @@ public class CraftedCoreForgeEventHandler {
     public void sleepFinishedTime(SleepFinishedTimeEvent event) {
         long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition((ServerLevel) event.getLevel(), event.getNewTime());
         event.setTimeAddition(newTimeIn);
+    }
+
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
     }
 }

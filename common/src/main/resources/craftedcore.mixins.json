@@ -10,6 +10,7 @@
     "ServerPlayerMixin"
   ],
   "client": [
+    "MultiPlayerGameModeMixin",
     "client.ClientPacketListenerMixin",
     "client.MinecraftClientMixin"
   ],
