@@ -8,11 +8,13 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 @SuppressWarnings("unused")
@@ -52,5 +54,19 @@ public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+    }
+
+    @SubscribeEvent
+    public void serverLoad(LevelEvent.Load event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
+        }
+    }
+
+    @SubscribeEvent
+    public void serverUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
+        }
     }
 }

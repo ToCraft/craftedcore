@@ -6,9 +6,11 @@ import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.registration.neoforge.KeyBindingRegistryImpl;
 
@@ -25,6 +27,16 @@ public class CraftedCoreNeoForgeEventHandlerClient {
         for (KeyMapping mapping : KeyBindingRegistryImpl.getMappingsForEvent()) {
             event.register(mapping);
         }
+    }
+
+    @SubscribeEvent
+    public void event(ClientTickEvent.Pre event) {
+        ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
+    }
+
+    @SubscribeEvent
+    public void event(ClientTickEvent.Post event) {
+        ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
     }
 
     @SubscribeEvent

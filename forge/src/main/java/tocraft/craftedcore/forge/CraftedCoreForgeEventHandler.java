@@ -6,6 +6,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,6 +14,7 @@ import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 @SuppressWarnings("unused")
@@ -52,5 +54,19 @@ public class CraftedCoreForgeEventHandler {
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+    }
+
+    @SubscribeEvent
+    public void serverLoad(LevelEvent.Load event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
+        }
+    }
+
+    @SubscribeEvent
+    public void serverUnload(LevelEvent.Unload event) {
+        if (event.getLevel() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
+        }
     }
 }

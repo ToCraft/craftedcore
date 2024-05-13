@@ -11,6 +11,7 @@
   ],
   "client": [
     "MultiPlayerGameModeMixin",
+    "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.MinecraftClientMixin"
   ],
