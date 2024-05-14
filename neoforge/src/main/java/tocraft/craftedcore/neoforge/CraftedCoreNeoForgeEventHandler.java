@@ -11,7 +11,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
-import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
@@ -23,7 +22,7 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void addReloadListenerEvent(AddReloadListenerEvent event) {
-        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener().values()) {
+        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener()) {
             event.addListener(lister);
         }
     }

@@ -1,1 +1,7 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/neoforge.gradle"
+
+dependencies {
+    // mixin extras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))
+    implementation(include("io.github.llamalad7:mixinextras-neoforge:0.3.5"))
+}

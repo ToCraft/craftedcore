@@ -22,7 +22,7 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 public class CraftedCoreForgeEventHandler {
     @SubscribeEvent
     public void addReloadListenerEvent(AddReloadListenerEvent event) {
-        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener().values()) {
+        for (SynchronizedJsonReloadListener lister : SynchronizedReloadListenerRegistry.getAllListener()) {
             event.addListener(lister);
         }
     }

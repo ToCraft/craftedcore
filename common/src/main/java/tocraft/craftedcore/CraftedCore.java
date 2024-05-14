@@ -1,5 +1,6 @@
 package tocraft.craftedcore;
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ public class CraftedCore {
     public static final String MODID = "craftedcore";
 
     public void initialize() {
+        // initialize MixinExtras
+        MixinExtrasBootstrap.init();
+
         // register Network Types
         ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
         ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
@@ -26,8 +30,8 @@ public class CraftedCore {
         // send configurations to client
         PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
 
-        // sync data pack packets on player join
-        PlayerEvents.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
+        // sync data pack packets on data pack sync
+        SynchronizedReloadListenerRegistry.initialize();
 
         // check for new version
         VersionChecker.registerModrinthChecker(MODID, "crafted-core", Component.literal("CraftedCore"));
