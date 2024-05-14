@@ -18,6 +18,7 @@ import tocraft.craftedcore.event.client.ClientTickEvents;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings({"unused", "DataFlowIssue"})
 @Environment(EnvType.CLIENT)
 @Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin extends Level {

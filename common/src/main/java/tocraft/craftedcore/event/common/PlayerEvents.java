@@ -25,7 +25,7 @@ public final class PlayerEvents {
         long newNewTime = 0;
         for (SleepFinishedTime callback : callbacks) {
             long newTimeIn = callback.setTimeAddition(level, newTime);
-            if (((ServerLevel) level).getDayTime() <= newTimeIn) {
+            if (level.getDayTime() <= newTimeIn) {
                 newNewTime = newTimeIn;
             }
         }

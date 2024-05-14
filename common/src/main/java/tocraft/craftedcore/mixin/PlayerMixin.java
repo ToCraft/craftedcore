@@ -20,10 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({"unused", "DataFlowIssue"})
 @Mixin(Player.class)
 public abstract class PlayerMixin implements PlayerDataProvider {
     @Unique
-    private final Map<String, Tag> craftedcore$playerData = new HashMap<String, Tag>();
+    private final Map<String, Tag> craftedcore$playerData = new HashMap<>();
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readNbt(CompoundTag tag, CallbackInfo info) {

@@ -5,6 +5,7 @@ import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 
 @SuppressWarnings("unused")
 public class SynchronizedReloadListenerRegistryImpl {
+    @SuppressWarnings("EmptyMethod")
     public static void onRegister(SynchronizedJsonReloadListener reloadListener, ResourceLocation id) {
     }
 }

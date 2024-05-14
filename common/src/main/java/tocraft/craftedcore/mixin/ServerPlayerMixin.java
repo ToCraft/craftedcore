@@ -10,6 +10,7 @@ import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.registration.PlayerDataRegistry;
 
+@SuppressWarnings({"DataFlowIssue", "unused", "RedundantCast"})
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
 

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.event.Event;
 import tocraft.craftedcore.event.EventFactory;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public final class EntityEvents {
     public static final Event<Interact> INTERACT_WITH_PLAYER = EventFactory.createWithInteractionResult();
     public static final Event<LivingDeath> LIVING_DEATH = EventFactory.createWithInteractionResult();

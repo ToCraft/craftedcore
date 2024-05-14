@@ -4,7 +4,7 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
-    neoForge();
+    neoForge()
 }
 
 configurations {

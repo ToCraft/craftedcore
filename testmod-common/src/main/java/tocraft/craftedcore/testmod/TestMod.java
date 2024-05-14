@@ -47,7 +47,7 @@ public class TestMod {
                 return !canBreathe;
             } else {
                 LOGGER.info("something is breathing here...");
-                return !canBreathe;
+                return canBreathe;
             }
         });
 

@@ -8,6 +8,7 @@ import net.minecraft.client.KeyMapping;
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public final class KeyBindingRegistry {
+    @SuppressWarnings("EmptyMethod")
     @ExpectPlatform
     public static void register(KeyMapping keyMapping) {
     }
