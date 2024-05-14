@@ -1,3 +1,14 @@
+craftedcore 4.2
+================
+
+- remove HTTPClient 5 background library
+- improve Render Overlay Events for MinecraftForge & Fabric
+- fix SynchronizedReloadRegistry for Fabric
+- remove Architectury API dependency
+- add Living Breathe Event
+- add Data Pack Sync Event
+- background improvements
+
 craftedcore 4.1
 ================
 
