@@ -1,11 +1,11 @@
 package tocraft.craftedcore.network;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,13 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @SuppressWarnings("unused")
 public class ModernNetworking {
-    private static final Map<ResourceLocation, CustomPacketPayload.Type<PacketPayload>> TYPES = new HashMap<>();
-
     @ExpectPlatform
     public static void registerReceiver(Side side, ResourceLocation id, Receiver receiver) {
         throw new AssertionError();
@@ -32,20 +27,19 @@ public class ModernNetworking {
         throw new AssertionError();
     }
 
-    public static CustomPacketPayload.Type<PacketPayload> getType(ResourceLocation id) {
-        if (!TYPES.containsKey(id)) {
-            TYPES.put(id, new CustomPacketPayload.Type<>(id));
-        }
-        return TYPES.get(id);
-    }
-
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
-        player.connection.send(new ClientboundCustomPayloadPacket(new PacketPayload(packetId, data.copy())));
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeResourceLocation(packetId);
+        buf.writeNbt(data.copy());
+        player.connection.send(new ClientboundCustomPayloadPacket(buf));
     }
 
     public static void sendToPlayers(Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
         for (ServerPlayer player : players) {
-            player.connection.send(new ClientboundCustomPayloadPacket(new PacketPayload(packetId, data.copy())));
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeResourceLocation(packetId);
+            buf.writeNbt(data.copy());
+            player.connection.send(new ClientboundCustomPayloadPacket(buf));
         }
     }
 
@@ -53,7 +47,10 @@ public class ModernNetworking {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
 
         if (connection != null) {
-            connection.send(new ServerboundCustomPayloadPacket(new PacketPayload(packetId, data)));
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeResourceLocation(packetId);
+            buf.writeNbt(data.copy());
+            connection.send(new ServerboundCustomPayloadPacket(buf));
         }
     }
 
@@ -82,33 +79,13 @@ public class ModernNetworking {
     public record PacketPayload(ResourceLocation id,
                                 CompoundTag nbt) implements CustomPacketPayload {
 
-        public PacketPayload(RegistryFriendlyByteBuf buf) {
+        public PacketPayload(FriendlyByteBuf buf) {
             this(buf.readResourceLocation(), buf.readNbt());
         }
 
-        public void write(RegistryFriendlyByteBuf buf) {
+        public void write(FriendlyByteBuf buf) {
             buf.writeResourceLocation(id);
             buf.writeNbt(nbt);
-        }
-
-        @Override
-        public @NotNull Type<? extends CustomPacketPayload> type() {
-            return getType(id);
-        }
-
-        public static StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec() {
-            return new StreamCodec<>() {
-                @Override
-                public @NotNull PacketPayload decode(@NotNull RegistryFriendlyByteBuf buf) {
-                    return new PacketPayload(buf);
-                }
-
-                @Override
-                public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull PacketPayload payload) {
-                    buf.writeResourceLocation(payload.id);
-                    buf.writeNbt(payload.nbt);
-                }
-            };
         }
     }
 }

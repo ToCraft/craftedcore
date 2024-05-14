@@ -4,9 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.EventNetworkChannel;
 import tocraft.craftedcore.CraftedCore;
@@ -24,7 +22,6 @@ public class ModernNetworkingImpl {
     public static void initialize() {
         CHANNEL.addListener(event -> {
             FriendlyByteBuf buf = event.getPayload();
-            ResourceLocation id = buf.readResourceLocation();
             CompoundTag payload = buf.readNbt();
             ModernNetworking.Context context = new ModernNetworking.Context() {
                 @Override
@@ -45,9 +42,9 @@ public class ModernNetworkingImpl {
 
             ModernNetworking.Receiver receiver;
             if (context.getEnv() == ModernNetworking.Env.CLIENT) {
-                receiver = S2C_RECEIVER.get(id);
+                receiver = S2C_RECEIVER.get(event.getChannel());
             } else {
-                receiver = C2S_RECEIVER.get(id);
+                receiver = C2S_RECEIVER.get(event.getChannel());
             }
             receiver.receive(context, payload);
             event.getSource().setPacketHandled(true);
@@ -60,14 +57,6 @@ public class ModernNetworkingImpl {
             C2S_RECEIVER.put(id, receiver);
         } else if (side == ModernNetworking.Side.S2C) {
             S2C_RECEIVER.put(id, receiver);
-        }
-    }
-
-    public static void registerType(ResourceLocation id) {
-        if (FMLLoader.getDist() == Dist.DEDICATED_SERVER) {
-            ModernNetworking.getType(id);
-            registerReceiver(ModernNetworking.Side.S2C, id, (context, data) -> {
-            });
         }
     }
 }
