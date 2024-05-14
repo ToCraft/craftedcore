@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[48,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/ToCraft/craftedcore/issues"
+displayURL = "https://github.com/ToCraft/craftedcore"
 license = "LGPL-3.0"
 
 [[mods]]
@@ -11,7 +12,7 @@ authors = "To_Craft"
 description = '''
 My libary mod to make mods more compatible with modloaders
 '''
-#logoFile = ""
+logoFile = "assets/craftedcore/icon.png"
 
 [[dependencies.craftedcore]]
 modId = "forge"
