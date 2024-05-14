@@ -23,7 +23,7 @@ public class ModernNetworkingImpl {
         IEventBus eventBus = Objects.requireNonNull(ModList.get().getModContainerById(CraftedCore.MODID).orElseThrow().getEventBus());
 
         if (side == ModernNetworking.Side.C2S) {
-            eventBus.addListener(RegisterPayloadHandlersEvent.class, event -> event.registrar(id.toString()).playToServer(getType(id), PacketPayload.streamCodec(), (arg, context) -> receiver.receive(new ModernNetworking.Context() {
+            eventBus.addListener(RegisterPayloadHandlersEvent.class, event -> event.registrar(id.getNamespace()).playToServer(getType(id), PacketPayload.streamCodec(), (arg, context) -> receiver.receive(new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
                     return context.player();
@@ -40,7 +40,7 @@ public class ModernNetworkingImpl {
                 }
             }, arg.nbt())));
         } else if (side == ModernNetworking.Side.S2C) {
-            eventBus.addListener(RegisterPayloadHandlersEvent.class, event -> event.registrar(id.toString()).playToClient(getType(id), PacketPayload.streamCodec(), (arg, context) -> receiver.receive(new ModernNetworking.Context() {
+            eventBus.addListener(RegisterPayloadHandlersEvent.class, event -> event.registrar(id.getNamespace()).playToClient(getType(id), PacketPayload.streamCodec(), (arg, context) -> receiver.receive(new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
                     return Minecraft.getInstance().player;
