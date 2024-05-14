@@ -1,5 +1,6 @@
 package tocraft.craftedcore.network.forge;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +30,7 @@ public class ModernNetworkingImpl {
             ModernNetworking.Context context = new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
-                    return event.getSource().getSender();
+                    return getEnv() == ModernNetworking.Env.CLIENT ? Minecraft.getInstance().player : event.getSource().getSender();
                 }
 
                 @Override

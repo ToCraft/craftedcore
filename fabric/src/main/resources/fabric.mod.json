@@ -3,7 +3,7 @@
   "id": "craftedcore",
   "version": "${version}",
   "name": "CraftedCore",
-  "icon": "assets/craftedcore/icon.png",
+  "icon": "icon.png",
   "description": "My library mod to make mods more compatible with mod loaders",
   "authors": [
     "To_Craft"

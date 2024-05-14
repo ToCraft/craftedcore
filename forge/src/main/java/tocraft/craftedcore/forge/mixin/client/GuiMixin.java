@@ -3,7 +3,6 @@ package tocraft.craftedcore.forge.mixin.client;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -12,9 +11,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import tocraft.craftedcore.event.client.RenderEvents;
 
+@SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 @Mixin(Gui.class)
 public abstract class GuiMixin {
@@ -22,8 +21,8 @@ public abstract class GuiMixin {
     @Shadow
     protected abstract Player getCameraPlayer();
 
-    @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci, Player player, int i, boolean bl, long l, int j, int k, int m, int n, float f, int o, int p, int q, int r, int s, LivingEntity livingEntity, int t, int u, int v) {
+    @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
+    private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci) {
         InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
             ci.cancel();

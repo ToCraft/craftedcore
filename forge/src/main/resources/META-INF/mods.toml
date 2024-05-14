@@ -12,7 +12,7 @@ authors = "To_Craft"
 description = '''
 My libary mod to make mods more compatible with modloaders
 '''
-logoFile = "assets/craftedcore/icon.png"
+logoFile = "icon.png"
 
 [[dependencies.craftedcore]]
 modId = "forge"
