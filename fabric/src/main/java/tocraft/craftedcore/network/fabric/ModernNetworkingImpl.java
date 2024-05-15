@@ -5,14 +5,18 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 
 import static tocraft.craftedcore.network.ModernNetworking.getType;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "resource"})
 public class ModernNetworkingImpl {
     public static void registerReceiver(ModernNetworking.Side side, ResourceLocation id, ModernNetworking.Receiver receiver) {
         if (side == ModernNetworking.Side.C2S) {
@@ -58,6 +62,15 @@ public class ModernNetworkingImpl {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
             ModernNetworking.getType(id);
             PayloadTypeRegistry.playS2C().register(getType(id), PacketPayload.streamCodec());
+        }
+    }
+
+    @ApiStatus.Internal
+    public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
+        if (side == ModernNetworking.Side.C2S) {
+            return ClientPlayNetworking.createC2SPacket(payload);
+        } else {
+            return ServerPlayNetworking.createS2CPacket(payload);
         }
     }
 }

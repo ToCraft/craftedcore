@@ -1,13 +1,14 @@
 package tocraft.craftedcore.network;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,21 +41,28 @@ public class ModernNetworking {
     }
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
-        player.connection.send(new ClientboundCustomPayloadPacket(new PacketPayload(packetId, data.copy())));
+        player.connection.send(toPacket(Side.S2C, new PacketPayload(packetId, data.copy())));
     }
 
     public static void sendToPlayers(Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
         for (ServerPlayer player : players) {
-            player.connection.send(new ClientboundCustomPayloadPacket(new PacketPayload(packetId, data.copy())));
+            sendToPlayer(player, packetId, data);
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void sendToServer(ResourceLocation packetId, CompoundTag data) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
 
         if (connection != null) {
-            connection.send(new ServerboundCustomPayloadPacket(new PacketPayload(packetId, data)));
+            connection.send(toPacket(Side.C2S, new PacketPayload(packetId, data)));
         }
+    }
+
+    @ExpectPlatform
+    @ApiStatus.Internal
+    public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
+        throw new AssertionError();
     }
 
     @FunctionalInterface

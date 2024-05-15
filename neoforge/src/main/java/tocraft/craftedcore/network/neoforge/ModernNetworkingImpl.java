@@ -1,18 +1,20 @@
 package tocraft.craftedcore.network.neoforge;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import tocraft.craftedcore.CraftedCore;
+import org.jetbrains.annotations.ApiStatus;
+import tocraft.craftedcore.neoforge.CraftedCoreNeoForge;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.ModernNetworking.PacketPayload;
-
-import java.util.Objects;
 
 import static tocraft.craftedcore.network.ModernNetworking.getType;
 
@@ -20,7 +22,7 @@ import static tocraft.craftedcore.network.ModernNetworking.getType;
 public class ModernNetworkingImpl {
     public static void registerReceiver(ModernNetworking.Side side, ResourceLocation id, ModernNetworking.Receiver
             receiver) {
-        IEventBus eventBus = Objects.requireNonNull(ModList.get().getModContainerById(CraftedCore.MODID).orElseThrow().getEventBus());
+        IEventBus eventBus = CraftedCoreNeoForge.getEventBus();
 
         if (side == ModernNetworking.Side.C2S) {
             eventBus.addListener(RegisterPayloadHandlersEvent.class, event -> event.registrar(id.getNamespace()).playToServer(getType(id), PacketPayload.streamCodec(), (arg, context) -> receiver.receive(new ModernNetworking.Context() {
@@ -64,6 +66,15 @@ public class ModernNetworkingImpl {
             ModernNetworking.getType(id);
             registerReceiver(ModernNetworking.Side.S2C, id, (context, data) -> {
             });
+        }
+    }
+
+    @ApiStatus.Internal
+    public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
+        if (side == ModernNetworking.Side.C2S) {
+            return new ClientboundCustomPayloadPacket(payload);
+        } else {
+            return new ServerboundCustomPayloadPacket(payload);
         }
     }
 }
