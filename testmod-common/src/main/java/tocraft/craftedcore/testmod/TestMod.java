@@ -22,17 +22,17 @@ public class TestMod {
     public static final String MODID = "testmod";
 
     public static void initialize() {
-        PlayerEvents.PLAYER_JOIN.register(player -> LOGGER.info("player " + (player != null ? player.getName().getString() : "") + " joined."));
-        PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.info("player " + (player != null ? player.getName().getString() : "") + " quit."));
-        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info((player != null ? player.getDisplayName() : "") + " unlocked advancement " + criterionKey));
-        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info((player != null ? player.getDisplayName() : "") + " revoked advancement " + criterionKey));
+        PlayerEvents.PLAYER_JOIN.register(player -> LOGGER.info("player {} joined.", player != null ? player.getName().getString() : ""));
+        PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.info("player {} quit.", player != null ? player.getName().getString() : ""));
+        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info("{} unlocked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
+        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info("{} revoked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
-            LOGGER.info("player " + (player != null ? player.getName().getString() : "") + "just interacted with " + entity.getName().getString());
+            LOGGER.info("player {}just interacted with {}", player != null ? player.getName().getString() : "", entity.getName().getString());
             return InteractionResult.PASS;
         });
 
         EntityEvents.LIVING_DEATH.register((entity, source) -> {
-            LOGGER.info((entity != null ? entity.getName().getString() : "") + "Oh, I just died in your arms tonight.");
+            LOGGER.info("{}Oh, I just died in your arms tonight.", entity != null ? entity.getName().getString() : "");
             return InteractionResult.PASS;
         });
 
@@ -59,16 +59,14 @@ public class TestMod {
     @Environment(EnvType.CLIENT)
     static class TestModClient {
         public static void initialize() {
-            ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(player -> LOGGER.info("client player " + (player != null ? player.getName().getString() : "") + " joined."));
-            ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> LOGGER.info("client player " + (player != null ? player.getName().getString() : "") + " quit."));
-            ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.info((newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "") + " respawned and was previously named " + (oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : "")));
+            ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(player -> LOGGER.info("client player {} joined.", player != null ? player.getName().getString() : ""));
+            ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> LOGGER.info("client player {} quit.", player != null ? player.getName().getString() : ""));
+            ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.info("{} respawned and was previously named {}", newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "", oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : ""));
 
             RenderEvents.RENDER_MOUNT_HEALTH.register((player, graphics) -> InteractionResult.FAIL);
 
             RenderEvents.HUD_RENDERING.register((graphics, tickDelta) -> LOGGER.debug("Rendering HUD..."));
 
-            ClientTickEvents.CLIENT_LEVEL_PRE.register(level -> LOGGER.debug("tick"));
-            ClientTickEvents.CLIENT_LEVEL_PRE.register(level -> LOGGER.debug("tock"));
             ClientTickEvents.CLIENT_PRE.register(mc -> LOGGER.debug("TICK"));
             ClientTickEvents.CLIENT_POST.register(mc -> LOGGER.debug("TOCK"));
         }

@@ -8,6 +8,7 @@ import tocraft.craftedcore.network.ModernNetworking;
 import java.nio.file.Path;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface Config {
     /**
      * This should be overwritten to improve the performance and avoid errors

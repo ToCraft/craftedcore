@@ -5,9 +5,11 @@ import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
 import net.neoforged.neoforge.event.TickEvent;
+import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 
@@ -56,5 +58,10 @@ public class CraftedCoreNeoForgeEventHandlerClient {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void event(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientPlayerEvents.CLIENT_PLAYER_QUIT.invoke().quit(event.getPlayer());
     }
 }

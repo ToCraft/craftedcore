@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public final class PlatformDataImpl {
     public static boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
