@@ -19,10 +19,3 @@ mandatory = true
 versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"
-
-[[dependencies.testmod]]
-modId = "architectury"
-mandatory = true
-versionRange = "[1,)"
-ordering = "AFTER"
-side = "BOTH"

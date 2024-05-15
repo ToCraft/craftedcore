@@ -50,7 +50,7 @@ public class ConfigLoader {
                                     Object preSyncValue = field.get(config);
                                     field.set(potentiallySynced, preSyncValue);
                                 } catch (IllegalAccessException e) {
-                                    CraftedCore.LOGGER.error("Failed reverting modifications on config " + config.getClass().getSimpleName(), e);
+                                    CraftedCore.LOGGER.error("Failed reverting modifications on config {}", config.getClass().getSimpleName(), e);
                                 }
                             }
                         }
@@ -78,7 +78,7 @@ public class ConfigLoader {
                 // some files might be malfunctions
                 if (newConfig == null) {
                     newConfig = configClass.getDeclaredConstructor().newInstance();
-                    CraftedCore.LOGGER.error("The Configuration '" + configName + ".json' is null. This isn't normal. It will overwritten be with default values.");
+                    CraftedCore.LOGGER.error("The Configuration '{}.json' is null. This isn't normal. It will overwritten be with default values.", configName);
                 }
 
                 // If the configuration existed, it's read now. This overrides it again to ensure every field is represented
@@ -88,7 +88,7 @@ public class ConfigLoader {
                 return newConfig;
             }
         } catch (Exception e) {
-            CraftedCore.LOGGER.error("Failed reading config " + configName, e);
+            CraftedCore.LOGGER.error("Failed reading config {}", configName, e);
         }
         return null;
     }
@@ -101,7 +101,7 @@ public class ConfigLoader {
 
             Files.writeString(file, GSON.toJson(config));
         } catch (IOException e) {
-            CraftedCore.LOGGER.error("Failed saving config at " + file, e);
+            CraftedCore.LOGGER.error("Failed saving config at {}", file, e);
         }
     }
 
@@ -133,6 +133,7 @@ public class ConfigLoader {
         if (!list.isEmpty()) ModernNetworking.sendToPlayer(target, CONFIG_SYNC, tag);
     }
 
+    @SuppressWarnings("unused")
     private static void handleConfigSyncPackage(ModernNetworking.Context context, CompoundTag tag) {
         CLIENT_CONFIGS.clear();
 
@@ -174,7 +175,7 @@ public class ConfigLoader {
                             Object serverValue = field.get(serverConfig);
                             field.set(config, serverValue);
                         } catch (IllegalAccessException e) {
-                            CraftedCore.LOGGER.error("Failed modifying config " + config.getClass().getSimpleName(), e);
+                            CraftedCore.LOGGER.error("Failed modifying config {}", config.getClass().getSimpleName(), e);
                         }
                     }
                 }

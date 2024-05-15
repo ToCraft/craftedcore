@@ -8,6 +8,7 @@ import tocraft.craftedcore.network.ModernNetworking;
 import java.nio.file.Path;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface Config {
     /**
      * This should be overwritten to improve the performance and avoid errors
@@ -15,7 +16,7 @@ public interface Config {
     @Nullable
     default String getName() {
         List<String> possibleNames = ConfigLoader.getConfigNames(this);
-        return !possibleNames.isEmpty() ? possibleNames.get(0) : null;
+        return !possibleNames.isEmpty() ? possibleNames.getFirst() : null;
     }
 
     @Nullable

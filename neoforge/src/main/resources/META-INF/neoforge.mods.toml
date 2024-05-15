@@ -6,6 +6,8 @@ license = "LGPL-3.0"
 
 [[mixins]]
 config = "craftedcore.mixins.json"
+[[mixins]]
+config = "craftedcore-neoforge.mixins.json"
 
 [[mods]]
 modId = "craftedcore"

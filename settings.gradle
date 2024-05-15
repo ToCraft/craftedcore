@@ -10,12 +10,12 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("forge")
+//include("forge")
 include("neoforge")
 
 include("testmod-common")
 include("testmod-fabric")
-include("testmod-forge")
+//include("testmod-forge")
 include("testmod-neoforge")
 
 rootProject.name = "craftedcore"

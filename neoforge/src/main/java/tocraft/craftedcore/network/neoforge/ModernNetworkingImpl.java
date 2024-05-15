@@ -72,9 +72,9 @@ public class ModernNetworkingImpl {
     @ApiStatus.Internal
     public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
         if (side == ModernNetworking.Side.C2S) {
-            return new ClientboundCustomPayloadPacket(payload);
-        } else {
             return new ServerboundCustomPayloadPacket(payload);
+        } else {
+            return new ClientboundCustomPayloadPacket(payload);
         }
     }
 }

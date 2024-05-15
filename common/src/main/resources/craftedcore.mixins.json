@@ -11,9 +11,7 @@
   ],
   "client": [
     "MultiPlayerGameModeMixin",
-    "client.ClientLevelMixin",
-    "client.ClientPacketListenerMixin",
-    "client.MinecraftClientMixin"
+    "client.ClientPacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

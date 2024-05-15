@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.event.Event;
 import tocraft.craftedcore.event.EventFactory;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 @Environment(EnvType.CLIENT)
 public final class RenderEvents {
     public static final Event<HUDRendering> HUD_RENDERING = EventFactory.createWithVoid();
