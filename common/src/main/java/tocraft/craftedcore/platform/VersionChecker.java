@@ -62,7 +62,7 @@ public class VersionChecker {
                             remoteVersions.add(nodeList.item(i).getTextContent());
                         }
                     } catch (Exception e) {
-                        CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: " + mavenURL, e);
+                        CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: {}", mavenURL, e);
                     }
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, true, INVALID_VERSIONS));
                     if (!versions.isEmpty()) {
@@ -154,7 +154,7 @@ public class VersionChecker {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
         } catch (IOException | URISyntaxException e) {
-            CraftedCore.LOGGER.error("Caught an error while getting the newest " + (releasesInsteadOfTags ? "releases" : "tags") + " from " + url, e);
+            CraftedCore.LOGGER.error("Caught an error while getting the newest {} from {}", releasesInsteadOfTags ? "releases" : "tags", url, e);
         }
 
         return versions;
@@ -224,7 +224,7 @@ public class VersionChecker {
             }
 
         } catch (Exception e) {
-            CraftedCore.LOGGER.error("Caught an error while getting the newest version from " + url, e);
+            CraftedCore.LOGGER.error("Caught an error while getting the newest version from {}", url, e);
         }
 
         return versions;

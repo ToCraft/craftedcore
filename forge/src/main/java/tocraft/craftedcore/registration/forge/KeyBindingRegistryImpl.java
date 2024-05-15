@@ -18,7 +18,7 @@ public final class KeyBindingRegistryImpl {
         if (!eventAlreadyTriggered) {
             KEY_MAPPINGS.add(keyMapping);
         } else {
-            LogUtils.getLogger().warn("Key Registration Event already run. Couldn't register Key " + keyMapping.getName());
+            LogUtils.getLogger().warn("Key Registration Event already run. Couldn't register Key {}", keyMapping.getName());
         }
     }
 
