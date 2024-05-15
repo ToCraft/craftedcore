@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.event.client.RenderEvents;
 
+@SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 @Mixin(Gui.class)
 public abstract class GuiMixin {
@@ -22,19 +23,17 @@ public abstract class GuiMixin {
     @Shadow
     protected abstract Player getCameraPlayer();
 
-    @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    private boolean shouldRenderBreath(boolean isEyeInFluid) {
-        InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(null, this.getCameraPlayer());
+    @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
+    private void shouldRenderBreath(PoseStack guiGraphics, CallbackInfo ci) {
+        InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
-            return false;
-        } else {
-            return isEyeInFluid;
+            ci.cancel();
         }
     }
 
     @Inject(method = "renderHearts", at = @At(value = "HEAD"), cancellable = true)
     private void shouldRenderHealth(PoseStack guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(guiGraphics, null);
+        InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(guiGraphics, player);
         if (result == InteractionResult.FAIL) {
             ci.cancel();
         }
@@ -51,7 +50,7 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderVehicleHealth", at = @At(value = "HEAD"), cancellable = true)
     private void shouldRenderMountHealth(PoseStack guiGraphics, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(guiGraphics, null);
+        InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
             ci.cancel();
         }
