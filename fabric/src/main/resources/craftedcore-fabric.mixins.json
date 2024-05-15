@@ -7,7 +7,8 @@
     "LivingDeathMixin"
   ],
   "client": [
-    "client.GuiMixin"
+    "client.GuiMixin",
+    "client.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1
