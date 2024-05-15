@@ -9,10 +9,17 @@ import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.event.Event;
 import tocraft.craftedcore.event.EventFactory;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public final class EntityEvents {
     public static final Event<Interact> INTERACT_WITH_PLAYER = EventFactory.createWithInteractionResult();
     public static final Event<LivingDeath> LIVING_DEATH = EventFactory.createWithInteractionResult();
+    public static final Event<LivingBreathe> LIVING_BREATHE = EventFactory.createWithCallback(callbacks -> (entity, canBreathe) -> {
+        boolean canBreatheNow = canBreathe;
+        for (LivingBreathe callback : callbacks) {
+            canBreatheNow = callback.breathe(entity, canBreatheNow);
+        }
+        return canBreatheNow;
+    });
 
     @FunctionalInterface
     public interface Interact {
@@ -22,5 +29,13 @@ public final class EntityEvents {
     @FunctionalInterface
     public interface LivingDeath {
         InteractionResult die(LivingEntity entity, DamageSource source);
+    }
+
+    @FunctionalInterface
+    public interface LivingBreathe {
+        /**
+         * @return the new value for canBreathe
+         */
+        boolean breathe(LivingEntity entity, boolean canBreathe);
     }
 }

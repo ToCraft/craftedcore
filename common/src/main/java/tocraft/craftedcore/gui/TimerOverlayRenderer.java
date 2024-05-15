@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 public class TimerOverlayRenderer {
 
     private static final int fadingTickRequirement = 0;
-    private static int lastCooldown = 0;
     private static int ticksSinceUpdate = 0;
     private static boolean isFading = false;
     private static int fadingProgress = 0;
@@ -27,18 +26,7 @@ public class TimerOverlayRenderer {
         float cooldownScale = 1 - currentCooldown / (float) maxCooldown;
 
         // cooldown has NOT updated since last tick. It is most likely full.
-        if (currentCooldown == lastCooldown) {
-            ticksSinceUpdate++;
-
-            // If the cooldown has not updated, we are above the requirement, and we are not fading, start fading.
-            if (ticksSinceUpdate > fadingTickRequirement && !isFading) {
-                isFading = true;
-                fadingProgress = 0;
-            }
-        }
-
-        // cooldown updated in the last tick, and we are fading. Stop fading.
-        else if (ticksSinceUpdate > fadingProgress) {
+        if (ticksSinceUpdate > fadingProgress) {
             ticksSinceUpdate = 0;
             isFading = false;
         }

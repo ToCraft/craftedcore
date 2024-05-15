@@ -1,55 +1,60 @@
 package tocraft.craftedcore.network;
 
-import dev.architectury.networking.NetworkManager;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 
-@SuppressWarnings("ALL")
-public final class ModernNetworking {
+@SuppressWarnings("unused")
+public class ModernNetworking {
+    @ExpectPlatform
     public static void registerReceiver(Side side, ResourceLocation id, Receiver receiver) {
-        NetworkManager.registerReceiver(side == Side.C2S ? NetworkManager.Side.C2S : NetworkManager.Side.S2C, id, (packet, context) -> receiver.receive(new Context() {
-            @Override
-            public Player getPlayer() {
-                return context.getPlayer();
-            }
+        throw new AssertionError();
+    }
 
-            @Override
-            public EnvType getEnv() {
-                return context.getEnv();
-            }
-
-            @Override
-            public void queue(Runnable runnable) {
-                context.queue(runnable);
-            }
-        }, packet.readNbt()));
+    @ExpectPlatform
+    public static void registerType(ResourceLocation id) {
+        throw new AssertionError();
     }
 
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
-        FriendlyByteBuf buf = new FriendlyByteBuf((Unpooled.buffer()));
-        buf.writeNbt(data);
-        NetworkManager.sendToPlayer(player, packetId, buf);
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeResourceLocation(packetId);
+        buf.writeNbt(data.copy());
+        player.connection.send(toPacket(Side.S2C, packetId, buf));
     }
 
     public static void sendToPlayers(Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
         for (ServerPlayer player : players) {
-            FriendlyByteBuf buf = new FriendlyByteBuf((Unpooled.buffer()));
-            buf.writeNbt(data);
-            NetworkManager.sendToPlayer(player, packetId, buf);
+            sendToPlayer(player, packetId, data);
         }
     }
 
     @Environment(EnvType.CLIENT)
     public static void sendToServer(ResourceLocation packetId, CompoundTag data) {
-        FriendlyByteBuf buf = new FriendlyByteBuf((Unpooled.buffer()));
-        buf.writeNbt(data);
-        NetworkManager.sendToServer(packetId, buf);
+        ClientPacketListener connection = Minecraft.getInstance().getConnection();
+
+        if (connection != null) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeResourceLocation(packetId);
+            buf.writeNbt(data.copy());
+            connection.send(toPacket(Side.C2S, packetId, buf));
+        }
+    }
+
+    @ExpectPlatform
+    @ApiStatus.Internal
+    public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
+        throw new AssertionError();
     }
 
     @FunctionalInterface
@@ -60,12 +65,16 @@ public final class ModernNetworking {
     public interface Context {
         Player getPlayer();
 
-        EnvType getEnv();
+        Env getEnv();
 
         void queue(Runnable runnable);
     }
 
     public enum Side {
         S2C, C2S
+    }
+
+    public enum Env {
+        CLIENT, SERVER
     }
 }

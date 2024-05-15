@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/ToCraft/craftedcore/issues"
+displayURL = "https://github.com/ToCraft/craftedcore"
 license = "LGPL-3.0"
 
 [[mixins]]
@@ -14,18 +15,12 @@ authors = "To_Craft"
 description = '''
 My libary mod to make mods more compatible with modloaders
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.craftedcore]]
 modId = "minecraft"
 mandatory = true
+type = "required"
 versionRange = "[${minecraft_version},)"
 ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.craftedcore]]
-modId = "architectury"
-mandatory = true
-versionRange = "[${architectury_version},)"
-ordering = "AFTER"
 side = "BOTH"

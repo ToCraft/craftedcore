@@ -1,5 +1,17 @@
+craftedcore 4.2
+================
+
+- remove HTTPClient 5 background library
+- improve Render Overlay Events for MinecraftForge & Fabric
+- fix SynchronizedReloadRegistry for Fabric
+- remove Architectury API dependency
+- add Living Breathe Event
+- add Data Pack Sync Event
+- background improvements
+
 craftedcore 4.1
 ================
+
 - fix crash on dedicated server
 - fix networking issues on 1.20.6
 - fix NeoForge not detecting mod
@@ -8,6 +20,7 @@ craftedcore 4.1
 
 craftedcore 4.0
 ================
+
 - add SynchronizedJsonReloadListener
 - implement new custom networking
 - create custom Event system
@@ -15,20 +28,24 @@ craftedcore 4.0
 
 craftedcore 3.2.4
 ================
+
 - fix "Invalid Player Data" on first world join with multiple mods
 - fix patreons can't be synced with web
 - cached patreons are stored locally for offline functionality
 
 craftedcore 3.2.3
 ================
+
 - fix crash on neoforge & dev versions
 
 craftedcore 3.2.2
 ================
+
 - merge to apache http client 5
 
 craftedcore 3.2.1
 ================
+
 - version checker for maven meta data xml files is now updated & improved
 - small improvements to the player data saving system
 - better logging while config handling
@@ -36,11 +53,13 @@ craftedcore 3.2.1
 
 craftedcore 3.2
 ================
+
 - add new version checker option to check for new tags & releases on GitHub
 - Patreons are now on a github.io-Page
 
 craftedcore 3.1.2
 ================
+
 - fix crash on Legacy Forge
 
 craftedcore 3.1
