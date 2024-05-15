@@ -5,14 +5,18 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.world.SleepFinishedTimeEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.event.common.ServerLevelEvents;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 @SuppressWarnings("unused")
@@ -47,5 +51,24 @@ public class CraftedCoreForgeEventHandler {
     public void sleepFinishedTime(SleepFinishedTimeEvent event) {
         long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition((ServerLevel) event.getWorld(), event.getNewTime());
         event.setTimeAddition(newTimeIn);
+    }
+
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getEnvironment());
+    }
+
+    @SubscribeEvent
+    public void serverLoad(WorldEvent.Load event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
+        }
+    }
+
+    @SubscribeEvent
+    public void serverUnload(WorldEvent.Unload event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
+        }
     }
 }

@@ -6,7 +6,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 
 @SuppressWarnings("unused")
@@ -50,6 +52,15 @@ public class CraftedCoreForgeEventHandlerClient {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void event(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
+        } else if (event.phase == TickEvent.Phase.END) {
+            ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
         }
     }
 }

@@ -1,7 +1,6 @@
 package tocraft.craftedcore.platform;
 
-import dev.architectury.platform.Mod;
-import dev.architectury.platform.Platform;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,36 +9,35 @@ import java.nio.file.Path;
 
 @SuppressWarnings("unused")
 public final class PlatformData {
+    @ExpectPlatform
     public static boolean isModLoaded(String modid) {
-        return Platform.isModLoaded(modid);
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     @Nullable
     public static Version getModVersion(String modid) {
-        Mod mod = Platform.getMod(modid);
-        return mod != null ? Version.parse(mod.getVersion()) : null;
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static boolean isDevEnv() {
-        return Platform.isDevelopmentEnvironment();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static EnvType getEnv() {
-        return Platform.getEnv();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static Path getConfigPath() {
-        return Platform.getConfigFolder();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static ModLoader getModLoaderId() {
-        if (Platform.isFabric()) {
-            return ModLoader.FABRIC;
-        } else if (Platform.isForge()) {
-            return ModLoader.FORGE;
-        } else {
-            return ModLoader.OTHER;
-        }
+        throw new AssertionError();
     }
 
     public enum ModLoader {

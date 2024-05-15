@@ -9,19 +9,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.event.common.PlayerEvents;
-import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
+import tocraft.craftedcore.event.common.ResourceEvents;
 
+@SuppressWarnings("unused")
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
     @ModifyArg(method = "reloadResources", at = @At(value = "INVOKE", target = "Lnet/minecraft/stats/ServerRecipeBook;sendInitialRecipeBook(Lnet/minecraft/server/level/ServerPlayer;)V"))
     private ServerPlayer endResourceReload(ServerPlayer player) {
-        SynchronizedReloadListenerRegistry.sendAllToPlayer(player);
+        ResourceEvents.DATA_PACK_SYNC.invoke().onSync(player);
         return player;
     }
+
 
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
     private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
         PlayerEvents.PLAYER_JOIN.invoke().join(serverPlayer);
+        ResourceEvents.DATA_PACK_SYNC.invoke().onSync(serverPlayer);
     }
 
     @Inject(method = "remove", at = @At("HEAD"))

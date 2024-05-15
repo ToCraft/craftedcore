@@ -4,12 +4,15 @@
   "package": "tocraft.craftedcore.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "LivingBreatheMixin",
     "PlayerAdvancementsMixin",
     "PlayerListMixin",
     "PlayerMixin",
     "ServerPlayerMixin"
   ],
   "client": [
+    "MultiPlayerGameModeMixin",
+    "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.MinecraftClientMixin"
   ],
