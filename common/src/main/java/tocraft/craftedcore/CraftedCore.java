@@ -6,7 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.event.ArchitecturyImpl;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
@@ -16,10 +15,8 @@ public class CraftedCore {
     public static final String MODID = "craftedcore";
 
     public void initialize() {
-        // initialize mixin extras
+        // initialize MixinExtras
         MixinExtrasBootstrap.init();
-
-        ArchitecturyImpl.initialize();
 
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();
@@ -27,8 +24,8 @@ public class CraftedCore {
         // send configurations to client
         PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
 
-        // sync data pack packets on player join
-        PlayerEvents.PLAYER_JOIN.register(SynchronizedReloadListenerRegistry::sendAllToPlayer);
+        // sync data pack packets on data pack sync
+        SynchronizedReloadListenerRegistry.initialize();
 
         // check for new version
         VersionChecker.registerModrinthChecker(MODID, "crafted-core", Component.literal("CraftedCore"));

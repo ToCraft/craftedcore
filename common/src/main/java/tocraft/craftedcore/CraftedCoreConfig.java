@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("CanBeFinal")
 public final class CraftedCoreConfig implements Config {
     public static final CraftedCoreConfig INSTANCE = ConfigLoader.read(CraftedCore.MODID, CraftedCoreConfig.class);
     public boolean enableVersionChecking = true;
