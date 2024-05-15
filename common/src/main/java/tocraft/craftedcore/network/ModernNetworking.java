@@ -2,18 +2,18 @@ package tocraft.craftedcore.network;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ModernNetworking {
@@ -31,18 +31,16 @@ public class ModernNetworking {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeResourceLocation(packetId);
         buf.writeNbt(data.copy());
-        player.connection.send(new ClientboundCustomPayloadPacket(buf));
+        player.connection.send(toPacket(Side.S2C, packetId, buf));
     }
 
     public static void sendToPlayers(Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
         for (ServerPlayer player : players) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-            buf.writeResourceLocation(packetId);
-            buf.writeNbt(data.copy());
-            player.connection.send(new ClientboundCustomPayloadPacket(buf));
+            sendToPlayer(player, packetId, data);
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void sendToServer(ResourceLocation packetId, CompoundTag data) {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
 
@@ -50,8 +48,14 @@ public class ModernNetworking {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeResourceLocation(packetId);
             buf.writeNbt(data.copy());
-            connection.send(new ServerboundCustomPayloadPacket(buf));
+            connection.send(toPacket(Side.C2S, packetId, buf));
         }
+    }
+
+    @ExpectPlatform
+    @ApiStatus.Internal
+    public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
+        throw new AssertionError();
     }
 
     @FunctionalInterface
