@@ -2,9 +2,12 @@ package tocraft.craftedcore.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionResult;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
+import tocraft.craftedcore.event.client.RenderEvents;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 
 import java.util.HashSet;
@@ -24,6 +27,15 @@ public class CraftedCoreClient {
             }
 
             getSyncPacketQueue().clear();
+        });
+
+        // prevent full air bar when swimming
+        RenderEvents.RENDER_BREATH.register((graphics, player) -> {
+            if (player != null && player.getAirSupply() == player.getMaxAirSupply() && player.isEyeInFluid(FluidTags.WATER)) {
+                return InteractionResult.FAIL;
+            } else {
+                return InteractionResult.PASS;
+            }
         });
     }
 
