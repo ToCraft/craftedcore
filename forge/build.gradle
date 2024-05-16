@@ -2,7 +2,7 @@ apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.g
 
 loom {
     forge {
-        mixinConfigs = ["craftedcore.mixins.json"]
+        mixinConfigs = ["craftedcore.mixins.json", "craftedcore-forge.mixins.json"]
     }
 }
 
