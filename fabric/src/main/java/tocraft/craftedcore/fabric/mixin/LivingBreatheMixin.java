@@ -1,4 +1,4 @@
-package tocraft.craftedcore.mixin;
+package tocraft.craftedcore.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.LivingEntity;
