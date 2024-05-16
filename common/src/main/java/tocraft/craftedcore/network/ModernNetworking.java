@@ -21,11 +21,6 @@ public class ModernNetworking {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
-    public static void registerType(ResourceLocation id) {
-        throw new AssertionError();
-    }
-
     public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeResourceLocation(packetId);
