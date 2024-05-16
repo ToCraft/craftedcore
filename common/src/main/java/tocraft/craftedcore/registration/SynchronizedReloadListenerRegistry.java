@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.ResourceEvents;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.ArrayList;
@@ -29,10 +28,6 @@ public class SynchronizedReloadListenerRegistry {
         if (PlatformData.getEnv() == EnvType.CLIENT) {
             reloadListener.registerPacketReceiver();
         }
-
-
-        // register Network packet
-        ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
 
         onRegister(reloadListener, id);
     }

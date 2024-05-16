@@ -20,10 +20,6 @@ public class CraftedCore {
         // initialize MixinExtras
         MixinExtrasBootstrap.init();
 
-        // register Network Types
-        ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
-        ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
-
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();
 
