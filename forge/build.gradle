@@ -4,10 +4,6 @@ loom {
     forge {
         mixinConfigs = ["craftedcore.mixins.json", "craftedcore-forge.mixins.json"]
     }
-
-    mixin {
-        useLegacyMixinAp = false
-    }
 }
 
 dependencies {

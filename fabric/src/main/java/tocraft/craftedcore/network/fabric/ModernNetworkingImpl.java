@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -60,9 +62,9 @@ public class ModernNetworkingImpl {
     @ApiStatus.Internal
     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
         if (side == ModernNetworking.Side.C2S) {
-            return ClientPlayNetworking.createC2SPacket(id, buf);
+            return new ServerboundCustomPayloadPacket(buf);
         } else {
-            return ServerPlayNetworking.createS2CPacket(id, buf);
+            return new ClientboundCustomPayloadPacket(buf);
         }
     }
 }
