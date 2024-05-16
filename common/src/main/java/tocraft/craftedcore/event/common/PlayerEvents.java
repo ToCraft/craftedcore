@@ -20,7 +20,7 @@ public final class PlayerEvents {
     public static final Event<PlayerRespawn> PLAYER_RESPAWN = EventFactory.createWithVoid();
     public static final Event<AwardAdvancement> AWARD_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<RevokeAdvancement> REVOKE_ADVANCEMENT = EventFactory.createWithVoid();
-    public static final Event<AllowSleepTime> ALLOW_SLEEP_TIME = EventFactory.createWithVoid();
+    public static final Event<AllowSleepTime> ALLOW_SLEEP_TIME = EventFactory.createWithInteractionResult();
     public static final Event<SleepFinishedTime> SLEEP_FINISHED_TIME = EventFactory.createWithCallback(callbacks -> (level, newTime) -> {
         long newNewTime = 0;
         for (SleepFinishedTime callback : callbacks) {
