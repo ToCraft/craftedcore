@@ -1,3 +1,8 @@
+craftedcore 4.2.2
+================
+
+- fix Entity Interactions failed most times
+
 craftedcore 4.2
 ================
 
