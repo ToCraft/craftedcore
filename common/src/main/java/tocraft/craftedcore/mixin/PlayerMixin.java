@@ -43,7 +43,10 @@ public abstract class PlayerMixin implements PlayerDataProvider {
             ordinal = 0),
             cancellable = true)
     private void onInteraction(Entity entity, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        cir.setReturnValue(EntityEvents.INTERACT_WITH_PLAYER.invoke().interact((Player) (Object) this, entity, interactionHand));
+        InteractionResult result = EntityEvents.INTERACT_WITH_PLAYER.invoke().interact((Player) (Object) this, entity, interactionHand);
+        if (result != InteractionResult.PASS) {
+            cir.setReturnValue(result);
+        }
     }
 
     @Unique

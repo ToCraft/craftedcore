@@ -1,3 +1,9 @@
+craftedcore 4.2.2
+================
+
+- fix Entity Interactions failed most times
+- fix key mappings not always registered on Forge/NeoForge
+
 craftedcore 4.2
 ================
 
