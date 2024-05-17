@@ -1,5 +1,9 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/common.gradle"
 
+loom {
+    accessWidenerPath = file("src/main/resources/craftedcore.accessWidener")
+}
+
 dependencies {
     // mixin extras
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))

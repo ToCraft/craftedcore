@@ -1,8 +1,13 @@
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
 
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
     forge {
         mixinConfigs = ["craftedcore.mixins.json", "craftedcore-forge.mixins.json"]
+
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
     }
 }
 
