@@ -4,6 +4,10 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +22,9 @@ public final class KeyBindingRegistryImpl {
         if (!eventAlreadyTriggered) {
             KEY_MAPPINGS.add(keyMapping);
         } else {
-            LogUtils.getLogger().warn("Key Registration Event already run. Couldn't register Key {}", keyMapping.getName());
+            Options options = Minecraft.getInstance().options;
+            options.keyMappings = ArrayUtils.add(options.keyMappings, keyMapping);
+            LogUtils.getLogger().warn("Key Registration Event already run for key {}.", keyMapping.getName());
         }
     }
 
