@@ -18,6 +18,9 @@ public class MultiPlayerGameModeMixin {
                     shift = At.Shift.AFTER),
             cancellable = true)
     private void entityInteract(Player player, Entity entity, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        cir.setReturnValue(EntityEvents.INTERACT_WITH_PLAYER.invoke().interact(player, entity, interactionHand));
+        InteractionResult result = EntityEvents.INTERACT_WITH_PLAYER.invoke().interact(player, entity, interactionHand);
+        if (result != InteractionResult.PASS) {
+            cir.setReturnValue(result);
+        }
     }
 }
