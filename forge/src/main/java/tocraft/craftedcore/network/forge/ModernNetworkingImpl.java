@@ -6,6 +6,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -34,7 +36,7 @@ public class ModernNetworkingImpl {
             ModernNetworking.Context context = new ModernNetworking.Context() {
                 @Override
                 public Player getPlayer() {
-                    return getEnv() == ModernNetworking.Env.CLIENT ? Minecraft.getInstance().player : event.getSource().get().getSender();
+                    return getEnv() == ModernNetworking.Env.CLIENT ? DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().player) : event.getSource().get().getSender();
                 }
 
                 @Override
