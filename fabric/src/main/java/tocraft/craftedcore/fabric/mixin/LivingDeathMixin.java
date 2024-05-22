@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.event.common.EntityEvents;
 
-@SuppressWarnings({"DataFlowIssue", "unused"})
+@SuppressWarnings({"DataFlowIssue", "unused", "UnreachableCode"})
 @Mixin(value = {LivingEntity.class, Player.class, ServerPlayer.class})
 public class LivingDeathMixin {
     @Inject(method = "die", at = @At("HEAD"), cancellable = true)

@@ -1,7 +1,13 @@
 package tocraft.craftedcore.forge.mixin;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,9 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.craftedcore.event.common.EntityEvents;
 
 // I have no idea, why this is so complicated for Forge...
-@SuppressWarnings({"DataFlowIssue", "unused", "UnreachableCode"})
+@SuppressWarnings({"UnreachableCode", "DataFlowIssue"})
 @Mixin(LivingEntity.class)
-public abstract class LivingBreatheMixin {
+public abstract class LivingBreatheMixin extends Entity {
+    public LivingBreatheMixin(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
+
     @Shadow
     public abstract boolean isAlive();
 
@@ -37,20 +47,23 @@ public abstract class LivingBreatheMixin {
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "baseTick", at = @At("HEAD"))
     private void breathe(CallbackInfo ci) {
+        boolean isInWater = this.isEyeInFluid(FluidTags.WATER) && !this.level.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).is(Blocks.BUBBLE_COLUMN);
+        int air = this.getAirSupply();
+        boolean canBreathe = EntityEvents.LIVING_BREATHE.invoke().breathe((LivingEntity) (Object) this, !isInWater);
+
         if (this.isAlive()) {
-            int air = ((LivingEntity) (Object) this).getAirSupply();
-            if (!EntityEvents.LIVING_BREATHE.invoke().breathe((LivingEntity) (Object) this, !((LivingEntity) (Object) this).isInWater())) {
-                ((LivingEntity) (Object) this).setAirSupply(this.decreaseAirSupply(air));
+            if (!isInWater && !canBreathe) {
+                this.setAirSupply(this.decreaseAirSupply(air));
 
                 // Air has run out, start drowning
-                if (((LivingEntity) (Object) this).getAirSupply() == -20) {
-                    ((LivingEntity) (Object) this).setAirSupply(0);
-                    ((LivingEntity) (Object) this).hurt(DamageSource.DRY_OUT, 2.0F);
+                if (this.getAirSupply() == -20) {
+                    this.setAirSupply(0);
+                    this.hurt(DamageSource.DRY_OUT, 2.0F);
                 }
-            } else if (((LivingEntity) (Object) this).getAirSupply() < ((LivingEntity) (Object) this).getMaxAirSupply()) {
-                ((LivingEntity) (Object) this).setAirSupply(this.increaseAirSupply(air));
+            } else if (canBreathe && isInWater) {
+                this.setAirSupply(this.increaseAirSupply(air));
             }
         }
     }

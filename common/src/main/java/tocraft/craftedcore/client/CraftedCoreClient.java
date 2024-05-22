@@ -13,6 +13,7 @@ import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("UnreachableCode")
 @Environment(EnvType.CLIENT)
 public class CraftedCoreClient {
     private static final Set<ApplicablePacket> SYNC_PACKET_QUEUE = new HashSet<>();
