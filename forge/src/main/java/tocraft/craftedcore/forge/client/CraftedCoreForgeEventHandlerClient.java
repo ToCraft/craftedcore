@@ -33,13 +33,6 @@ public class CraftedCoreForgeEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void registerKeyMappingsEvent(RegisterKeyMappingsEvent event) {
-        for (KeyMapping mapping : KeyBindingRegistryImpl.getMappingsForEvent()) {
-            event.register(mapping);
-        }
-    }
-
-    @SubscribeEvent
     public void event(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientPlayerEvents.CLIENT_PLAYER_QUIT.invoke().quit(event.getPlayer());
     }
