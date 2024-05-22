@@ -3,6 +3,7 @@ craftedcore 4.2.3
 
 - fix keys not always registered on Forge
 - fix breathing speed on 1.18.2
+- fix crash on Forge Server when receiving Packet
 
 craftedcore 4.2.2
 ================
