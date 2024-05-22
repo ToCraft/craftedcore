@@ -16,7 +16,7 @@ public class CraftedCoreNeoForge {
 
     public CraftedCoreNeoForge(IEventBus bus) {
         if (FMLEnvironment.dist.isClient()) {
-            new CraftedCoreNeoForgeClient(bus);
+            new CraftedCoreNeoForgeClient();
         }
         new CraftedCore().initialize();
 
