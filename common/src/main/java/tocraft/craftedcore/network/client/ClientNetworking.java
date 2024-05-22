@@ -1,9 +1,12 @@
 package tocraft.craftedcore.network.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.ModernNetworking;
 
+@Environment(EnvType.CLIENT)
 public class ClientNetworking {
 
     public static void runOrQueue(ModernNetworking.Context context, ApplicablePacket packet) {
