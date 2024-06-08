@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("UnreachableCode")
 public class SynchronizedReloadListenerRegistry {
     private static final Map<ResourceLocation, SynchronizedJsonReloadListener> listener = new HashMap<>();
 

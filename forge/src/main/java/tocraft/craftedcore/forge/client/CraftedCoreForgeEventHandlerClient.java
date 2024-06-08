@@ -1,20 +1,17 @@
 package tocraft.craftedcore.forge.client;
 
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
-import tocraft.craftedcore.registration.forge.KeyBindingRegistryImpl;
 
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)

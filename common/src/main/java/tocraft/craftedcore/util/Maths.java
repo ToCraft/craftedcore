@@ -1,11 +1,10 @@
-package tocraft.craftedcore.math;
+package tocraft.craftedcore.util;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @SuppressWarnings("unused")
-@Deprecated(forRemoval = true)
-public class math {
+public class Maths {
     public static Vector3f POSITIVE_X() {
         return new Vector3f(1, 0, 0);
     }
