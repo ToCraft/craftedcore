@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnreachableCode"})
 public class VersionChecker {
     private static final Map<String, Version> CACHED_VERSION = new HashMap<>();
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");

@@ -1,11 +1,10 @@
-package tocraft.craftedcore.math;
+package tocraft.craftedcore.util;
 
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 @SuppressWarnings("unused")
-@Deprecated(forRemoval = true)
-public class math {
+public class Maths {
     public static Vector3f POSITIVE_X() {
         return new Vector3f(1, 0, 0);
     }

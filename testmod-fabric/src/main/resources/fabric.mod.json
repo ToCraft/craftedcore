@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "testmod",
-  "version": "N/A",
+  "version": "0.1",
   "name": "TestMod",
   "description": "Mod to test CraftedCore",
   "authors": [
