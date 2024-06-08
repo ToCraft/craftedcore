@@ -1,3 +1,8 @@
+craftedcore 4.2.4.1
+================
+
+- crash patch for mixins
+
 craftedcore 4.2.4
 ================
 
