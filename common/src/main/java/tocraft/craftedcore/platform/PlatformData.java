@@ -2,12 +2,13 @@ package tocraft.craftedcore.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "Contract"})
 public final class PlatformData {
     @ExpectPlatform
     public static boolean isModLoaded(String modid) {
@@ -25,17 +26,20 @@ public final class PlatformData {
         throw new AssertionError();
     }
 
+    @Contract(value = " -> !null", pure = true)
     @ExpectPlatform
     public static EnvType getEnv() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
+    @Contract(value = " -> !null", pure = true)
     public static Path getConfigPath() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
+    @Contract(value = " -> !null", pure = true)
     public static ModLoader getModLoaderId() {
         throw new AssertionError();
     }

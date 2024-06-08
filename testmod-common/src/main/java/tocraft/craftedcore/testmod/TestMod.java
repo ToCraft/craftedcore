@@ -22,31 +22,31 @@ public class TestMod {
     public static final String MODID = "testmod";
 
     public static void initialize() {
-        PlayerEvents.PLAYER_JOIN.register(player -> LOGGER.info("player {} joined.", player != null ? player.getName().getString() : ""));
-        PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.info("player {} quit.", player != null ? player.getName().getString() : ""));
-        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info("{} unlocked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
-        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.info("{} revoked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
+        PlayerEvents.PLAYER_JOIN.register(player -> LOGGER.debug("player {} joined.", player != null ? player.getName().getString() : ""));
+        PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.debug("player {} quit.", player != null ? player.getName().getString() : ""));
+        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} unlocked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
+        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} revoked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
-            LOGGER.info("player {}just interacted with {}", player != null ? player.getName().getString() : "", entity.getName().getString());
+            LOGGER.debug("player {}just interacted with {}", player != null ? player.getName().getString() : "", entity.getName().getString());
             return InteractionResult.PASS;
         });
 
         EntityEvents.LIVING_DEATH.register((entity, source) -> {
-            LOGGER.info("{}Oh, I just died in your arms tonight.", entity != null ? entity.getName().getString() : "");
+            LOGGER.debug("{}Oh, I just died in your arms tonight.", entity != null ? entity.getName().getString() : "");
             return InteractionResult.PASS;
         });
 
         EntityEvents.LIVING_BREATHE.register((entity, canBreathe) -> {
             if (entity instanceof Player) {
                 if (canBreathe) {
-                    LOGGER.info("In and out.");
+                    LOGGER.debug("In and out.");
                 } else {
-                    LOGGER.info("I need air!");
+                    LOGGER.debug("I need air!");
                 }
                 // revert value, the players will need to breathe underwater now
                 return !canBreathe;
             } else {
-                LOGGER.info("something is breathing here...");
+                LOGGER.debug("something is breathing here...");
                 return canBreathe;
             }
         });
@@ -59,9 +59,9 @@ public class TestMod {
     @Environment(EnvType.CLIENT)
     static class TestModClient {
         public static void initialize() {
-            ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(player -> LOGGER.info("client player {} joined.", player != null ? player.getName().getString() : ""));
-            ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> LOGGER.info("client player {} quit.", player != null ? player.getName().getString() : ""));
-            ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.info("{} respawned and was previously named {}", newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "", oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : ""));
+            ClientPlayerEvents.CLIENT_PLAYER_JOIN.register(player -> LOGGER.debug("client player {} joined.", player != null ? player.getName().getString() : ""));
+            ClientPlayerEvents.CLIENT_PLAYER_QUIT.register(player -> LOGGER.debug("client player {} quit.", player != null ? player.getName().getString() : ""));
+            ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> LOGGER.debug("{} respawned and was previously named {}", newPlayer != null ? Objects.requireNonNull(newPlayer.getDisplayName()).getString() : "", oldPlayer != null ? Objects.requireNonNull(oldPlayer.getDisplayName()).getString() : ""));
 
             RenderEvents.RENDER_MOUNT_HEALTH.register((player, graphics) -> InteractionResult.FAIL);
 
