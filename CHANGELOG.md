@@ -1,3 +1,9 @@
+craftedcore 4.2.4
+================
+
+- update to NeoForge 20.6.111 for 1.20.6
+- integrate Mixin Trace mod for more detailed crash reports
+
 craftedcore 4.2.3
 ================
 
