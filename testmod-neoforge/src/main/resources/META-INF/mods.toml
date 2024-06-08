@@ -5,7 +5,7 @@ license = "LGPL-3.0"
 
 [[mods]]
 modId = "testmod"
-version = "N/A"
+version = "0.1"
 displayName = "TestMod"
 authors = "To_Craft"
 description = '''

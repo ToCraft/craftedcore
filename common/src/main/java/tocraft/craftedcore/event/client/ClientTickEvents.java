@@ -3,7 +3,6 @@ package tocraft.craftedcore.event.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import tocraft.craftedcore.event.Event;
 import tocraft.craftedcore.event.EventFactory;
 

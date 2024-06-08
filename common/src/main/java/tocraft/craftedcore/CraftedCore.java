@@ -6,9 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
