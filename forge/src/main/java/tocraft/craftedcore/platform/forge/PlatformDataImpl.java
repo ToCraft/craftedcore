@@ -5,6 +5,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
@@ -32,11 +33,7 @@ public final class PlatformDataImpl {
         return FMLPaths.CONFIGDIR.get();
     }
 
-    public static ModLoader getModLoaderId() {
-        return ModLoader.FORGE;
-    }
-
-    public enum ModLoader {
-        FABRIC, FORGE, NEOFORGE, OTHER
+    public static PlatformData.ModLoader getModLoaderId() {
+        return PlatformData.ModLoader.FORGE;
     }
 }

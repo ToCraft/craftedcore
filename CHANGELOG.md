@@ -1,3 +1,9 @@
+craftedcore 4.3
+================
+
+- fix error when sending update message
+- improve filter mechanism for modrinth version checking
+
 craftedcore 4.2.4
 ================
 
