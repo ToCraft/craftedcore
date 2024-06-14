@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -17,6 +19,7 @@ import tocraft.craftedcore.event.common.PlayerEvents;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +38,11 @@ import java.util.Map;
 public class VersionChecker {
     private static final Map<String, Version> CACHED_VERSION = new HashMap<>();
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");
+
+    private static void sendUpdateMessage(Player player, Component modName, Version newestVersion) {
+        CraftedCore.LOGGER.warn(new TranslatableComponent("craftedcore.update", modName.getString(), newestVersion.toString()).getString());
+        player.displayClientMessage(new TranslatableComponent("craftedcore.update", modName, newestVersion.toString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())), false);
+    }
 
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
         // notify player about outdated version
@@ -72,8 +80,7 @@ public class VersionChecker {
                     CACHED_VERSION.put(modid, newestVersion);
                 }
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.displayClientMessage(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion), false);
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
@@ -104,8 +111,7 @@ public class VersionChecker {
                 }
 
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.displayClientMessage(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion), false);
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
@@ -205,15 +211,14 @@ public class VersionChecker {
                 }
 
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.displayClientMessage(new TranslatableComponent(CraftedCore.MODID + ".update", modName.getString(), newestVersion), false);
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
     }
 
     private static List<String> getVersionsFromModrinth(String slug) {
-        String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
+        String url = getModrinthUrl(slug);
         Gson GSON = new GsonBuilder().setPrettyPrinting().create();
         List<String> versions = new ArrayList<>();
 
@@ -222,8 +227,10 @@ public class VersionChecker {
             header.put("User-Agent", "crafted-core");
             String json = getResponse(header, url);
             JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
-            for (JsonElement jsonElement : jsonArray) {
-                versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
+            if (jsonArray != null) {
+                for (JsonElement jsonElement : jsonArray) {
+                    versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
+                }
             }
 
         } catch (Exception e) {
@@ -231,5 +238,15 @@ public class VersionChecker {
         }
 
         return versions;
+    }
+
+    private static @NotNull String getModrinthUrl(String slug) {
+        String baseUrl = "https://api.modrinth.com/v2/project/" + slug + "/version";
+        // filter for compatibility
+        PlatformData.ModLoader modLoader = PlatformData.getModLoaderId();
+        String loaders = modLoader != PlatformData.ModLoader.OTHER ? "?loaders=[\"" + modLoader.name().toLowerCase() + "\"]" : "";
+        Version mcVersion = PlatformData.getModVersion("minecraft");
+        String params = loaders + (mcVersion != null ? "&game_versions=[\"" + mcVersion.toString() + "\"]" : "");
+        return (baseUrl + params).replace("\"", "%22"); // fix invalid chars
     }
 }
