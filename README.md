@@ -10,7 +10,8 @@ mods.
 
 ## Legal Note
 
-This mod is massively inspired by Architectury API and integrates the Mixin Trace mod by comp500, which is licensed under MIT.
+This mod is massively inspired by Architectury API and integrates the Mixin Trace mod by comp500, which is licensed
+under MIT.
 Everything not licensed under LGPL-3.0 is marked as such.
 
 ## How to use?

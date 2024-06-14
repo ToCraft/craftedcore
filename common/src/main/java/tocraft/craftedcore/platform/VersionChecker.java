@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -16,6 +17,7 @@ import tocraft.craftedcore.event.common.PlayerEvents;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,6 +36,11 @@ import java.util.Map;
 public class VersionChecker {
     private static final Map<String, Version> CACHED_VERSION = new HashMap<>();
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");
+
+    private static void sendUpdateMessage(Player player, Component modName, Version newestVersion) {
+        CraftedCore.LOGGER.warn(Component.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
+        player.sendSystemMessage(Component.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
+    }
 
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
         // notify player about outdated version
@@ -71,8 +78,7 @@ public class VersionChecker {
                     CACHED_VERSION.put(modid, newestVersion);
                 }
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
@@ -103,8 +109,7 @@ public class VersionChecker {
                 }
 
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
@@ -202,15 +207,14 @@ public class VersionChecker {
                 }
 
                 if (localVersion != null && newestVersion != null && newestVersion.compareTo(localVersion) > 0) {
-                    CraftedCore.LOGGER.warn(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion).getString());
-                    player.sendSystemMessage(Component.translatable(CraftedCore.MODID + ".update", modName.getString(), newestVersion));
+                    sendUpdateMessage(player, modName, newestVersion);
                 }
             }
         }, VersionChecker.class.getSimpleName()).start());
     }
 
     private static List<String> getVersionsFromModrinth(String slug) {
-        String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
+        String url = getModrinthUrl(slug);
         Gson GSON = new GsonBuilder().setPrettyPrinting().create();
         List<String> versions = new ArrayList<>();
 
@@ -228,5 +232,15 @@ public class VersionChecker {
         }
 
         return versions;
+    }
+
+    private static @NotNull String getModrinthUrl(String slug) {
+        String baseUrl = "https://api.modrinth.com/v2/project/" + slug + "/version";
+        // filter for compatibility
+        PlatformData.ModLoader modLoader = PlatformData.getModLoaderId();
+        String loaders = modLoader != PlatformData.ModLoader.OTHER ? "?loaders=[\"" + modLoader.name().toLowerCase() + "\"]" : "";
+        Version mcVersion = PlatformData.getModVersion("minecraft");
+        String params = loaders + (mcVersion != null ? "&game_versions=[\"" + mcVersion.toString() + "\"]" : "");
+        return (baseUrl + params).replace("\"", "%22"); // fix invalid chars
     }
 }

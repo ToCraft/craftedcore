@@ -3,6 +3,7 @@ package tocraft.craftedcore.platform.fabric;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
@@ -30,11 +31,7 @@ public final class PlatformDataImpl {
         return FabricLoader.getInstance().getConfigDir();
     }
 
-    public static ModLoader getModLoaderId() {
-        return ModLoader.FABRIC;
-    }
-
-    public enum ModLoader {
-        FABRIC, FORGE, NEOFORGE, OTHER
+    public static PlatformData.ModLoader getModLoaderId() {
+        return PlatformData.ModLoader.FABRIC;
     }
 }
