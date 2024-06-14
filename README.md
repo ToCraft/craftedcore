@@ -8,6 +8,12 @@
 This mod is my basic library mod, so my mods would work across mod loader, and it won't take me that long to port my
 mods.
 
+## Legal Note
+
+This mod is massively inspired by Architectury API and integrates the Mixin Trace mod by comp500, which is licensed
+under MIT.
+Everything not licensed under LGPL-3.0 is marked as such.
+
 ## How to use?
 
 Use the following maven:
