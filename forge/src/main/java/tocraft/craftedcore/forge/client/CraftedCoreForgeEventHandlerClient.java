@@ -16,11 +16,17 @@ import tocraft.craftedcore.event.client.RenderEvents;
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 public class CraftedCoreForgeEventHandlerClient {
-    // FIXME: Where is RenderGuiEvent.Post ???
     @SubscribeEvent
-    public void eventRenderGameOverlayEvent(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-            RenderEvents.HUD_RENDERING.invoke().render(event.getMatrixStack(), event.getPartialTicks());
+    public void event(RenderGameOverlayEvent.Post event) {
+        RenderEvents.HUD_RENDERING.invoke().render(event.getMatrixStack(), event.getPartialTicks());
+    }
+
+    @SubscribeEvent
+    public void event(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
+        } else if (event.phase == TickEvent.Phase.END) {
+            ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
         }
     }
 
@@ -54,15 +60,6 @@ public class CraftedCoreForgeEventHandlerClient {
                     }
                 }
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void event(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
-        } else if (event.phase == TickEvent.Phase.END) {
-            ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
         }
     }
 
