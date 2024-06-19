@@ -58,7 +58,7 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
         this.map.clear();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {
-                this.map.put(new ResourceLocation(key), JsonParser.parseString(compound.getString(key)));
+                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(compound.getString(key)));
             }
         }
         if (PlatformData.getEnv() == EnvType.CLIENT) {

@@ -2,6 +2,7 @@ package tocraft.craftedcore.event.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +22,7 @@ public final class RenderEvents {
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface HUDRendering {
-        void render(GuiGraphics graphics, float tickDelta);
+        void render(GuiGraphics graphics, DeltaTracker tickCounter);
     }
 
     @Environment(EnvType.CLIENT)

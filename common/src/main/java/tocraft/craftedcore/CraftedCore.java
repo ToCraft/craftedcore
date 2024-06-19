@@ -38,6 +38,6 @@ public class CraftedCore {
     }
 
     public static ResourceLocation id(String name) {
-        return new ResourceLocation(MODID, name);
+        return ResourceLocation.fromNamespaceAndPath(MODID, name);
     }
 }

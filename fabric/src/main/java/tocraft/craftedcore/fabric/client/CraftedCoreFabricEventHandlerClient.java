@@ -10,7 +10,7 @@ import tocraft.craftedcore.event.client.RenderEvents;
 public class CraftedCoreFabricEventHandlerClient {
 
     public static void initialize() {
-        HudRenderCallback.EVENT.register((graphics, tickDelta) -> RenderEvents.HUD_RENDERING.invoke().render(graphics, tickDelta));
+        HudRenderCallback.EVENT.register((graphics, tickCounter) -> RenderEvents.HUD_RENDERING.invoke().render(graphics, tickCounter));
         ClientTickEvents.START_CLIENT_TICK.register(instance -> tocraft.craftedcore.event.client.ClientTickEvents.CLIENT_PRE.invoke().tick(instance));
         ClientTickEvents.END_CLIENT_TICK.register(instance -> tocraft.craftedcore.event.client.ClientTickEvents.CLIENT_POST.invoke().tick(instance));
     }

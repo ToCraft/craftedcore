@@ -1,5 +1,6 @@
 package tocraft.craftedcore.forge.client;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,7 +17,7 @@ import tocraft.craftedcore.event.client.RenderEvents;
 public class CraftedCoreForgeEventHandlerClient {
     @SubscribeEvent
     public void event(CustomizeGuiOverlayEvent event) {
-        RenderEvents.HUD_RENDERING.invoke().render(event.getGuiGraphics(), event.getPartialTick());
+        RenderEvents.HUD_RENDERING.invoke().render(event.getGuiGraphics(), DeltaTracker.ONE);
     }
 
     @SubscribeEvent

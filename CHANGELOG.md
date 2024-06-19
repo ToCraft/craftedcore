@@ -2,6 +2,7 @@ craftedcore 4.3.1
 ================
 
 - fix mixins on forge not working properly anymore
+- upgrade to Minecraft 1.21
 
 craftedcore 4.3
 ================
