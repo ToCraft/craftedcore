@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.EventNetworkChannel;
@@ -43,7 +42,7 @@ public class ModernNetworkingImpl {
 
                 @Override
                 public ModernNetworking.Env getEnv() {
-                    return event.getSource().getDirection().getReceptionSide() == LogicalSide.CLIENT ? ModernNetworking.Env.CLIENT : ModernNetworking.Env.SERVER;
+                    return event.getSource().isClientSide() ? ModernNetworking.Env.CLIENT : ModernNetworking.Env.SERVER;
                 }
 
                 @Override
