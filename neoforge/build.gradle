@@ -6,6 +6,6 @@ loom {
 
 dependencies {
     // mixin extras
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.6"))
-    implementation(include("io.github.llamalad7:mixinextras-neoforge:0.3.6"))
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-neoforge:${rootProject.mixinextras_version}"))
 }
