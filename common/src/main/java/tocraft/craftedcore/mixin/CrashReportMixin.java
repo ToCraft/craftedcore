@@ -6,10 +6,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import tocraft.craftedcore.platform.PlatformData;
 import tocraft.craftedcore.util.TraceUtils;
 
-// based on code by comp500 (licensed as MIT, take a look https://github.com/comp500/mixintrace for details)
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
     @Shadow
@@ -18,19 +16,17 @@ public abstract class CrashReportMixin {
     @Inject(method = "getDetails(Ljava/lang/StringBuilder;)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
     private void onGetDetails(StringBuilder crashReportBuilder, CallbackInfo ci) {
-        if (!PlatformData.isModLoaded("mixintrace")) {
-            int trailingNewlineCount = 0;
-            // Remove trailing \n
-            if (crashReportBuilder.charAt(crashReportBuilder.length() - 1) == '\n') {
-                crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
-                trailingNewlineCount++;
-            }
-            if (crashReportBuilder.charAt(crashReportBuilder.length() - 1) == '\n') {
-                crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
-                trailingNewlineCount++;
-            }
-            TraceUtils.printMixinTrace(uncategorizedStackTrace, crashReportBuilder);
-            crashReportBuilder.append("\n".repeat(trailingNewlineCount));
+        int trailingNewlineCount = 0;
+        // Remove trailing \n
+        if (crashReportBuilder.charAt(crashReportBuilder.length() - 1) == '\n') {
+            crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
+            trailingNewlineCount++;
         }
+        if (crashReportBuilder.charAt(crashReportBuilder.length() - 1) == '\n') {
+            crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
+            trailingNewlineCount++;
+        }
+        TraceUtils.printMixinTrace(uncategorizedStackTrace, crashReportBuilder);
+        crashReportBuilder.append("\n".repeat(trailingNewlineCount));
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,10 +16,18 @@ import tocraft.craftedcore.event.client.RenderEvents;
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
 public class CraftedCoreForgeEventHandlerClient {
-    // FIXME: Where is RenderGuiEvent.Post ???
     @SubscribeEvent
-    public void eventRenderGameOverlayEvent(CustomizeGuiOverlayEvent event) {
+    public void event(RenderGuiEvent.Post event) {
         RenderEvents.HUD_RENDERING.invoke().render(event.getPoseStack(), event.getPartialTick());
+    }
+
+    @SubscribeEvent
+    public void event(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
+        } else if (event.phase == TickEvent.Phase.END) {
+            ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
+        }
     }
 
     @SubscribeEvent
@@ -49,15 +57,6 @@ public class CraftedCoreForgeEventHandlerClient {
                     event.setCanceled(true);
                 }
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void event(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            ClientTickEvents.CLIENT_PRE.invoke().tick(Minecraft.getInstance());
-        } else if (event.phase == TickEvent.Phase.END) {
-            ClientTickEvents.CLIENT_POST.invoke().tick(Minecraft.getInstance());
         }
     }
 
