@@ -39,11 +39,11 @@ jobs:
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: "[${{ env.minecraft_version }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
+          name: "[${{ env.minecraft }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
           path: |
             **/build/libs/
             !build/libs/

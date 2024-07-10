@@ -18,6 +18,14 @@ public class CraftedCore {
 
     public void initialize() {
         // initialize MixinExtras
+
+        //#if MC>=1204
+        System.out.println("HALLO!!!");
+        //#else
+        // $$ System.out.println("COOL!");
+        //#endif
+
+
         MixinExtrasBootstrap.init();
 
         // register Network Types

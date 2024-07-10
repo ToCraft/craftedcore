@@ -48,11 +48,11 @@ jobs:
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: "[${{ env.minecraft_version }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
+          name: "[${{ env.minecraft }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
           path: |
             **/build/libs/
             !build/libs/
@@ -96,10 +96,10 @@ jobs:
       - name: Create version data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version= >> $GITHUB_ENV
+          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - name: Create version name
-        run: echo "version_name_git=$minecraft_version-$mod_version" >> $GITHUB_ENV
+        run: echo "version_name_git=$minecraft-$mod_version" >> $GITHUB_ENV
       - name: Create GitHub Tag
         if: |
           ${{ env.artifact_type }} == 'release'

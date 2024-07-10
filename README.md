@@ -28,7 +28,7 @@ maven {
 And the following mod-dependency:
 
 ```Groovy
-modApi "dev.tocraft:craftedcore:${minecraft_version}-${craftedcore_version}"
+modApi "dev.tocraft:craftedcore:${minecraft}-${craftedcore_version}"
 ```
 
 #### e.g. for fabric and forge projects, which use a common-project:

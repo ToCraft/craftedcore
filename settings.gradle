@@ -4,18 +4,27 @@ pluginManagement {
         maven { url "https://maven.architectury.dev/" }
         maven { url "https://maven.minecraftforge.net/" }
         maven { url "https://maven.parchmentmc.org" }
+        maven { url "https://maven.tocraft.dev/public" }
         gradlePluginPortal()
     }
 }
 
-include("common")
-include("fabric")
-//include("forge")
-include("neoforge")
+String props = file("props/${minecraft}.properties").getText()
 
+include("common")
 include("testmod-common")
-include("testmod-fabric")
-//include("testmod-forge")
-include("testmod-neoforge")
+
+if (props.contains("fabric")) {
+    include("fabric")
+    include("testmod-fabric")
+}
+if (props.contains("forge")) {
+    include("forge")
+    include("testmod-forge")
+}
+if (props.contains("neoforge")) {
+    include("neoforge")
+    include("testmod-neoforge")
+}
 
 rootProject.name = "craftedcore"

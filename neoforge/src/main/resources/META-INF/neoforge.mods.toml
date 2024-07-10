@@ -21,6 +21,6 @@ logoFile = "icon.png"
 modId = "minecraft"
 mandatory = true
 type = "required"
-versionRange = "[${minecraft_version},)"
+versionRange = "[${minecraft},)"
 ordering = "NONE"
 side = "BOTH"
