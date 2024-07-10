@@ -3,12 +3,17 @@ package tocraft.craftedcore.neoforge;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+//#if MC>=1205
 import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
+//#else
+//$$ import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
+//#endif
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
@@ -36,6 +41,7 @@ public class CraftedCoreNeoForgeEventHandler {
     }
 
     @SubscribeEvent
+    //#if MC>=1205
     public void allowSleepTime(CanContinueSleepingEvent event) {
         if (event.getEntity() instanceof Player player) {
             InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, event.getEntity().getSleepingPos().orElse(null), event.getProblem() == null);
@@ -47,6 +53,17 @@ public class CraftedCoreNeoForgeEventHandler {
             }
         }
     }
+    //#else
+    //$$ public void allowSleepTime(SleepingTimeCheckEvent event) {
+    //$$     InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(event.getEntity(), event.getSleepingLocation().isPresent() ? event.getSleepingLocation().get() : null, event.getResult() != Event.Result.DENY);
+    //$$     if (result == InteractionResult.FAIL) {
+    //$$         event.setResult(Event.Result.DENY);
+    //$$     }
+    //$$     if (result == InteractionResult.SUCCESS) {
+    //$$         event.setResult(Event.Result.ALLOW);
+    //$$     }
+    //$$ }
+    //#endif
 
     @SubscribeEvent
     public void sleepFinishedTime(SleepFinishedTimeEvent event) {

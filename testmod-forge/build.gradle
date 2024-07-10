@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.+"
+    }
+}
+
+apply plugin: com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${gradle.rootProject.minecraft}-${rootProject.props.forge}"
+
+    implementation(project(path: ":forge", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":testmod-common", configuration: "transformProductionForge")) { transitive = false }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set("testmod-forge-dev-shadow")
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set("testmod-forge")
+}

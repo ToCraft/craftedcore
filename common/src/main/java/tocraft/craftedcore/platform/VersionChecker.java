@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import org.xml.sax.InputSource;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.CraftedCoreConfig;
 import tocraft.craftedcore.event.common.PlayerEvents;
+import tocraft.craftedcore.patched.TComponent;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,8 +40,14 @@ public class VersionChecker {
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");
 
     private static void sendUpdateMessage(Player player, Component modName, Version newestVersion) {
-        CraftedCore.LOGGER.warn(Component.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
-        player.sendSystemMessage(Component.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
+        CraftedCore.LOGGER.warn(TComponent.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
+        //#if MC>1202
+        player.sendSystemMessage(TComponent.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
+        //#elseif MC>1182
+        //$$ player.sendSystemMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())));
+        //#else
+        //$$ player.displayClientMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())), false);
+        //#endif
     }
 
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
@@ -73,7 +81,7 @@ public class VersionChecker {
                     }
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, true, INVALID_VERSIONS));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 }
@@ -101,7 +109,7 @@ public class VersionChecker {
                     List<String> remoteVersions = getVersionsFromGitHub(owner, repo, releasesInsteadOfTags);
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, useLastPartOfVersion, invalidVersions));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 } else {
@@ -199,7 +207,7 @@ public class VersionChecker {
                     List<String> remoteVersions = getVersionsFromModrinth(slug);
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, useLastPartOfVersion, invalidVersions));
                     if (!versions.isEmpty()) {
-                        newestVersion = versions.getLast();
+                        newestVersion = versions.get(versions.size() - 1);
                     }
                     CACHED_VERSION.put(modid, newestVersion);
                 } else {

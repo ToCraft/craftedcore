@@ -1,0 +1,171 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.+"
+        classpath "net.darkhax.curseforgegradle:CurseForgeGradle:1.+"
+        classpath "com.modrinth.minotaur:Minotaur:2.+"
+    }
+}
+
+apply plugin: com.modrinth.minotaur.Minotaur
+apply plugin: com.github.jengelman.gradle.plugins.shadow.ShadowPlugin
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+configurations {
+    common
+    shadowCommon
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.minecraft}-${rootProject.props.forge}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+}
+
+processResources {
+    inputs.properties mod_meta
+
+    filesMatching("META-INF/mods.toml") {
+        expand mod_meta + [project: project]
+    }
+
+    outputs.upToDateWhen{ false }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier.set("forge-dev-shadow")
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier.set("forge")
+}
+
+jar {
+    archiveClassifier.set("forge-dev")
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenForge(MavenPublication) {
+            artifactId = rootProject.archivesBaseName + "-$project.name"
+            version = rootProject.minecraft + "-" + rootProject.mod_version
+            from components.java
+        }
+    }
+    repositories {
+        if (System.getenv("MAVEN_PASS") != null) {
+            maven {
+                name = "tocraftMavenPublic"
+                url "https://maven.tocraft.dev/public"
+
+                credentials {
+                    username = "tocraft"
+                    password = System.getenv("MAVEN_PASS")
+                }
+            }
+        }
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = rootProject.modrinth_id
+    versionNumber = "$rootProject.minecraft-$project.name-$project.version"
+    versionType = "$rootProject.artifact_type"
+    uploadFile = remapJar
+    gameVersions = []
+    loaders = ["forge"]
+    changelog = releaseChangelog(1)
+    dependencies {
+        if (project.hasProperty("required_dependencies") && !project.getProperty("required_dependencies").isEmpty()) {
+            project.getProperty("required_dependencies").split(',').each {
+                required.project "${it}"
+            }
+        }
+        if (project.hasProperty("optional_dependencies") && !project.getProperty("optional_dependencies").isEmpty()) {
+            project.getProperty("optional_dependencies").split(',').each {
+                optional.project "${it}"
+            }
+        }
+    }
+
+    rootProject.supported_versions.each { gameVersions.add(it.trim()) }
+}
+
+task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv("CURSEFORGE_TOKEN")
+
+    // The main file to upload
+    def mainFile = upload("${rootProject.curseforge_id}".toString(), remapJar)
+    mainFile.displayName = "$rootProject.minecraft-$project.name-$project.version"
+    mainFile.releaseType = "$rootProject.artifact_type"
+    mainFile.changelog = releaseChangelog(1)
+    mainFile.changelogType = "markdown"
+    mainFile.addModLoader("forge")
+    mainFile.addJavaVersion("Java ${rootProject.props.java}")
+    if (project.hasProperty("required_dependencies") && !project.getProperty("required_dependencies").isEmpty()) {
+        project.getProperty("required_dependencies").split(',').each {
+            mainFile.addRequirement("${it}")
+        }
+    }
+    if (project.hasProperty("optional_dependencies") && !project.getProperty("optional_dependencies").isEmpty()) {
+        project.getProperty("optional_dependencies").split(',').each {
+            mainFile.addOptional("${it}")
+        }
+    }
+    mainFile.withAdditionalFile(sourcesJar)
+    mainFile.withAdditionalFile(jar)
+
+    rootProject.supported_versions.each { mainFile.addGameVersion(it.trim()) }
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        mixinConfigs = ["craftedcore.mixins.json"]
+        if ("${minecraft}" == "1.18.2") {
+            mixinConfigs.add("craftedcore-forge.mixins.json")
+        }
+
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    }
+}
+
+dependencies {
+    // mixin extras
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${rootProject.mixinextras_version}"))
+}

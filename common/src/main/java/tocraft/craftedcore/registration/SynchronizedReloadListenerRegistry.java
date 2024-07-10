@@ -32,8 +32,10 @@ public class SynchronizedReloadListenerRegistry {
         }
 
 
+        //#if MC>=1205
         // register Network packet
         ModernNetworking.registerType(reloadListener.RELOAD_SYNC);
+        //#endif
 
         onRegister(reloadListener, id);
     }

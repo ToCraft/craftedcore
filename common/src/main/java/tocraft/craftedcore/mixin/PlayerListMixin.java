@@ -2,7 +2,9 @@ package tocraft.craftedcore.mixin;
 
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
+//#if MC>1201
 import net.minecraft.server.network.CommonListenerCookie;
+//#endif
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +25,11 @@ public class PlayerListMixin {
 
 
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
+    //#if MC>1201
     private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
+    //#else
+    //$$ private void placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
+    //#endif
         PlayerEvents.PLAYER_JOIN.invoke().join(serverPlayer);
         ResourceEvents.DATA_PACK_SYNC.invoke().onSync(serverPlayer);
     }

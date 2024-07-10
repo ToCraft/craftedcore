@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.util.TraceUtils;
 
 // based on code by comp500 (licensed as MIT, take a look https://github.com/comp500/mixintrace for details)
+@SuppressWarnings("unused")
 @Mixin(CrashReportCategory.class)
 public abstract class CrashReportCategoryMixin {
     @Shadow

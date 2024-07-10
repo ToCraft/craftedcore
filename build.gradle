@@ -10,13 +10,16 @@ buildscript {
 
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
-    id "dev.tocraft.preprocessor" version "0.31-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+    id "dev.tocraft.preprocessor" version "0.51-SNAPSHOT" apply false
+    // NOTE: This allows e.g. ./gradlew <task> fileTree
+    id "com.dorongold.task-tree" version "4.0.0"
 }
 
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
+import dev.tocraft.gradle.preprocess.PreProcessTask
 
 architectury {
     minecraft = rootProject.minecraft
@@ -43,10 +46,13 @@ if (project.props.neoforge != null) {
 }
 
 List<String> supportedVersions = new ArrayList<>();
-supportedVersions.add(rootProject.minecraft);
+supportedVersions.add(rootProject.minecraft)
 if (rootProject.props.supported_versions != null) {
     rootProject.props.supported_versions.split(",").each {
-        supportedVersions.add((it as String).trim())
+        String version = (it as String).trim()
+        if (!supportedVersions.contains(version)) {
+            supportedVersions.add(version)
+        }
     }
 }
 project.ext.set("supported_versions", supportedVersions)
@@ -56,6 +62,12 @@ println()
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "maven-publish"
+    apply plugin: "dev.tocraft.preprocessor"
+
+    preprocess {
+        //sources = sourceSets.main.java.srcDirs
+        vars.put("MC", rootProject.props.mc_id != null ? rootProject.props.mc_id : rootProject.minecraft.replaceAll(".", ""))
+    }
 
     loom {
         silentMojangMappingsLicense()
@@ -68,6 +80,7 @@ subprojects {
             if (project.hasProperty("parchmentmc_mappings")) {
                 parchment("org.parchmentmc.data:parchment-${rootProject.minecraft}:" + project.getProperty("parchmentmc_mappings") + "@zip")
             }
+
         }
     }
 }
@@ -75,6 +88,8 @@ subprojects {
 allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
+
+    buildDir = rootProject.projectDir.toPath().resolve("build/$rootProject.minecraft/$project.name")
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
@@ -92,6 +107,11 @@ allprojects {
             name = "tocraftMavenPublic"
             url "https://maven.tocraft.dev/public"
         }
+    }
+
+    tasks.withType(PreProcessTask).configureEach {
+        //dependsOn clean
+        //target.set rootProject.projectDir.toPath().resolve("build/$rootProject.minecraft/$project.name/preprocessor/$it.taskIdentity.name").toFile()
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -130,8 +150,8 @@ allprojects {
 }
 
 //Splits the changelog into multiple parts if they get bigger than discords embed field size (1024)
-def discordChangelog() {
-    def changelog = ext.releaseChangelog(1)
+static def discordChangelog() {
+    def changelog = releaseChangelog(1)
     List<String> res = new ArrayList()
     if (changelog.size() < 1024) {
         res.add(changelog)
@@ -151,7 +171,7 @@ def discordChangelog() {
 }
 
 // based on the code by Flemmli97
-task discordRelease {
+tasks.register('discordRelease') {
     doLast {
         try {
             def webhook = new Webhook(System.getenv("DISCORD_WEB_HOOK"), "${rootProject.name} Upload")
@@ -187,7 +207,7 @@ task discordRelease {
     }
 }
 
-task extractNewestChangelog {
+tasks.register('extractNewestChangelog') {
     String fileName = "extracted.CHANGELOG.md";
     // delete file if exists
     delete fileName
@@ -203,6 +223,6 @@ task extractNewestChangelog {
 ext {
     mod_meta = [
             minecraft: minecraft,
-            version          : version
+            version  : version
     ]
 }

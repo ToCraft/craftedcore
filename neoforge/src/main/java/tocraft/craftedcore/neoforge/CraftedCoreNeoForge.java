@@ -7,6 +7,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
+import tocraft.craftedcore.network.neoforge.ModernNetworkingImpl;
 
 import java.util.Objects;
 
@@ -21,9 +22,15 @@ public class CraftedCoreNeoForge {
         new CraftedCore().initialize();
 
         NeoForge.EVENT_BUS.register(new CraftedCoreNeoForgeEventHandler());
+
+        //#if MC==1204
+        //$$ ModernNetworkingImpl.initialize(bus);
+        //#endif
     }
 
+    //#if MC>=1206
     public static IEventBus getEventBus() {
         return Objects.requireNonNull(ModList.get().getModContainerById(CraftedCore.MODID).orElseThrow().getEventBus());
     }
+    //#endif
 }

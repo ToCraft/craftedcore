@@ -13,6 +13,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.Identifier;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public abstract class SynchronizedJsonReloadListener extends SimpleJsonResourceR
         this.map.clear();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {
-                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(compound.getString(key)));
+                this.map.put(Identifier.parse(key), JsonParser.parseString(compound.getString(key)));
             }
         }
         if (PlatformData.getEnv() == EnvType.CLIENT) {

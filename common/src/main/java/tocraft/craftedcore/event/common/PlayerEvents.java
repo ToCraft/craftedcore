@@ -1,6 +1,9 @@
 package tocraft.craftedcore.event.common;
 
+//#if MC>1201
 import net.minecraft.advancements.AdvancementHolder;
+//#endif
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,12 +52,20 @@ public final class PlayerEvents {
 
     @FunctionalInterface
     public interface AwardAdvancement {
+        //#if MC>1201
         void award(ServerPlayer player, AdvancementHolder advancement, String criterionKey);
+        //#else
+        //$$ void award(ServerPlayer player, Advancement advancement, String criterionKey);
+        //#endif
     }
 
     @FunctionalInterface
     public interface RevokeAdvancement {
+        //#if MC>1201
         void revoke(ServerPlayer player, AdvancementHolder advancement, String criterionKey);
+        //#else
+        //$$ void revoke(ServerPlayer player, Advancement advancement, String criterionKey);
+        //#endif
     }
 
     @FunctionalInterface

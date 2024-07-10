@@ -9,20 +9,40 @@ pluginManagement {
     }
 }
 
-String props = file("props/${minecraft}.properties").getText()
-
+List<String> props = file("props/${minecraft}.properties").readLines()
+boolean foundFabric = false
+for (final def line in props) {
+    if (line.startsWith("fabric")) {
+        foundFabric = true
+        break
+    }
+}
+boolean foundForge = false
+for (final def line in props) {
+    if (line.startsWith("forge")) {
+        foundForge = true
+        break
+    }
+}
+boolean foundNeoForge = false
+for (final def line in props) {
+    if (line.startsWith("neoforge")) {
+        foundNeoForge = true
+        break
+    }
+}
 include("common")
 include("testmod-common")
 
-if (props.contains("fabric")) {
+if (foundFabric) {
     include("fabric")
     include("testmod-fabric")
 }
-if (props.contains("forge")) {
+if (foundForge) {
     include("forge")
     include("testmod-forge")
 }
-if (props.contains("neoforge")) {
+if (foundNeoForge) {
     include("neoforge")
     include("testmod-neoforge")
 }

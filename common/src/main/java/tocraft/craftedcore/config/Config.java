@@ -16,7 +16,7 @@ public interface Config {
     @Nullable
     default String getName() {
         List<String> possibleNames = ConfigLoader.getConfigNames(this);
-        return !possibleNames.isEmpty() ? possibleNames.getFirst() : null;
+        return !possibleNames.isEmpty() ? possibleNames.get(0) : null;
     }
 
     @Nullable

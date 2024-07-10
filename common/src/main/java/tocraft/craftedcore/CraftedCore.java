@@ -9,6 +9,8 @@ import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.Identifier;
+import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
@@ -18,19 +20,13 @@ public class CraftedCore {
 
     public void initialize() {
         // initialize MixinExtras
-
-        //#if MC>=1204
-        System.out.println("HALLO!!!");
-        //#else
-        // $$ System.out.println("COOL!");
-        //#endif
-
-
         MixinExtrasBootstrap.init();
 
+        //#if MC>=1205
         // register Network Types
         ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
         ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
+        //#endif
 
         // cache patreons in an extra thread to prevent longer loading times while connecting
         new Thread(VIPs::cachePatreons).start();
@@ -42,10 +38,10 @@ public class CraftedCore {
         SynchronizedReloadListenerRegistry.initialize();
 
         // check for new version
-        VersionChecker.registerModrinthChecker(MODID, "crafted-core", Component.literal("CraftedCore"));
+        VersionChecker.registerModrinthChecker(MODID, "crafted-core", TComponent.literal("CraftedCore"));
     }
 
     public static ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, name);
+        return Identifier.parse(MODID, name);
     }
 }
