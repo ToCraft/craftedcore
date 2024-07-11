@@ -25,12 +25,12 @@ configurations {
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:${rootProject.props.neoforge}"
+    neoForge "net.neoforged:neoforge:${parent.props.neoforge}"
 
-    implementation(project(path: ":neoforge", configuration: "namedElements")) { transitive false }
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":testmod-common", configuration: "transformProductionNeoForge")) { transitive = false }
+    implementation(project(path: ":$parent.name:neoforge", configuration: "namedElements")) { transitive false }
+    common(project(path: ":$parent.name:common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":$parent.name:testmod-common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":$parent.name:testmod-common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
 shadowJar {

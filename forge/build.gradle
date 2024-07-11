@@ -29,10 +29,10 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft}-${rootProject.props.forge}"
+    forge "net.minecraftforge:forge:${parent.name}-${parent.props.forge}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive = false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    common(project(path: ":$parent.name:common", configuration: "namedElements")) { transitive = false }
+    shadowCommon(project(path: ":$parent.name:common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 processResources {
@@ -64,7 +64,7 @@ jar {
 }
 
 sourcesJar {
-    def commonSources = project(":common").sourcesJar
+    def commonSources = project(":$parent.name:common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
 }
@@ -78,8 +78,8 @@ components.java {
 publishing {
     publications {
         mavenForge(MavenPublication) {
-            artifactId = rootProject.archivesBaseName + "-$project.name"
-            version = rootProject.minecraft + "-" + rootProject.mod_version
+            artifactId = parent.archivesBaseName + "-$project.name"
+            version = parent.name + "-" + rootProject.mod_version
             from components.java
         }
     }
@@ -101,7 +101,7 @@ publishing {
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = rootProject.modrinth_id
-    versionNumber = "$rootProject.minecraft-$project.name-$project.version"
+    versionNumber = "$parent.name-$project.name-$project.version"
     versionType = "$rootProject.artifact_type"
     uploadFile = remapJar
     gameVersions = []
@@ -120,7 +120,7 @@ modrinth {
         }
     }
 
-    rootProject.supported_versions.each { gameVersions.add(it.trim()) }
+    parent.supported_versions.each { gameVersions.add(it.trim()) }
 }
 
 task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
@@ -128,12 +128,12 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
 
     // The main file to upload
     def mainFile = upload("${rootProject.curseforge_id}".toString(), remapJar)
-    mainFile.displayName = "$rootProject.minecraft-$project.name-$project.version"
+    mainFile.displayName = "$parent.name-$project.name-$project.version"
     mainFile.releaseType = "$rootProject.artifact_type"
     mainFile.changelog = releaseChangelog(1)
     mainFile.changelogType = "markdown"
     mainFile.addModLoader("forge")
-    mainFile.addJavaVersion("Java ${rootProject.props.java}")
+    mainFile.addJavaVersion("Java ${parent.props.java}")
     if (project.hasProperty("required_dependencies") && !project.getProperty("required_dependencies").isEmpty()) {
         project.getProperty("required_dependencies").split(',').each {
             mainFile.addRequirement("${it}")
@@ -147,15 +147,15 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     mainFile.withAdditionalFile(sourcesJar)
     mainFile.withAdditionalFile(jar)
 
-    rootProject.supported_versions.each { mainFile.addGameVersion(it.trim()) }
+    parent.supported_versions.each { mainFile.addGameVersion(it.trim()) }
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
+    accessWidenerPath = project(":$parent.name:common").loom.accessWidenerPath
 
     forge {
         mixinConfigs = ["craftedcore.mixins.json"]
-        if ("${minecraft}" == "1.18.2") {
+        if ("${parent.name}" == "1.18.2") {
             mixinConfigs.add("craftedcore-forge.mixins.json")
         }
 

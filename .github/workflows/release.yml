@@ -76,44 +76,8 @@ jobs:
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
 
-      - name: Publish 1.18.2
-        run: ./gradlew -Pminecraft="1.18.2" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.19.4
-        run: ./gradlew -Pminecraft="1.19.4" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.20.1
-        run: ./gradlew -Pminecraft="1.20.1" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.20.2
-        run: ./gradlew -Pminecraft="1.20.2" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.20.4
-        run: ./gradlew -Pminecraft="1.20.4" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.20.6
-        run: ./gradlew -Pminecraft="1.20.6" publish modrinth curseforge --parallel
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-      - name: Publish 1.21
-        run: ./gradlew -Pminecraft="1.21" publish modrinth curseforge --parallel
+      - name: Publish to Maven, Modrinth & CurseForge
+        run: ./gradlew publish modrinth curseforge --parallel
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -124,7 +88,6 @@ jobs:
       - name: Create version data
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - name: Create GitHub Tag
         if: |

@@ -26,12 +26,12 @@ configurations {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.props.fabric}+${rootProject.minecraft}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${parent.props.fabric}+${parent.name}"
 
-    implementation project(path: ":fabric", configuration: "namedElements")
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":testmod-common", configuration: "transformProductionFabric")) { transitive = false }
+    implementation project(path: ":$parent.name:fabric", configuration: "namedElements")
+    common(project(path: ":$parent.name:common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":$parent.name:testmod-common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":$parent.name:testmod-common", configuration: "transformProductionFabric")) { transitive = false }
 }
 
 shadowJar {

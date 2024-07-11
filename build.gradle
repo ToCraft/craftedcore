@@ -1,36 +1,18 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6+'
-    }
-}
-
-plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
-    id "dev.tocraft.preprocessor" version "0.51-SNAPSHOT" apply false
-    // NOTE: This allows e.g. ./gradlew <task> fileTree
-    id "com.dorongold.task-tree" version "4.0.0"
-}
-
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
 import dev.tocraft.gradle.preprocess.PreProcessTask
 
 architectury {
-    minecraft = rootProject.minecraft
+    minecraft = project.name
 }
 
 // Read version-specific properties file
 project.ext.set("props", new Properties())
-file("props/${rootProject.minecraft}.properties").withInputStream { project.props.load(it) }
+file("../../props/${project.name}.properties").withInputStream { project.props.load(it) }
 
 println()
-println "Minecraft: ${rootProject.minecraft} (Java ${project.props.java})"
+println "Minecraft: ${project.name} (Java ${project.props.java})"
 if (project.props.mappings != null) {
     println "├── Parchment: ${project.props.mappings}"
 
@@ -46,9 +28,9 @@ if (project.props.neoforge != null) {
 }
 
 List<String> supportedVersions = new ArrayList<>();
-supportedVersions.add(rootProject.minecraft)
-if (rootProject.props.supported_versions != null) {
-    rootProject.props.supported_versions.split(",").each {
+supportedVersions.add(project.name)
+if (project.props.supported_versions != null) {
+    project.props.supported_versions.split(",").each {
         String version = (it as String).trim()
         if (!supportedVersions.contains(version)) {
             supportedVersions.add(version)
@@ -59,6 +41,8 @@ project.ext.set("supported_versions", supportedVersions)
 println("└── Supported Minecraft Versions: ${project.supported_versions}")
 println()
 
+layout.buildDirectory.set(rootDir.toPath().resolve("build/$project.name").toFile())
+
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "maven-publish"
@@ -66,7 +50,17 @@ subprojects {
 
     preprocess {
         //sources = sourceSets.main.java.srcDirs
-        vars.put("MC", rootProject.props.mc_id != null ? rootProject.props.mc_id : rootProject.minecraft.replaceAll(".", ""))
+        vars.put("MC", project.props.mc_id != null ? project.props.mc_id : project.name.replaceAll(".", ""))
+    }
+
+    layout.buildDirectory.set(parent.layout.buildDirectory.file(project.name).get().asFile)
+
+    tasks.withType(PreProcessTask).configureEach {
+        target = layout.buildDirectory.file("preprocess").get().asFile
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        setSource(fileTree(layout.buildDirectory.file("preprocess").get().asFile))
     }
 
     loom {
@@ -74,11 +68,11 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft}"
+        minecraft "com.mojang:minecraft:${parent.name}"
         mappings loom.layered() {
             officialMojangMappings()
             if (project.hasProperty("parchmentmc_mappings")) {
-                parchment("org.parchmentmc.data:parchment-${rootProject.minecraft}:" + project.getProperty("parchmentmc_mappings") + "@zip")
+                parchment("org.parchmentmc.data:parchment-${parent.name}:" + project.getProperty("parchmentmc_mappings") + "@zip")
             }
 
         }
@@ -89,34 +83,13 @@ allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
 
-    buildDir = rootProject.projectDir.toPath().resolve("build/$rootProject.minecraft/$project.name")
-
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
-
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-        maven { url "https://maven.parchmentmc.org" }
-        maven { url "https://maven.neoforged.net/releases/" }
-        maven {
-            name = "tocraftMavenPublic"
-            url "https://maven.tocraft.dev/public"
-        }
-    }
-
-    tasks.withType(PreProcessTask).configureEach {
-        //dependsOn clean
-        //target.set rootProject.projectDir.toPath().resolve("build/$rootProject.minecraft/$project.name/preprocessor/$it.taskIdentity.name").toFile()
-    }
+    archivesBaseName = project.archives_base_name
+    version = project.mod_version
+    group = project.maven_group
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        options.release.set Integer.parseInt(rootProject.props.java)
+        options.release.set Integer.parseInt(project.props.java)
     }
 
     ext {
@@ -126,7 +99,7 @@ allprojects {
                 String changelog = ""
                 int match = 0
                 String previousIT = ""
-                rootProject.file("CHANGELOG.md").eachLine {
+                project.file("CHANGELOG.md").eachLine {
                     if (it.contains("================")) {
                         match++
                         //changelog += previousIT
@@ -139,7 +112,7 @@ allprojects {
                 }
                 return changelog + "\n\n"
             } catch (exception) {
-                return "${rootProject.archives_base_name} ${rootProject.mod_version}\n==========\nThere was an error generating the changelog" + exception.getLocalizedMessage()
+                return "${project.archives_base_name} ${project.mod_version}\n==========\nThere was an error generating the changelog" + exception.getLocalizedMessage()
             }
         }
     }
@@ -174,11 +147,11 @@ static def discordChangelog() {
 tasks.register('discordRelease') {
     doLast {
         try {
-            def webhook = new Webhook(System.getenv("DISCORD_WEB_HOOK"), "${rootProject.name} Upload")
+            def webhook = new Webhook(System.getenv("DISCORD_WEB_HOOK"), "${project.name} Upload")
 
             def message = new Message()
             message.setUsername("Mod Release")
-            def content = "${rootProject.name} ${project.mod_version} has been released!"
+            def content = "${project.name} ${project.mod_version} has been released!"
             if (project.hasProperty("ping_role")) {
                 content = "<@&${project.getProperty("ping_role")}> " + content
             }
@@ -222,7 +195,7 @@ tasks.register('extractNewestChangelog') {
 
 ext {
     mod_meta = [
-            minecraft: minecraft,
+            minecraft: project.name,
             version  : version
     ]
 }

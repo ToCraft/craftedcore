@@ -57,31 +57,19 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-      - name: Build  1.18.2
-        run: ./gradlew -Pminecraft="1.18.2" check build --parallel
-      - name: Build  1.19.4
-        run: ./gradlew -Pminecraft="1.19.4" check build --parallel
-      - name: Build  1.20.1
-        run: ./gradlew -Pminecraft="1.20.1" check build --parallel
-      - name: Build  1.20.2
-        run: ./gradlew -Pminecraft="1.20.2" check build --parallel
-      - name: Build  1.20.4
-        run: ./gradlew -Pminecraft="1.20.4" check build --parallel
-      - name: Build  1.20.6
-        run: ./gradlew -Pminecraft="1.20.6" check build --parallel
-      - name: Build  1.21
-        run: ./gradlew -Pminecraft="1.21" check build --parallel
+      - name: Build
+        run: ./gradlew check build --parallel
 
       - name: Setting mod version
         run: |
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft= >> $GITHUB_ENV
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
       - uses: actions/upload-artifact@v4
         with:
-          name: "[${{ env.minecraft }}] ${{ env.archives_base_name }}-${{ env.mod_version }}"
+          name: "${{ env.archives_base_name }}-${{ env.mod_version }}"
           path: |
             build/**/**/libs/
+            !build/**/temp/
             !build/**/craftedcore/libs/
             !build/libs/
             !**/*-dev.jar

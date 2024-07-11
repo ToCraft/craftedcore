@@ -25,12 +25,12 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${gradle.rootProject.minecraft}-${rootProject.props.forge}"
+    forge "net.minecraftforge:forge:${parent.name}-${parent.props.forge}"
 
-    implementation(project(path: ":forge", configuration: "namedElements")) { transitive false }
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    common(project(path: ":testmod-common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":testmod-common", configuration: "transformProductionForge")) { transitive = false }
+    implementation(project(path: ":$parent.name:forge", configuration: "namedElements")) { transitive false }
+    common(project(path: ":$parent.name:common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":$parent.name:testmod-common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":$parent.name:testmod-common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 shadowJar {

@@ -1,19 +1,19 @@
 architectury {
     List<String> platforms = new ArrayList<>()
-    if (rootProject.props.fabric != null) {
+    if (parent.props.fabric != null) {
         platforms.add("fabric")
     }
-    if (rootProject.props.forge != null) {
+    if (parent.props.forge != null) {
         platforms.add("forge")
     }
-    if (rootProject.props.neoforge != null) {
+    if (parent.props.neoforge != null) {
         platforms.add("neoforge")
     }
     common(platforms)
 }
 
 dependencies {
-    implementation project(path: ":common", configuration: "namedElements")
+    implementation project(path: ":$parent.name:common", configuration: "namedElements")
 
     // used for @Environment & EnvType
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader}"
