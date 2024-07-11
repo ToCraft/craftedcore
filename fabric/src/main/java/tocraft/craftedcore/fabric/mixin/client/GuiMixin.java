@@ -7,9 +7,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 //#if MC>1194
-import net.minecraft.client.gui.GuiGraphics;
+//$$ import net.minecraft.client.gui.GuiGraphics;
 //#else
-//$$
+
 //#endif
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -30,9 +30,9 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
     //#if MC>1194
-    private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci) {
+    //$$ private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci) {
     //#else
-    //$$ private void shouldRenderBreath(PoseStack guiGraphics, CallbackInfo ci) {
+    private void shouldRenderBreath(PoseStack guiGraphics, CallbackInfo ci) {
     //#endif
         InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {
@@ -42,9 +42,9 @@ public abstract class GuiMixin {
 
     @Inject(method = "renderHearts", at = @At(value = "HEAD"), cancellable = true)
     //#if MC>1194
-    private void shouldRenderHealth(GuiGraphics guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
+    //$$ private void shouldRenderHealth(GuiGraphics guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
     //#else
-    //$$ private void shouldRenderHealth(PoseStack guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
+    private void shouldRenderHealth(PoseStack guiGraphics, Player player, int x, int y, int height, int offsetHeartIndex, float maxHealth, int currentHealth, int displayHealth, int absorptionAmount, boolean renderHighlight, CallbackInfo ci) {
     //#endif
         InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(guiGraphics, player);
         if (result == InteractionResult.FAIL) {
@@ -53,29 +53,29 @@ public abstract class GuiMixin {
     }
 
     //#if MC>=1205
-    @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
-    private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
-        if (result == InteractionResult.FAIL) {
-            ci.cancel();
-        }
-    }
-    //#else
-    //$$ @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
-    //$$ private int shouldRenderFood(int health) {
-    //$$     InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(null, Minecraft.getInstance().player);
+    //$$ @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
+    //$$ private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
+    //$$     InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
     //$$     if (result == InteractionResult.FAIL) {
-    //$$         return -1;
+    //$$         ci.cancel();
     //$$     }
-    //$$     return health;
     //$$ }
+    //#else
+    @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int shouldRenderFood(int health) {
+        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(null, Minecraft.getInstance().player);
+        if (result == InteractionResult.FAIL) {
+            return -1;
+        }
+        return health;
+    }
     //#endif
 
     @Inject(method = "renderVehicleHealth", at = @At(value = "HEAD"), cancellable = true)
     //#if MC>1194
-    private void shouldRenderMountHealth(GuiGraphics guiGraphics, CallbackInfo ci) {
+    //$$ private void shouldRenderMountHealth(GuiGraphics guiGraphics, CallbackInfo ci) {
     //#else
-    //$$ private void shouldRenderMountHealth(PoseStack guiGraphics, CallbackInfo ci) {
+    private void shouldRenderMountHealth(PoseStack guiGraphics, CallbackInfo ci) {
         //#endif
         InteractionResult result = RenderEvents.RENDER_MOUNT_HEALTH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {

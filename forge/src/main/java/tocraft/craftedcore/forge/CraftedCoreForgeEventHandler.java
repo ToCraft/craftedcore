@@ -8,16 +8,16 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 //#if MC>1194
-import net.minecraftforge.event.entity.living.LivingBreatheEvent;
+//$$ import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 //#endif
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 //#if MC>1182
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.event.level.SleepFinishedTimeEvent;
+//$$ import net.minecraftforge.event.level.LevelEvent;
+//$$ import net.minecraftforge.event.level.SleepFinishedTimeEvent;
 //#else
-//$$ import net.minecraftforge.event.world.WorldEvent;
-//$$ import net.minecraftforge.event.world.SleepFinishedTimeEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 //#endif
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -59,9 +59,9 @@ public class CraftedCoreForgeEventHandler {
     @SubscribeEvent
     public void sleepFinishedTime(SleepFinishedTimeEvent event) {
         //#if MC>1182
-        LevelAccessor level = event.getLevel();
+        //$$ LevelAccessor level = event.getLevel();
         //#else
-        //$$ LevelAccessor level = event.getWorld();
+        LevelAccessor level = event.getWorld();
         //#endif
         long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition((ServerLevel) level, event.getNewTime());
         event.setTimeAddition(newTimeIn);
@@ -70,46 +70,46 @@ public class CraftedCoreForgeEventHandler {
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         //#if MC>1182
-        CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+        //$$ CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
         //#else
-        //$$ CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getEnvironment());
+        CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getEnvironment());
         //#endif
     }
 
     //#if MC>1182
-    @SubscribeEvent
-    public void serverLoad(LevelEvent.Load event) {
-        if (event.getLevel() instanceof ServerLevel serverLevel) {
-            ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
-        }
-    }
-    
-    @SubscribeEvent
-    public void serverUnload(LevelEvent.Unload event) {
-        if (event.getLevel() instanceof ServerLevel serverLevel) {
-            ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
-        }
-    }
-    //#else
     //$$ @SubscribeEvent
-    //$$ public void serverLoad(WorldEvent.Load event) {
-    //$$     if (event.getWorld() instanceof ServerLevel serverLevel) {
+    //$$ public void serverLoad(LevelEvent.Load event) {
+    //$$     if (event.getLevel() instanceof ServerLevel serverLevel) {
     //$$         ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
     //$$     }
     //$$ }
     //$$
     //$$ @SubscribeEvent
-    //$$ public void serverUnload(WorldEvent.Unload event) {
-    //$$     if (event.getWorld() instanceof ServerLevel serverLevel) {
+    //$$ public void serverUnload(LevelEvent.Unload event) {
+    //$$     if (event.getLevel() instanceof ServerLevel serverLevel) {
     //$$         ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
     //$$     }
     //$$ }
+    //#else
+    @SubscribeEvent
+    public void serverLoad(WorldEvent.Load event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
+        }
+    }
+    
+    @SubscribeEvent
+    public void serverUnload(WorldEvent.Unload event) {
+        if (event.getWorld() instanceof ServerLevel serverLevel) {
+            ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
+        }
+    }
     //#endif
 
     //#if MC>1194
-    @SubscribeEvent
-    public void livingBreathe(LivingBreatheEvent event) {
-        event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
-    }
+    //$$ @SubscribeEvent
+    //$$ public void livingBreathe(LivingBreatheEvent event) {
+    //$$     event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
+    //$$ }
     //#endif
 }

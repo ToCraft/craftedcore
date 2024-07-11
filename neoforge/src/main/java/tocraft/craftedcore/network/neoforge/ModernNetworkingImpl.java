@@ -80,8 +80,9 @@ public class ModernNetworkingImpl {
     }
 }
 //#elseif MC>1202
+//$$
+//$$ import io.netty.buffer.Unpooled;
 //$$ import net.minecraft.client.Minecraft;
-//$$ import net.minecraft.nbt.CompoundTag;
 //$$ import net.minecraft.network.FriendlyByteBuf;
 //$$ import net.minecraft.network.protocol.Packet;
 //$$ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -89,7 +90,6 @@ public class ModernNetworkingImpl {
 //$$ import net.minecraft.resources.ResourceLocation;
 //$$ import net.minecraft.world.entity.player.Player;
 //$$ import net.neoforged.bus.api.IEventBus;
-//$$ import net.neoforged.fml.LogicalSide;
 //$$ import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 //$$ import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 //$$ import org.jetbrains.annotations.ApiStatus;
@@ -109,40 +109,42 @@ public class ModernNetworkingImpl {
 //$$         eventBus.addListener(RegisterPayloadHandlerEvent.class, event -> {
 //$$             IPayloadRegistrar registrar = event.registrar(CraftedCore.MODID).optional();
 //$$
-//$$             registrar.play(CHANNEL_ID, ModernNetworking.PacketPayload::new, builder -> builder.server((arg, context) -> C2S.get(arg.id()).receive(new ModernNetworking.Context() {
-//$$                 @Override
-//$$                 public Player getPlayer() {
-//$$                     return context.player().orElse(null);
-//$$                 }
+//$$             registrar.play(CHANNEL_ID, ModernNetworking.PacketPayload::new, builder -> {
+//$$                 builder.server((arg, context) -> C2S.get(arg.id()).receive(new ModernNetworking.Context() {
+//$$                     @Override
+//$$                     public Player getPlayer() {
+//$$                         return context.player().orElse(null);
+//$$                     }
 //$$
-//$$                 @Override
-//$$                 public ModernNetworking.Env getEnv() {
-//$$                     return ModernNetworking.Env.SERVER;
-//$$                 }
+//$$                     @Override
+//$$                     public ModernNetworking.Env getEnv() {
+//$$                         return ModernNetworking.Env.SERVER;
+//$$                     }
 //$$
-//$$                 @Override
-//$$                 public void queue(Runnable runnable) {
-//$$                     context.workHandler().execute(runnable);
-//$$                 }
-//$$             }, arg.nbt())));
+//$$                     @Override
+//$$                     public void queue(Runnable runnable) {
+//$$                         context.workHandler().execute(runnable);
+//$$                     }
+//$$                 }, arg.nbt()));
 //$$
-//$$         registrar.play(CHANNEL_ID, ModernNetworking.PacketPayload::new, builder -> builder.client((arg, context) -> S2C.get(arg.id()).receive(new ModernNetworking.Context() {
-//$$             @Override
-//$$             public Player getPlayer() {
-//$$                 return Minecraft.getInstance().player;
-//$$             }
+//$$                 builder.client((arg, context) -> S2C.get(arg.id()).receive(new ModernNetworking.Context() {
+//$$                     @Override
+//$$                     public Player getPlayer() {
+//$$                         return Minecraft.getInstance().player;
+//$$                     }
 //$$
-//$$             @Override
-//$$             public ModernNetworking.Env getEnv() {
-//$$                 return ModernNetworking.Env.CLIENT;
-//$$             }
+//$$                     @Override
+//$$                     public ModernNetworking.Env getEnv() {
+//$$                         return ModernNetworking.Env.CLIENT;
+//$$                     }
 //$$
-//$$             @Override
-//$$             public void queue(Runnable runnable) {
-//$$                 context.workHandler().execute(runnable);
-//$$             }
-//$$         }, arg.nbt())));
-//$$     });
+//$$                     @Override
+//$$                     public void queue(Runnable runnable) {
+//$$                         context.workHandler().execute(runnable);
+//$$                     }
+//$$                 }, arg.nbt()));
+//$$             });
+//$$         });
 //$$     }
 //$$
 //$$     public static void registerReceiver(ModernNetworking.Side side, ResourceLocation id, ModernNetworking.Receiver
@@ -155,11 +157,14 @@ public class ModernNetworkingImpl {
 //$$
 //$$     @ApiStatus.Internal
 //$$     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
-//$$         if (side == ModernNetworking.Side.C2S) {
-//$$             return new ServerboundCustomPayloadPacket(new ModernNetworking.PacketPayload(buf));
-//$$         } else {
-//$$             return new ClientboundCustomPayloadPacket(new ModernNetworking.PacketPayload(buf));
-//$$         }
+        //$$ FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+        //$$ packet.writeResourceLocation(CHANNEL_ID);
+        //$$ packet.writeResourceLocation(id);
+        //$$ packet.writeNbt(buf.readNbt());
+        //$$ return switch (side) {
+        //$$      case C2S -> new ServerboundCustomPayloadPacket(packet);
+        //$$     case S2C -> new ClientboundCustomPayloadPacket(packet);
+        //$$ };
 //$$     }
 //$$ }
 //#else
@@ -167,6 +172,7 @@ public class ModernNetworkingImpl {
 //$$ import net.minecraft.nbt.CompoundTag;
 //$$ import net.minecraft.network.FriendlyByteBuf;
 //$$ import net.minecraft.network.protocol.Packet;
+//$$ import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 //$$ import net.minecraft.resources.ResourceLocation;
 //$$ import net.minecraft.world.entity.player.Player;
 //$$ import net.neoforged.fml.LogicalSide;

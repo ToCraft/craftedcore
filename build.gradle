@@ -1,7 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://maven.tocraft.dev/public" }
+    }
+    dependencies {
+        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6+'
+        classpath "dev.tocraft:preprocessor:0.79-SNAPSHOT"
+    }
+}
+
 import com.diluv.schoomp.Webhook
 import com.diluv.schoomp.message.Message
 import com.diluv.schoomp.message.embed.Embed
-import dev.tocraft.gradle.preprocess.PreProcessTask
 
 architectury {
     minecraft = project.name
@@ -43,24 +54,17 @@ println()
 
 layout.buildDirectory.set(rootDir.toPath().resolve("build/$project.name").toFile())
 
+apply plugin: "dev.tocraft.preprocessor"
+
 subprojects {
+    layout.buildDirectory.set(parent.layout.buildDirectory.file(project.name).get().asFile)
+
     apply plugin: "dev.architectury.loom"
     apply plugin: "maven-publish"
     apply plugin: "dev.tocraft.preprocessor"
 
     preprocess {
-        //sources = sourceSets.main.java.srcDirs
         vars.put("MC", project.props.mc_id != null ? project.props.mc_id : project.name.replaceAll(".", ""))
-    }
-
-    layout.buildDirectory.set(parent.layout.buildDirectory.file(project.name).get().asFile)
-
-    tasks.withType(PreProcessTask).configureEach {
-        target = layout.buildDirectory.file("preprocess").get().asFile
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        setSource(fileTree(layout.buildDirectory.file("preprocess").get().asFile))
     }
 
     loom {
@@ -86,6 +90,10 @@ allprojects {
     archivesBaseName = project.archives_base_name
     version = project.mod_version
     group = project.maven_group
+
+    repositories {
+        maven { url "https://maven.tocraft.dev/public" }
+    }
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"

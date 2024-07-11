@@ -1,13 +1,13 @@
 package tocraft.craftedcore.fabric;
 
 //#if MC>1182
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+//$$ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 //#else
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.minecraft.commands.Commands;
 //#endif
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.minecraft.commands.Commands;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.event.common.ServerLevelEvents;

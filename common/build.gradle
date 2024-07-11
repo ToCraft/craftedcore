@@ -1,55 +1,5 @@
-//layout.buildDirectory.set(layout.buildDirectory.file(parent.name).get().asFile)
+apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/v2/common.gradle"
 
-dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${parent.fabric_loader}"
-}
-
-architectury {
-    List<String> platforms = new ArrayList<>()
-    if (parent.props.fabric != null) {
-        platforms.add("fabric")
-    }
-    if (parent.props.forge != null) {
-        platforms.add("forge")
-    }
-    if (parent.props.neoforge != null) {
-        platforms.add("neoforge")
-    }
-    common(platforms)
-}
-
-configurations {
-    dev
-}
-
-artifacts {
-    dev(jar)
-}
-
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            artifactId = parent.archivesBaseName
-            version = parent.name + "-" + rootProject.mod_version
-            from components.java
-        }
-    }
-    repositories {
-        if (System.getenv("MAVEN_PASS") != null) {
-            maven {
-                name = "tocraftMavenPublic"
-                url "https://maven.tocraft.dev/public"
-
-                credentials {
-                    username = "tocraft"
-                    password = System.getenv("MAVEN_PASS")
-                }
-            }
-        }
-    }
-}
 loom {
     accessWidenerPath = file("src/main/resources/craftedcore.accessWidener")
 }

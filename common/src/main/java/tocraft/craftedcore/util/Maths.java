@@ -1,11 +1,11 @@
 package tocraft.craftedcore.util;
 
 //#if MC>1182
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+//$$ import org.joml.Quaternionf;
+//$$ import org.joml.Vector3f;
 //#else
-//$$ import com.mojang.math.Quaternion;
-//$$ import com.mojang.math.Vector3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 //#endif
 
 @SuppressWarnings("unused")
@@ -23,12 +23,12 @@ public class Maths {
     }
 
     //#if MC>1182
-    public static Quaternionf getDegreesQuaternion(Vector3f axis, float angle) {
-        return new Quaternionf().fromAxisAngleDeg(axis, angle);
-    }
-    //#else
-    //$$ public static Quaternion getDegreesQuaternion(Vector3f axis, float angle) {
-    //$$     return axis.rotation(angle);
+    //$$ public static Quaternionf getDegreesQuaternion(Vector3f axis, float angle) {
+    //$$     return new Quaternionf().fromAxisAngleDeg(axis, angle);
     //$$ }
+    //#else
+    public static Quaternion getDegreesQuaternion(Vector3f axis, float angle) {
+        return axis.rotation(angle);
+    }
     //#endif
 }

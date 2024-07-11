@@ -23,9 +23,9 @@ public class CraftedCore {
         MixinExtrasBootstrap.init();
 
         //#if MC>=1205
-        // register Network Types
-        ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
-        ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
+        //$$ // register Network Types
+        //$$ ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
+        //$$ ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
         //#endif
 
         // cache patreons in an extra thread to prevent longer loading times while connecting

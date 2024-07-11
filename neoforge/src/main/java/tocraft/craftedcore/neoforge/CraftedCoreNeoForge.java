@@ -7,9 +7,11 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
-import tocraft.craftedcore.network.neoforge.ModernNetworkingImpl;
-
+//#if MC>=1202 && MC<1205
+//$$ import tocraft.craftedcore.network.neoforge.ModernNetworkingImpl;
+//#elseif MC>1205
 import java.util.Objects;
+//#endif
 
 @SuppressWarnings("unused")
 @Mod(CraftedCore.MODID)
@@ -25,6 +27,8 @@ public class CraftedCoreNeoForge {
 
         //#if MC==1204
         //$$ ModernNetworkingImpl.initialize(bus);
+        //#else
+        ModernNetworkingImpl.initialize();
         //#endif
     }
 

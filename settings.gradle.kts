@@ -1,5 +1,3 @@
-import kotlin.io.path.name
-
 pluginManagement {
     repositories {
         maven("https://maven.fabricmc.net/")
@@ -8,13 +6,23 @@ pluginManagement {
         maven("https://maven.parchmentmc.org")
         maven("https://maven.tocraft.dev/public")
         gradlePluginPortal()
-        mavenLocal()
     }
 }
 
-rootProject.buildFileName = "root.gradle.kts"
+// set to only use one minecraft version
+val minecraft = "1.18.2"
 
 file("props").listFiles()?.forEach {
+    var forcedVersion : String? = startParameter.projectProperties["minecraft"]
+    if (forcedVersion == null) {
+        forcedVersion = minecraft
+    }
+    if (forcedVersion.isNotBlank()) {
+        if (!it.name.startsWith(forcedVersion)) {
+            return@forEach
+        }
+    }
+
     val props = it.readLines()
     var foundFabric = false
     for (line in props) {
@@ -87,3 +95,4 @@ file("props").listFiles()?.forEach {
 }
 
 rootProject.name = "craftedcore"
+rootProject.buildFileName = "root.gradle.kts"
