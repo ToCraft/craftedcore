@@ -1,3 +1,9 @@
+craftedcore 5
+================
+
+- **rework multi-version structure**
+- fix crash on NeoForge 1.20.4 with Server
+
 craftedcore 4.3.1
 ================
 

@@ -79,20 +79,23 @@ public class ModernNetworkingImpl {
         }
     }
 }
-//#elseif MC>1202
+//#elseif MC>1203
 //$$
 //$$ import io.netty.buffer.Unpooled;
 //$$ import net.minecraft.client.Minecraft;
+//$$ import net.minecraft.nbt.CompoundTag;
 //$$ import net.minecraft.network.FriendlyByteBuf;
 //$$ import net.minecraft.network.protocol.Packet;
 //$$ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 //$$ import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+//$$ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 //$$ import net.minecraft.resources.ResourceLocation;
 //$$ import net.minecraft.world.entity.player.Player;
 //$$ import net.neoforged.bus.api.IEventBus;
 //$$ import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 //$$ import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 //$$ import org.jetbrains.annotations.ApiStatus;
+//$$ import org.jetbrains.annotations.NotNull;
 //$$ import tocraft.craftedcore.CraftedCore;
 //$$ import tocraft.craftedcore.network.ModernNetworking;
 //$$
@@ -109,8 +112,8 @@ public class ModernNetworkingImpl {
 //$$         eventBus.addListener(RegisterPayloadHandlerEvent.class, event -> {
 //$$             IPayloadRegistrar registrar = event.registrar(CraftedCore.MODID).optional();
 //$$
-//$$             registrar.play(CHANNEL_ID, ModernNetworking.PacketPayload::new, builder -> {
-//$$                 builder.server((arg, context) -> C2S.get(arg.id()).receive(new ModernNetworking.Context() {
+//$$             registrar.play(CHANNEL_ID, NeoPacketPayload::new, builder -> {
+//$$                 builder.server((arg, context) -> C2S.get(arg.packetId()).receive(new ModernNetworking.Context() {
 //$$                     @Override
 //$$                     public Player getPlayer() {
 //$$                         return context.player().orElse(null);
@@ -125,9 +128,9 @@ public class ModernNetworkingImpl {
 //$$                     public void queue(Runnable runnable) {
 //$$                         context.workHandler().execute(runnable);
 //$$                     }
-//$$                 }, arg.nbt()));
+//$$                 }, arg.data()));
 //$$
-//$$                 builder.client((arg, context) -> S2C.get(arg.id()).receive(new ModernNetworking.Context() {
+//$$                 builder.client((arg, context) -> S2C.get(arg.packetId()).receive(new ModernNetworking.Context() {
 //$$                     @Override
 //$$                     public Player getPlayer() {
 //$$                         return Minecraft.getInstance().player;
@@ -142,9 +145,26 @@ public class ModernNetworkingImpl {
 //$$                     public void queue(Runnable runnable) {
 //$$                         context.workHandler().execute(runnable);
 //$$                     }
-//$$                 }, arg.nbt()));
+//$$                 }, arg.data()));
 //$$             });
 //$$         });
+//$$     }
+//$$
+//$$     private record NeoPacketPayload(ResourceLocation packetId, CompoundTag data) implements CustomPacketPayload {
+//$$         public NeoPacketPayload(FriendlyByteBuf buf) {
+//$$             this(buf.readResourceLocation(), buf.readNbt());
+//$$         }
+//$$
+//$$         @Override
+//$$         public void write(FriendlyByteBuf buf) {
+//$$             buf.writeResourceLocation(packetId);
+//$$             buf.writeNbt(data);
+//$$         }
+//$$
+//$$         @Override
+//$$         public @NotNull ResourceLocation id() {
+//$$             return CHANNEL_ID;
+//$$         }
 //$$     }
 //$$
 //$$     public static void registerReceiver(ModernNetworking.Side side, ResourceLocation id, ModernNetworking.Receiver
@@ -156,15 +176,12 @@ public class ModernNetworkingImpl {
 //$$     }
 //$$
 //$$     @ApiStatus.Internal
-//$$     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
-        //$$ FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
-        //$$ packet.writeResourceLocation(CHANNEL_ID);
-        //$$ packet.writeResourceLocation(id);
-        //$$ packet.writeNbt(buf.readNbt());
-        //$$ return switch (side) {
-        //$$      case C2S -> new ServerboundCustomPayloadPacket(packet);
-        //$$     case S2C -> new ClientboundCustomPayloadPacket(packet);
-        //$$ };
+//$$     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, CompoundTag data) {
+//$$         NeoPacketPayload packet = new NeoPacketPayload(id, data);
+//$$         return switch (side) {
+//$$              case C2S -> new ServerboundCustomPayloadPacket(packet);
+//$$             case S2C -> new ClientboundCustomPayloadPacket(packet);
+//$$         };
 //$$     }
 //$$ }
 //#else

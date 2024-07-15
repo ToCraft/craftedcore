@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 
 //#if MC<=1182
-import com.mojang.util.UUIDTypeAdapter;
+//$$ import com.mojang.util.UUIDTypeAdapter;
 //#endif
 
 import java.util.UUID;
@@ -15,9 +15,9 @@ import java.util.UUID;
 public class CMinecraft {
     public static UUID getLocalPlayerUUID() {
         //#if MC>1182
-        //$$ return Minecraft.getInstance().getUser().getProfileId();
+        return Minecraft.getInstance().getUser().getProfileId();
         //#else
-        return UUIDTypeAdapter.fromString(Minecraft.getInstance().getUser().getUuid());
+        //$$ return UUIDTypeAdapter.fromString(Minecraft.getInstance().getUser().getUuid());
         //#endif
     }
 

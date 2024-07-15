@@ -18,9 +18,9 @@ import java.io.File;
 public abstract class MinecraftMixin {
     @Inject(method = "crash", at = @At("HEAD"))
     //#if MC>1202
-    //$$ private static void onCrash(Minecraft minecraft, File gameDirectory, CrashReport report, CallbackInfo ci) {
+    private static void onCrash(Minecraft minecraft, File gameDirectory, CrashReport report, CallbackInfo ci) {
     //#else
-    private static void onCrash(CrashReport report, CallbackInfo ci) {
+    //$$ private static void onCrash(CrashReport report, CallbackInfo ci) {
     //#endif
         StringBuilder crashReportBuilder = new StringBuilder();
         TraceUtils.printMixinTrace(report.getException().getStackTrace(), crashReportBuilder);

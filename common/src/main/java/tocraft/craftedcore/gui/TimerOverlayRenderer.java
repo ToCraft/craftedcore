@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 //#if MC>1194
-//$$ import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphics;
 //#endif
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.item.Item;
@@ -19,9 +19,9 @@ public class TimerOverlayRenderer {
     private static int fadingProgress = 0;
 
     //#if MC>1194
-    //$$ public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
+    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
     //#else
-    public static void register(PoseStack graphics, int currentCooldown, int maxCooldown, Item item) {
+    //$$ public static void register(PoseStack graphics, int currentCooldown, int maxCooldown, Item item) {
     //#endif
         Minecraft client = Minecraft.getInstance();
 
@@ -50,9 +50,9 @@ public class TimerOverlayRenderer {
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             //#if MC>1194
-            //$$ graphics.pose().pushPose();
+            graphics.pose().pushPose();
             //#else
-            graphics.pushPose();
+            //$$ graphics.pushPose();
             //#endif
             if (cooldownScale != 1) {
                 RenderSystem.enableScissor(
@@ -68,26 +68,26 @@ public class TimerOverlayRenderer {
                 float scale = 1f + (float) Math.sin(fadeScalar * 1.5 * Math.PI) - .25f;
                 scale = Math.max(scale, 0);
                 //#if MC>1194
-                //$$ graphics.pose().scale(scale, scale, scale);
+                graphics.pose().scale(scale, scale, scale);
                 //#else
-                graphics.scale(scale, scale, scale);
+                //$$ graphics.scale(scale, scale, scale);
                 //#endif
             }
 
             ItemStack stack = new ItemStack(item);
             //#if MC>1194
-            //$$ graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
+            graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
             //#elseif MC>1182
             //$$ Minecraft.getInstance().getItemRenderer().renderGuiItem(graphics, stack, (int) (width * .95f), (int) (height * .92f));
             //#else
-            Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, (int) (width * .95f), (int) (height * .92f));
+            //$$ Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, (int) (width * .95f), (int) (height * .92f));
             //#endif
 
             RenderSystem.disableScissor();
             //#if MC>1194
-            //$$ graphics.pose().popPose();
+            graphics.pose().popPose();
             //#else
-            graphics.popPose();
+            //$$ graphics.popPose();
             //#endif
         }
     }

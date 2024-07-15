@@ -27,8 +27,8 @@ public class CraftedCoreNeoForge {
 
         //#if MC==1204
         //$$ ModernNetworkingImpl.initialize(bus);
-        //#else
-        ModernNetworkingImpl.initialize();
+        //#elseif MC<1205
+        //$$ ModernNetworkingImpl.initialize();
         //#endif
     }
 

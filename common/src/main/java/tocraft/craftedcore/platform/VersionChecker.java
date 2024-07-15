@@ -42,11 +42,11 @@ public class VersionChecker {
     private static void sendUpdateMessage(Player player, Component modName, Version newestVersion) {
         CraftedCore.LOGGER.warn(TComponent.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
         //#if MC>1202
-        //$$ player.sendSystemMessage(TComponent.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
+        player.sendSystemMessage(TComponent.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
         //#elseif MC>1182
         //$$ player.sendSystemMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())));
         //#else
-        player.displayClientMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())), false);
+        //$$ player.displayClientMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())), false);
         //#endif
     }
 

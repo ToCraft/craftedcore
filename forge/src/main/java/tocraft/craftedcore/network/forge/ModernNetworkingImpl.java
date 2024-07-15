@@ -1,5 +1,6 @@
 package tocraft.craftedcore.network.forge;
 
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,14 +12,14 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkDirection;
 //#if MC>1201
-//$$ import net.minecraftforge.network.ChannelBuilder;
-//$$ import net.minecraftforge.network.EventNetworkChannel;
-//$$ import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.EventNetworkChannel;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 //#else
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.event.EventNetworkChannel;
-import org.apache.commons.lang3.tuple.Pair;
+//$$ import net.minecraftforge.network.NetworkEvent;
+//$$ import net.minecraftforge.network.NetworkRegistry;
+//$$ import net.minecraftforge.network.event.EventNetworkChannel;
+//$$ import org.apache.commons.lang3.tuple.Pair;
 //#endif
 import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.CraftedCore;
@@ -31,9 +32,9 @@ import java.util.Map;
 public class ModernNetworkingImpl {
     private static final ResourceLocation CHANNEL_ID = CraftedCore.id("network");
     //#if MC>1201
-    //$$ private static final EventNetworkChannel CHANNEL = ChannelBuilder.named(CHANNEL_ID).acceptedVersions((status, version) -> true).optional().eventNetworkChannel();
+    private static final EventNetworkChannel CHANNEL = ChannelBuilder.named(CHANNEL_ID).acceptedVersions((status, version) -> true).optional().eventNetworkChannel();
     //#else
-    private static final EventNetworkChannel CHANNEL = NetworkRegistry.newEventChannel(CHANNEL_ID, () -> "1", version -> true, version -> true);
+    //$$ private static final EventNetworkChannel CHANNEL = NetworkRegistry.newEventChannel(CHANNEL_ID, () -> "1", version -> true, version -> true);
     //#endif
     private static final Map<ResourceLocation, ModernNetworking.Receiver> C2S_RECEIVER = new HashMap<>();
     private static final Map<ResourceLocation, ModernNetworking.Receiver> S2C_RECEIVER = new HashMap<>();
@@ -42,9 +43,9 @@ public class ModernNetworkingImpl {
         CHANNEL.addListener(event -> {
             FriendlyByteBuf buf = event.getPayload();
             //#if MC>1201
-            //$$ CustomPayloadEvent.Context source = event.getSource();
+            CustomPayloadEvent.Context source = event.getSource();
             //#else
-            NetworkEvent.Context source = event.getSource().get();
+            //$$ NetworkEvent.Context source = event.getSource().get();
             //#endif
             if (buf == null || source.getPacketHandled()) return;
             ResourceLocation packetId = buf.readResourceLocation();
@@ -87,12 +88,15 @@ public class ModernNetworkingImpl {
     }
 
     @ApiStatus.Internal
-    public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
+    public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, CompoundTag data) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeResourceLocation(id);
+        buf.writeNbt(data);
         NetworkDirection direction = side == ModernNetworking.Side.C2S ? NetworkDirection.PLAY_TO_SERVER : NetworkDirection.PLAY_TO_CLIENT;
         //#if MC>1201
-        //$$ return direction.buildPacket(buf, CHANNEL_ID).getThis();
+        return direction.buildPacket(buf, CHANNEL_ID).getThis();
         //#else
-        return direction.buildPacket(Pair.of(buf, 0), CHANNEL_ID).getThis();
+        //$$ return direction.buildPacket(Pair.of(buf, 0), CHANNEL_ID).getThis();
         //#endif
     }
 }
