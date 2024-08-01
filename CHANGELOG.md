@@ -1,3 +1,9 @@
+craftedcore 5.1
+================
+
+- fix crash on Fabric 1.21
+- add new graphics tools
+
 craftedcore 5
 ================
 
