@@ -1,12 +1,14 @@
 package tocraft.craftedcore.registration;
 
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.PlayerDataProvider;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @SuppressWarnings("unused")
 public class PlayerDataRegistry {
@@ -22,6 +24,10 @@ public class PlayerDataRegistry {
         registerKey(key, persistent, true);
     }
 
+    public static boolean isKeyRegistered(String key) {
+        return CraftedTagKeys.containsKey(key);
+    }
+
     /**
      * Should be called once the player joins and for every key
      *
@@ -33,10 +39,6 @@ public class PlayerDataRegistry {
         CraftedTagKeys.put(key, new SimpleEntry<>(persistent, sync));
     }
 
-    public static Set<String> keySet() {
-        return CraftedTagKeys.keySet();
-    }
-
     public static boolean isKeyPersistent(String key) {
         return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).getKey();
     }
@@ -45,7 +47,28 @@ public class PlayerDataRegistry {
         return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).getValue();
     }
 
-    public static PlayerDataProvider getPlayerDataProvider(Player player) {
-        return (PlayerDataProvider) player;
+    public static void writeTag(Player player, String key, Tag value) throws NotRegisteredTagKeyException {
+        PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
+        if (isKeyRegistered(key)) {
+            playerDataProvider.craftedcore$writeTag(key, value);
+        } else {
+            throw new NotRegisteredTagKeyException(key);
+        }
+    }
+
+    @Nullable
+    public static Tag readTag(Player player, String key) throws NotRegisteredTagKeyException {
+        PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
+        if (isKeyRegistered(key)) {
+            return playerDataProvider.craftedcore$readTag(key);
+        } else {
+            throw new NotRegisteredTagKeyException(key);
+        }
+    }
+
+    public static class NotRegisteredTagKeyException extends IllegalArgumentException {
+        public NotRegisteredTagKeyException(String key) {
+            super("Player Data Key " + key + " not found!");
+        }
     }
 }

@@ -44,8 +44,11 @@ public class PlayerDataSynchronizer {
                 return;
 
             CompoundTag entry = new CompoundTag();
-            entry.put(key, playerData.craftedcore$readTag(key));
-            list.add(entry);
+            Tag value = playerData.craftedcore$readTag(key);
+            if (value != null) {
+                entry.put(key, value);
+                list.add(entry);
+            }
         }
         tag.put(PLAYER_DATA_SYNC, list);
         ModernNetworking.sendToPlayer(player, PLAYER_DATA_SYNC_ID, tag);
