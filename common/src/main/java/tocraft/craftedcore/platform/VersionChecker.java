@@ -16,15 +16,13 @@ import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.CraftedCoreConfig;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.patched.TComponent;
+import tocraft.craftedcore.util.NetUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.module.ModuleDescriptor.Version;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,6 +34,7 @@ import java.util.Map;
 
 @SuppressWarnings({"unused", "UnreachableCode"})
 public class VersionChecker {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Map<String, Version> CACHED_VERSION = new HashMap<>();
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");
 
@@ -161,8 +160,7 @@ public class VersionChecker {
         try {
             Map<String, String> header = new HashMap<>();
             header.put("Accept", "application/vnd.github.v3+json");
-            String json = getResponse(header, url);
-            JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
+            JsonArray jsonArray = NetUtils.getJsonResponse(GSON, header, new URI(url).toURL()).getAsJsonArray();
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
@@ -171,24 +169,6 @@ public class VersionChecker {
         }
 
         return versions;
-    }
-
-    @NotNull
-    private static String getResponse(Map<String, String> header, String url) throws IOException, URISyntaxException {
-        HttpURLConnection connection = (HttpURLConnection) new URI(url).toURL().openConnection();
-        for (Map.Entry<String, String> entry : header.entrySet()) {
-            connection.addRequestProperty(entry.getKey(), entry.getValue());
-        }
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        connection.disconnect();
-        in.close();
-        return content.toString();
     }
 
     public static void registerModrinthChecker(String modid, String slug, Component modName) {
@@ -229,8 +209,7 @@ public class VersionChecker {
         try {
             Map<String, String> header = new HashMap<>();
             header.put("User-Agent", "crafted-core");
-            String json = getResponse(header, url);
-            JsonArray jsonArray = GsonHelper.fromJson(GSON, json, JsonArray.class);
+            JsonArray jsonArray = NetUtils.getJsonResponse(GSON, header, new URI(url).toURL()).getAsJsonArray();
             for (JsonElement jsonElement : jsonArray) {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }

@@ -3,6 +3,7 @@ craftedcore 5.1
 
 - fix crash on Fabric 1.21
 - add new graphics tools
+- add NetUtils
 
 craftedcore 5
 ================

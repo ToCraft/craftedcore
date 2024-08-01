@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class VIPs {
-    public static final String patreonURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/1.20.2/common/src/main/resources/patreons.txt";
+    public static final String patreonURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/main/common/src/main/resources/patreons.txt";
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
 
     @SuppressWarnings("unused")
