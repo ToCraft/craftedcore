@@ -2,18 +2,17 @@ package tocraft.craftedcore.registration;
 
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.PlayerDataProvider;
 
-import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public class PlayerDataRegistry {
-    private static final Map<String, SimpleEntry<Boolean, Boolean>> CraftedTagKeys = new HashMap<>();
+    private static final Map<String, TagData> CraftedTagKeys = new HashMap<>();
 
     /**
      * Should be called once the player joins and for every key
@@ -37,18 +36,30 @@ public class PlayerDataRegistry {
      * @param sync       should the tag be synchronized to the client?
      */
     public static void registerKey(String key, boolean persistent, boolean sync) {
-        CraftedTagKeys.put(key, new SimpleEntry<>(persistent, sync));
+        registerKey(key, persistent, sync, sync);
+    }
+
+    public static void registerKey(String key, boolean persistent, boolean syncToSelf, boolean syncToOthers) {
+        CraftedTagKeys.put(key, new TagData(persistent, syncToSelf, syncToOthers));
     }
 
     public static boolean isKeyPersistent(String key) {
-        return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).getKey();
+        return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).persistent();
     }
 
     public static boolean shouldSyncKey(String key) {
-        return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).getValue();
+        return shouldSyncTagToSelf(key) && shouldSyncTagToAll(key);
     }
 
-    public static void writeTag(Player player, String key, Tag value) throws NotRegisteredTagKeyException {
+    public static boolean shouldSyncTagToSelf(String key) {
+        return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).syncToSelf();
+    }
+
+    public static boolean shouldSyncTagToAll(String key) {
+        return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).syncToAll();
+    }
+
+    public static void writeTag(Player player, String key, @NotNull Tag value) throws NotRegisteredTagKeyException {
         PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
         if (isKeyRegistered(key)) {
             playerDataProvider.craftedcore$writeTag(key, value);
@@ -57,7 +68,6 @@ public class PlayerDataRegistry {
         }
     }
 
-    @Nullable
     public static Tag readTag(Player player, String key) throws NotRegisteredTagKeyException {
         PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
         if (isKeyRegistered(key)) {
@@ -75,5 +85,9 @@ public class PlayerDataRegistry {
         public NotRegisteredTagKeyException(String key) {
             super("Player Data Key " + key + " not found!");
         }
+    }
+
+    private record TagData(boolean persistent, boolean syncToSelf, boolean syncToAll) {
+
     }
 }

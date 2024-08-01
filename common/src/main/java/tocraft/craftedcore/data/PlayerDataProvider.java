@@ -12,6 +12,5 @@ public interface PlayerDataProvider {
 
     Set<String> craftedcore$keySet();
 
-    @Nullable
     Tag craftedcore$readTag(String key);
 }

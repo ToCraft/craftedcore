@@ -4,9 +4,10 @@ craftedcore 5.1
 - fix crash on Fabric 1.21
 - add new graphics tools
 - add NetUtils
-- add ProfileTools#
+- add PlayerProfile
 - improve PlayerDataRegistry
 - add delete tag logic for Player Data
+- fix sync error with player data
 
 craftedcore 5
 ================

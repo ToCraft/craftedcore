@@ -5,8 +5,8 @@ buildscript {
         maven { url "https://maven.tocraft.dev/public" }
     }
     dependencies {
-        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6+'
-        classpath "dev.tocraft:preprocessor:0.91-SNAPSHOT"
+        classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6'
+        classpath "dev.tocraft:preprocessor:0.107-SNAPSHOT"
     }
 }
 
@@ -22,7 +22,6 @@ println()
 println "Minecraft: ${project.name} (Java ${project.props.java})"
 if (project.props.mappings != null) {
     println "├── Parchment: ${project.props.mappings}"
-
 }
 if (project.props.fabric != null) {
     println "├── Fabric: ${project.props.fabric}"
@@ -47,6 +46,8 @@ if (project.props.supported_versions != null) {
 project.ext.set("supported_versions", supportedVersions)
 println("└── Supported Minecraft Versions: ${project.supported_versions}")
 println()
+
+apply plugin: "dev.tocraft.preprocessor"
 
 layout.buildDirectory.set(rootDir.toPath().resolve("build/$project.name").toFile())
 
@@ -104,6 +105,6 @@ allprojects {
 ext {
     mod_meta = [
             minecraft: project.name,
-            version  : version
+            version: version
     ]
 }

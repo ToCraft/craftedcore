@@ -185,6 +185,7 @@ public class ModernNetworkingImpl {
 //$$     }
 //$$ }
 //#else
+//$$ import io.netty.buffer.Unpooled;
 //$$ import net.minecraft.client.Minecraft;
 //$$ import net.minecraft.nbt.CompoundTag;
 //$$ import net.minecraft.network.FriendlyByteBuf;
@@ -255,7 +256,10 @@ public class ModernNetworkingImpl {
 //$$     }
 //$$
 //$$     @ApiStatus.Internal
-//$$     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, FriendlyByteBuf buf) {
+//$$     public static Packet<?> toPacket(ModernNetworking.Side side, ResourceLocation id, CompoundTag data) {
+//$$         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+//$$         buf.writeResourceLocation(id);
+//$$         buf.writeNbt(data);
 //$$         if (side == ModernNetworking.Side.C2S) {
 //$$             return PlayNetworkDirection.PLAY_TO_SERVER.buildPacket(new INetworkDirection.PacketData(buf, 0), CHANNEL_ID);
 //$$         } else {

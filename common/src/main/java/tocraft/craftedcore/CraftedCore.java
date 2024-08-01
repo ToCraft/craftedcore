@@ -3,12 +3,15 @@ package tocraft.craftedcore;
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.patched.Identifier;
 import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.VersionChecker;
@@ -33,6 +36,12 @@ public class CraftedCore {
 
         // send configurations to client
         PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
+
+        PlayerEvents.PLAYER_JOIN.register(player -> {
+            for (ServerPlayer serverPlayer : ((ServerLevel) CEntity.level(player)).players()) {
+                PlayerDataSynchronizer.sync(serverPlayer);
+            }
+        });
 
         // sync data pack packets on data pack sync
         SynchronizedReloadListenerRegistry.initialize();

@@ -64,7 +64,6 @@ public abstract class PlayerMixin implements PlayerDataProvider {
     }
 
     @Unique
-    @Nullable
     @Override
     public Tag craftedcore$readTag(String key) {
         return craftedcore$playerData.get(key);
