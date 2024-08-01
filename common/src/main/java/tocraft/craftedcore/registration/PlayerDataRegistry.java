@@ -9,10 +9,11 @@ import tocraft.craftedcore.data.PlayerDataProvider;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public class PlayerDataRegistry {
-    private static final Map<String, Map.Entry<Boolean, Boolean>> CraftedTagKeys = new HashMap<>();
+    private static final Map<String, SimpleEntry<Boolean, Boolean>> CraftedTagKeys = new HashMap<>();
 
     /**
      * Should be called once the player joins and for every key
@@ -64,6 +65,10 @@ public class PlayerDataRegistry {
         } else {
             throw new NotRegisteredTagKeyException(key);
         }
+    }
+
+    public static Set<String> keySet() {
+        return CraftedTagKeys.keySet();
     }
 
     public static class NotRegisteredTagKeyException extends IllegalArgumentException {

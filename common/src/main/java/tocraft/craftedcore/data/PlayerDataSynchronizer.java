@@ -2,6 +2,7 @@ package tocraft.craftedcore.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,6 +26,12 @@ public class PlayerDataSynchronizer {
                         }
                     }
                 }
+                ListTag deletedTags = (ListTag) tag.get(PLAYER_DATA_SYNC + "_DEL");
+                if (deletedTags != null) {
+                    for (Tag deletedTag : deletedTags) {
+                        ClientNetworking.runOrQueue(context, player -> ((PlayerDataProvider) player).craftedcore$writeTag(deletedTag.getAsString(), null));
+                    }
+                }
             }
         });
     }
@@ -35,6 +42,7 @@ public class PlayerDataSynchronizer {
     public static void sync(ServerPlayer player) {
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
+        ListTag deletedTags = new ListTag();
 
         PlayerDataProvider playerData = ((PlayerDataProvider) player);
 
@@ -48,9 +56,12 @@ public class PlayerDataSynchronizer {
             if (value != null) {
                 entry.put(key, value);
                 list.add(entry);
+            } else {
+                deletedTags.add(StringTag.valueOf(key));
             }
         }
         tag.put(PLAYER_DATA_SYNC, list);
+        tag.put(PLAYER_DATA_SYNC + "_DEL", deletedTags);
         ModernNetworking.sendToPlayer(player, PLAYER_DATA_SYNC_ID, tag);
     }
 }

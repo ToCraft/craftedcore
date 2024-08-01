@@ -6,6 +6,7 @@ craftedcore 5.1
 - add NetUtils
 - add ProfileTools#
 - improve PlayerDataRegistry
+- add delete tag logic for Player Data
 
 craftedcore 5
 ================

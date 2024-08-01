@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import tocraft.craftedcore.data.PlayerDataProvider;
 import tocraft.craftedcore.event.common.EntityEvents;
+import tocraft.craftedcore.registration.PlayerDataRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,9 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readNbt(CompoundTag tag, CallbackInfo info) {
-        craftedcore$playerData.replaceAll((k, v) -> tag.get(k));
+        for (String k : PlayerDataRegistry.keySet()) {
+            craftedcore$playerData.put(k, tag.get(k));
+        }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
@@ -57,11 +60,7 @@ public abstract class PlayerMixin implements PlayerDataProvider {
     @Unique
     @Override
     public void craftedcore$writeTag(String key, Tag tag) {
-        if (tag == null || (tag instanceof StringTag stringTag && stringTag.getAsString().isBlank())) {
-            craftedcore$playerData.remove(key);
-        } else {
-            craftedcore$playerData.put(key, tag);
-        }
+        craftedcore$playerData.put(key, tag);
     }
 
     @Unique
