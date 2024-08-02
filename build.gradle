@@ -3,10 +3,11 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven { url "https://maven.tocraft.dev/public" }
+        mavenLocal()
     }
     dependencies {
         classpath group: 'com.diluv.schoomp', name: 'Schoomp', version: '1.2.6'
-        classpath "dev.tocraft:preprocessor:0.107-SNAPSHOT"
+        classpath "dev.tocraft:preprocessor:0.111-SNAPSHOT"
     }
 }
 
@@ -62,6 +63,10 @@ subprojects {
 
     preprocess {
         vars.put("MC", project.props.mc_id != null ? project.props.mc_id : project.name.replaceAll(".", ""))
+    }
+
+    repositories {
+        mavenLocal()
     }
 
     loom {

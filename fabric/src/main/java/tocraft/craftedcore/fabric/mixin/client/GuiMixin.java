@@ -53,22 +53,22 @@ public abstract class GuiMixin {
     }
 
     //#if MC>=1205
-    @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
-    private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
-        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
-        if (result == InteractionResult.FAIL) {
-            ci.cancel();
-        }
-    }
-    //#else
-    //$$ @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
-    //$$ private int shouldRenderFood(int health) {
-    //$$     InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(null, Minecraft.getInstance().player);
+    //$$ @Inject(method = "renderFood", at = @At(value = "HEAD"), cancellable = true)
+    //$$ private void shouldRenderFood(GuiGraphics guiGraphics, Player player, int y, int x, CallbackInfo ci) {
+    //$$     InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(guiGraphics, player);
     //$$     if (result == InteractionResult.FAIL) {
-    //$$         return -1;
+    //$$         ci.cancel();
     //$$     }
-    //$$     return health;
     //$$ }
+    //#else
+    @ModifyExpressionValue(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int shouldRenderFood(int health) {
+        InteractionResult result = RenderEvents.RENDER_FOOD.invoke().render(null, Minecraft.getInstance().player);
+        if (result == InteractionResult.FAIL) {
+            return -1;
+        }
+        return health;
+    }
     //#endif
 
     @Inject(method = "renderVehicleHealth", at = @At(value = "HEAD"), cancellable = true)

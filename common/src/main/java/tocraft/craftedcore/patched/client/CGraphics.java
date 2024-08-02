@@ -93,6 +93,11 @@ public class CGraphics {
     //$$     }
     //$$
     //$$     public static void blit(PoseStack graphics, int i, int j, int k, int l, int m, TextureAtlasSprite textureAtlasSprite) {
+            //#if MC>1182
+            //$$ RenderSystem.setShaderTexture(0, textureAtlasSprite.atlasLocation());
+            //#else
+            //$$ RenderSystem.setShaderTexture(0, textureAtlasSprite.atlas().location());
+            //#endif
     //$$         GuiComponent.blit(graphics, i, j, k, l, m, textureAtlasSprite);
     //$$     }
     //#endif

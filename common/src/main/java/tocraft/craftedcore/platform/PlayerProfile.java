@@ -3,95 +3,105 @@ package tocraft.craftedcore.platform;
 import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.util.MalformedUUIDException;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.util.NetUtils;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
+import java.nio.channels.UnresolvedAddressException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable URL skin, boolean isSlim, @Nullable URL cape) {
+    private static final Map<String, UUID> NAME_TO_UUID_CACHE = new ConcurrentHashMap<>();
+    private static final Map<UUID, PlayerProfile> UUID_TO_PROFILE_CACHE = new ConcurrentHashMap<>();
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Nullable
-    public static PlayerProfile ofName(@NotNull final String name) throws MalformedUUIDException {
-        JsonObject lookup;
-        try {
-            JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://api.mojang.com/users/profiles/minecraft/" + name).toURL());
-            if (response == null) {
+    public static UUID getUUID(@NotNull final String name) {
+        return NAME_TO_UUID_CACHE.computeIfAbsent(name, key -> {
+            JsonObject lookup;
+            try {
+                JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://api.mojang.com/users/profiles/minecraft/" + key).toURL());
+                if (response == null) {
+                    return null;
+                }
+                lookup = response.getAsJsonObject();
+                return stringToUUID(lookup.get("id").getAsString());
+            } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
+                CraftedCore.LOGGER.error("Caught an exception.", e);
                 return null;
             }
-            lookup = response.getAsJsonObject();
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            return ofId(stringToUUID(lookup.get("id").getAsString()));
-        } catch (IllegalArgumentException e) {
-            throw new MalformedUUIDException(e.getMessage());
-        }
+        });
+    }
+
+    @Nullable
+    public static PlayerProfile ofName(@NotNull final String name) {
+        UUID uuid = getUUID(name);
+        return uuid != null ? ofId(uuid) : null;
     }
 
     @Nullable
     public static PlayerProfile ofId(@NotNull final UUID uuid) {
-        JsonObject profile;
-        try {
-            JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "")).toURL());
-            if (response == null) {
+        return UUID_TO_PROFILE_CACHE.computeIfAbsent(uuid, key -> {
+            JsonObject profile;
+            try {
+                JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + key.toString().replace("-", "")).toURL());
+                if (response == null) {
+                    return null;
+                }
+                profile = response.getAsJsonObject();
+            } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
+                CraftedCore.LOGGER.error("Caught an exception.", e);
                 return null;
             }
-            profile = response.getAsJsonObject();
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        JsonArray properties = profile.get("properties").getAsJsonArray();
-        JsonObject textures = null;
-        for (JsonElement property : properties) {
-            if (property.isJsonObject()) {
-                JsonObject propertyObject = property.getAsJsonObject();
-                if (Objects.equals(propertyObject.get("name").getAsString(), "textures")) {
-                    String decodedProperties = new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()), StandardCharsets.UTF_8);
-                    JsonObject jsonProperties = GSON.fromJson(decodedProperties, JsonElement.class).getAsJsonObject();
-                    textures = jsonProperties.get("textures").getAsJsonObject();
-                    break;
-                }
-            }
-        }
-
-        String name = profile.get("name").getAsString();
-        URL skin = null;
-        boolean isSlim = false;
-        URL cape = null;
-        if (textures != null) {
-            if (textures.has("SKIN")) {
-                JsonObject skinJson = textures.get("SKIN").getAsJsonObject();
-                try {
-                    skin = new URI(skinJson.get("url").getAsString()).toURL();
-                } catch (MalformedURLException | URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
-                if (skinJson.has("metadata")) {
-                    JsonObject metadata = skinJson.get("metadata").getAsJsonObject();
-                    if (metadata.has("model")) {
-                        isSlim = Objects.equals(metadata.get("model").getAsString(), "slim");
+            JsonArray properties = profile.get("properties").getAsJsonArray();
+            JsonObject textures = null;
+            for (JsonElement property : properties) {
+                if (property.isJsonObject()) {
+                    JsonObject propertyObject = property.getAsJsonObject();
+                    if (Objects.equals(propertyObject.get("name").getAsString(), "textures")) {
+                        String decodedProperties = new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()), StandardCharsets.UTF_8);
+                        JsonObject jsonProperties = GSON.fromJson(decodedProperties, JsonElement.class).getAsJsonObject();
+                        textures = jsonProperties.get("textures").getAsJsonObject();
+                        break;
                     }
                 }
             }
-            if (textures.has("CAPE")) {
-                try {
-                    cape = new URI(textures.get("CAPE").getAsJsonObject().get("url").getAsString()).toURL();
-                } catch (MalformedURLException | URISyntaxException e) {
-                    throw new RuntimeException(e);
+
+            String name = profile.get("name").getAsString();
+            URL skin = null;
+            boolean isSlim = false;
+            URL cape = null;
+            if (textures != null) {
+                if (textures.has("SKIN")) {
+                    JsonObject skinJson = textures.get("SKIN").getAsJsonObject();
+                    try {
+                        skin = new URI(skinJson.get("url").getAsString()).toURL();
+                    } catch (MalformedURLException | URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (skinJson.has("metadata")) {
+                        JsonObject metadata = skinJson.get("metadata").getAsJsonObject();
+                        if (metadata.has("model")) {
+                            isSlim = Objects.equals(metadata.get("model").getAsString(), "slim");
+                        }
+                    }
+                }
+                if (textures.has("CAPE")) {
+                    try {
+                        cape = new URI(textures.get("CAPE").getAsJsonObject().get("url").getAsString()).toURL();
+                    } catch (MalformedURLException | URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-        }
 
-        return new PlayerProfile(name, uuid, skin, isSlim, cape);
+            return new PlayerProfile(name, key, skin, isSlim, cape);
+        });
     }
 
     private static UUID stringToUUID(final String input) throws IllegalArgumentException {

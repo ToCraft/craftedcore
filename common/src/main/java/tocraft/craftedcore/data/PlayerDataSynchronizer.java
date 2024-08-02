@@ -10,6 +10,8 @@ import tocraft.craftedcore.network.client.ClientNetworking;
 import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.registration.PlayerDataRegistry;
 
+import java.util.Objects;
+
 public class PlayerDataSynchronizer {
     private static final String PLAYER_DATA_SYNC = "player_data_sync";
     public static final ResourceLocation PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
@@ -20,33 +22,33 @@ public class PlayerDataSynchronizer {
                 ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
                 if (list != null) {
                     for (Tag entry : list) {
-                        if (entry instanceof CompoundTag compoundTag) {
-                            for (String key : compoundTag.getAllKeys()) {
-                                ClientNetworking.runOrQueue(context, player -> {
-                                    PlayerDataProvider playerDataProvider;
-                                    if (tag.hasUUID("uuid")) {
-                                        playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
-                                    } else {
-                                        playerDataProvider = (PlayerDataProvider) player;
-                                    }
-                                    if (playerDataProvider != null) {
-                                        playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
-                                    }
-                                });
-                            }
-                        } else if (entry instanceof StringTag stringTag) {
-                            ClientNetworking.runOrQueue(context, player -> {
-                                PlayerDataProvider playerDataProvider;
-                                if (tag.hasUUID("uuid")) {
-                                    playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
+                            for (String key : ((CompoundTag) entry).getAllKeys()) {
+                                if (Objects.equals(key, "DELETED")) {
+                                    ClientNetworking.runOrQueue(context, player -> {
+                                        PlayerDataProvider playerDataProvider;
+                                        if (tag.hasUUID("uuid")) {
+                                            playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
+                                        } else {
+                                            playerDataProvider = (PlayerDataProvider) player;
+                                        }
+                                        if (playerDataProvider != null) {
+                                            playerDataProvider.craftedcore$writeTag(Objects.requireNonNull(((CompoundTag) entry).get(key)).getAsString(), null);
+                                        }
+                                    });
                                 } else {
-                                    playerDataProvider = (PlayerDataProvider) player;
+                                    ClientNetworking.runOrQueue(context, player -> {
+                                        PlayerDataProvider playerDataProvider;
+                                        if (tag.hasUUID("uuid")) {
+                                            playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
+                                        } else {
+                                            playerDataProvider = (PlayerDataProvider) player;
+                                        }
+                                        if (playerDataProvider != null) {
+                                            playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
+                                        }
+                                    });
                                 }
-                                if (playerDataProvider != null) {
-                                    playerDataProvider.craftedcore$writeTag(stringTag.getAsString(), null);
-                                }
-                            });
-                        }
+                            }
                     }
                 }
             }
@@ -75,8 +77,11 @@ public class PlayerDataSynchronizer {
 
             CompoundTag entry = new CompoundTag();
             Tag value = playerData.craftedcore$readTag(key);
-            entry.put(key, value);
-            list.add(entry);
+            if (value != null) {
+                entry.put(key, value);
+            } else {
+                entry.put("DELETED", StringTag.valueOf(key));
+            }            list.add(entry);
         }
         tag.put(PLAYER_DATA_SYNC, list);
 
@@ -101,7 +106,7 @@ public class PlayerDataSynchronizer {
             if (value != null) {
                 entry.put(key, value);
             } else {
-                list.add(StringTag.valueOf(key));
+                entry.put("DELETED", StringTag.valueOf(key));
             }
             list.add(entry);
         }
