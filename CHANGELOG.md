@@ -1,3 +1,8 @@
+craftedcore 5.1.0.1
+================
+
+- fix crash on 1.20.1
+
 craftedcore 5.1
 ================
 
