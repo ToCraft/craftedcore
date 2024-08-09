@@ -1,3 +1,9 @@
+craftedcore 5.2
+================
+
+- fix ConcurrentModificationException when creating a new event
+- move Threads to async completable futures
+
 craftedcore 5.1.0.1
 ================
 

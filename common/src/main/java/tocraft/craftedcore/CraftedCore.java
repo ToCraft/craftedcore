@@ -17,6 +17,8 @@ import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CraftedCore {
     public static final Logger LOGGER = LoggerFactory.getLogger(CraftedCore.class);
     public static final String MODID = "craftedcore";
@@ -32,7 +34,7 @@ public class CraftedCore {
         //#endif
 
         // cache patreons in an extra thread to prevent longer loading times while connecting
-        new Thread(VIPs::cachePatreons).start();
+        CompletableFuture.runAsync(VIPs::cachePatreons);
 
         // send configurations to client
         PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);

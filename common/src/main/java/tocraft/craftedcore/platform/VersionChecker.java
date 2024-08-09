@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 
 @SuppressWarnings({"unused", "UnreachableCode"})
@@ -50,7 +51,7 @@ public class VersionChecker {
 
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {
         // notify player about outdated version
-        PlayerEvents.PLAYER_JOIN.register(player -> new Thread(() -> {
+        PlayerEvents.PLAYER_JOIN.register(player -> CompletableFuture.runAsync(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
                 Version localVersion = PlatformData.getModVersion(modid);
@@ -87,7 +88,7 @@ public class VersionChecker {
                     sendUpdateMessage(player, modName, newestVersion);
                 }
             }
-        }, VersionChecker.class.getSimpleName()).start());
+        }));
     }
 
     public static void registerDefaultGitHubChecker(String modid, String owner, String repo, Component modName) {
@@ -97,7 +98,7 @@ public class VersionChecker {
 
     public static void registerGitHubChecker(String modid, String owner, String repo, boolean releasesInsteadOfTags, boolean useLastPartOfVersion, Component modName, List<String> invalidVersions) {
         // notify player about outdated version
-        PlayerEvents.PLAYER_JOIN.register(player -> new Thread(() -> {
+        PlayerEvents.PLAYER_JOIN.register(player -> CompletableFuture.runAsync(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
                 Version localVersion = PlatformData.getModVersion(modid);
@@ -118,7 +119,7 @@ public class VersionChecker {
                     sendUpdateMessage(player, modName, newestVersion);
                 }
             }
-        }, VersionChecker.class.getSimpleName()).start());
+        }));
     }
 
     private static List<Version> processVersionListWithDefaultLayout(List<String> versions, boolean useLast, List<String> invalidVersions) {
@@ -176,7 +177,7 @@ public class VersionChecker {
 
     public static void registerModrinthChecker(String modid, String slug, boolean useLastPartOfVersion, Component modName, List<String> invalidVersions) {
         // notify player about outdated version
-        PlayerEvents.PLAYER_JOIN.register(player -> new Thread(() -> {
+        PlayerEvents.PLAYER_JOIN.register(player -> CompletableFuture.runAsync(() -> {
             if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.enableVersionChecking) {
                 // get the actual mod version
                 Version localVersion = PlatformData.getModVersion(modid);
@@ -197,7 +198,7 @@ public class VersionChecker {
                     sendUpdateMessage(player, modName, newestVersion);
                 }
             }
-        }, VersionChecker.class.getSimpleName()).start());
+        }));
     }
 
     private static List<String> getVersionsFromModrinth(String slug) {
