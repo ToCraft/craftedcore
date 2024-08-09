@@ -1,13 +1,11 @@
 package tocraft.craftedcore.mixin;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +35,11 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeNbt(CompoundTag tag, CallbackInfo info) {
-        craftedcore$playerData.forEach(tag::put);
+        craftedcore$playerData.forEach((k, v) -> {
+            if (v != null && PlayerDataRegistry.isKeyRegistered(k)) {
+                tag.put(k, v);
+            }
+        });
     }
 
     @Inject(method = "interactOn", at = @At(value = "INVOKE",
