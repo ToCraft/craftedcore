@@ -1,3 +1,5 @@
 {
-  "craftedcore.update": "A new version of %s is available: %s"
+  "craftedcore.update": "A new version of %s is available: %s",
+  "craftedcore.config.set": "Config entry %s is now %s",
+  "craftedcore.config.get": "Config entry %s is set to %s"
 }

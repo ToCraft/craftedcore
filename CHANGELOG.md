@@ -1,3 +1,8 @@
+craftedcore 5.3
+================
+
+- add new lang keys for changing config entries
+
 craftedcore 5.2
 ================
 
