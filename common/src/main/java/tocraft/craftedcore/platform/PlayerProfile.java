@@ -32,7 +32,11 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
                 lookup = response.getAsJsonObject();
                 return stringToUUID(lookup.get("id").getAsString());
             } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
-                CraftedCore.LOGGER.error("Caught an exception.", e);
+                if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
+                    CraftedCore.reportMissingInternet(e);
+                } else {
+                    CraftedCore.LOGGER.error("Caught an exception.", e);
+                }
                 return null;
             }
         });

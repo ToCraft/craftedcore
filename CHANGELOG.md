@@ -2,6 +2,7 @@ craftedcore 5.3
 ================
 
 - add new lang keys for changing config entries
+- fix duplicate log entries with no internet connection
 
 craftedcore 5.2
 ================

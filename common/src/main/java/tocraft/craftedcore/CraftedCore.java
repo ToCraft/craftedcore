@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
@@ -50,6 +51,14 @@ public class CraftedCore {
 
         // check for new version
         VersionChecker.registerModrinthChecker(MODID, "crafted-core", TComponent.literal("CraftedCore"));
+    }
+
+    private static boolean hasReportedNoInternet = false;
+    public static void reportMissingInternet(Throwable cause) {
+        if (!hasReportedNoInternet) {
+            CraftedCore.LOGGER.error("No internet connection!", cause);
+            hasReportedNoInternet = true;
+        }
     }
 
     public static ResourceLocation id(String name) {

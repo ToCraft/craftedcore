@@ -7,10 +7,7 @@ import tocraft.craftedcore.platform.PlatformData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,11 @@ public class VIPs {
             }
             updateReader.close();
         } catch (IOException e) {
-            CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
+            if ((e instanceof SocketException || e instanceof UnknownHostException)) {
+                CraftedCore.reportMissingInternet(e);
+            } else {
+                CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
+            }
         }
         if (PlatformData.getEnv() == EnvType.CLIENT && people.contains(CMinecraft.getLocalPlayerUUID())) {
             CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");

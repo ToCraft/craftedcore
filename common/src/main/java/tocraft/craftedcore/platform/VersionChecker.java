@@ -22,9 +22,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.lang.module.ModuleDescriptor.Version;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
+import java.nio.channels.UnresolvedAddressException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +75,11 @@ public class VersionChecker {
                             remoteVersions.add(nodeList.item(i).getTextContent());
                         }
                     } catch (Exception e) {
-                        CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: {}", mavenURL, e);
+                        if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
+                            CraftedCore.reportMissingInternet(e);
+                        } else {
+                            CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: {}", mavenURL, e);
+                        }
                     }
                     List<Version> versions = new ArrayList<>(processVersionListWithDefaultLayout(remoteVersions, true, INVALID_VERSIONS));
                     if (!versions.isEmpty()) {
@@ -165,7 +168,11 @@ public class VersionChecker {
                 versions.add(jsonElement.getAsJsonObject().get("name").getAsString());
             }
         } catch (IOException | URISyntaxException e) {
-            CraftedCore.LOGGER.error("Caught an error while getting the newest {} from {}", releasesInsteadOfTags ? "releases" : "tags", url, e);
+            if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
+                CraftedCore.reportMissingInternet(e);
+            } else {
+                CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: {}", url, e);
+            }
         }
 
         return versions;
@@ -215,7 +222,11 @@ public class VersionChecker {
             }
 
         } catch (Exception e) {
-            CraftedCore.LOGGER.error("Caught an error while getting the newest version from {}", url, e);
+            if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
+                CraftedCore.reportMissingInternet(e);
+            } else {
+                CraftedCore.LOGGER.error("Caught an error while getting the newest versions from: {}", url, e);
+            }
         }
 
         return versions;
