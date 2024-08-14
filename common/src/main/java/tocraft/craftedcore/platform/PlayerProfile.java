@@ -21,6 +21,26 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Nullable
+    public static PlayerProfile getCachedProfile(UUID id) {
+        return UUID_TO_PROFILE_CACHE.get(id);
+    }
+
+    @Nullable
+    public static UUID getCachedId(String name) {
+        return NAME_TO_UUID_CACHE.get(name);
+    }
+
+    @Nullable
+    public static PlayerProfile getCachedProfile(String name) {
+        UUID id = getCachedId(name);
+        if (id != null) {
+            return UUID_TO_PROFILE_CACHE.get(id);
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
     public static UUID getUUID(@NotNull final String name) {
         return NAME_TO_UUID_CACHE.computeIfAbsent(name, key -> {
             JsonObject lookup;
