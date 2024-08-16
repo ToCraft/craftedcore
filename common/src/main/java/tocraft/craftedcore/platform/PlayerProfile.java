@@ -1,9 +1,11 @@
 package tocraft.craftedcore.platform;
 
 import com.google.gson.*;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.gui.TextureCache;
 import tocraft.craftedcore.util.NetUtils;
 
 import java.io.IOException;
@@ -133,6 +135,22 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
             return UUID.fromString(input);
         } catch (IllegalArgumentException e) {
             return UUID.fromString(input.replaceFirst("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5"));
+        }
+    }
+
+    public ResourceLocation getSkinId() {
+        if (skin != null) {
+            return TextureCache.getTextureId(CraftedCore.MODID, "entity", "custom_skin_", "png", skin);
+        } else {
+            return null;
+        }
+    }
+
+    public ResourceLocation getCapeId() {
+        if (cape != null) {
+            return TextureCache.getTextureId(CraftedCore.MODID, "entity", "custom_cape_", "png", cape);
+        } else {
+            return null;
         }
     }
 }
