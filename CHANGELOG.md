@@ -1,3 +1,8 @@
+craftedcore 5.4
+================
+
+- cache player profiles & patreons offline
+
 craftedcore 5.3
 ================
 

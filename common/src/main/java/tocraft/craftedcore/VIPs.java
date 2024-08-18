@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +18,7 @@ import java.util.UUID;
 public class VIPs {
     public static final String patreonURL = "https://raw.githubusercontent.com/ToCraft/craftedcore/main/common/src/main/resources/patreons.txt";
     private static final List<UUID> CACHED_PATREONS = new ArrayList<>();
+    private static final Path CACHE_FILE = CraftedCore.CACHE_DIR.resolve("patreons.txt");
 
     @SuppressWarnings("unused")
     public static List<UUID> getCachedPatreons() {
@@ -27,14 +30,16 @@ public class VIPs {
         if (CACHED_PATREONS.isEmpty()) {
             CACHED_PATREONS.addAll(getPatreons());
         }
-
-        if (CraftedCoreConfig.INSTANCE != null && CraftedCoreConfig.INSTANCE.savePatreonsLocal) {
-            if (CACHED_PATREONS.isEmpty()) {
-                CACHED_PATREONS.addAll(CraftedCoreConfig.INSTANCE.localPatreonsList);
-            } else {
-                CraftedCoreConfig.INSTANCE.localPatreonsList = CACHED_PATREONS;
-                CraftedCoreConfig.INSTANCE.save();
-            }
+        StringBuilder s = new StringBuilder();
+        for (UUID cachedPatreon : CACHED_PATREONS) {
+            s.append(cachedPatreon).append("\n");
+        }
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            CACHE_FILE.getParent().toFile().mkdirs();
+            Files.writeString(CACHE_FILE, s);
+        } catch (IOException e) {
+            CraftedCore.LOGGER.error("Caught an exception.", e);
         }
         return CACHED_PATREONS;
     }
@@ -42,6 +47,7 @@ public class VIPs {
     public static List<UUID> getPatreons() {
         List<UUID> patreons = new ArrayList<>();
         try {
+            // integrated patreons
             URL localPatreons = CraftedCore.class.getResource("/patreons.txt");
             if (localPatreons != null) {
                 for (UUID uuidOfPerson : getUUIDOfPeople(localPatreons)) {
@@ -50,9 +56,19 @@ public class VIPs {
                     }
                 }
             }
+            // web patreons
             for (UUID uuidOfPerson : getUUIDOfPeople(new URI(patreonURL).toURL())) {
                 if (!patreons.contains(uuidOfPerson)) {
                     patreons.add(uuidOfPerson);
+                }
+            }
+            // cached patreons
+            if (CACHE_FILE.toFile().exists()) {
+                URL cachedPatreons = CACHE_FILE.toFile().toURI().toURL();
+                for (UUID uuidOfPerson : getUUIDOfPeople(cachedPatreons)) {
+                    if (!patreons.contains(uuidOfPerson)) {
+                        patreons.add(uuidOfPerson);
+                    }
                 }
             }
         } catch (MalformedURLException | URISyntaxException e) {
@@ -82,5 +98,10 @@ public class VIPs {
         }
 
         return people;
+    }
+
+    public static void clearCache() {
+        CraftedCore.forceDeleteFile(CACHE_FILE.toFile());
+        CACHED_PATREONS.clear();
     }
 }

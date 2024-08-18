@@ -4,10 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionResult;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
+import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
 
 import java.util.HashSet;
@@ -37,6 +39,9 @@ public class CraftedCoreClient {
                 return InteractionResult.PASS;
             }
         });
+
+
+        ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, CraftedCore.CLEAR_CACHE_PACKET, (context, data) -> CraftedCore.clearCache());
     }
 
     public static Set<ApplicablePacket> getSyncPacketQueue() {

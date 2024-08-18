@@ -2,6 +2,7 @@ package tocraft.craftedcore.platform;
 
 import com.google.gson.*;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
@@ -9,18 +10,51 @@ import tocraft.craftedcore.gui.TextureCache;
 import tocraft.craftedcore.util.NetUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
 import java.nio.channels.UnresolvedAddressException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable URL skin, boolean isSlim, @Nullable URL cape) {
     private static final Map<String, UUID> NAME_TO_UUID_CACHE = new ConcurrentHashMap<>();
     private static final Map<UUID, PlayerProfile> UUID_TO_PROFILE_CACHE = new ConcurrentHashMap<>();
+    private final static Path CACHE_DIR = CraftedCore.CACHE_DIR.resolve("player_profiles");
+    private final static Path CACHE_PROFILES_DIR = CACHE_DIR.resolve("profiles");
+    private final static Path CACHE_SKINS_DIR = CACHE_DIR.resolve("skins");
+    private final static Path CACHE_CAPES_DIR = CACHE_DIR.resolve("capes");
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "SpellCheckingInspection"})
+    @ApiStatus.Internal
+    public static void mkdirs() {
+        CACHE_DIR.toFile().mkdirs();
+        CACHE_PROFILES_DIR.toFile().mkdirs();
+        CACHE_SKINS_DIR.toFile().mkdirs();
+        CACHE_CAPES_DIR.toFile().mkdirs();
+    }
+
+    @ApiStatus.Internal
+    public static void initialize() {
+        try {
+            loadAll();
+        } catch (IOException e) {
+            CraftedCore.LOGGER.error("Caught an exception.", e);
+        }
+    }
+
+    @ApiStatus.Internal
+    public static void clearCache() {
+        NAME_TO_UUID_CACHE.clear();
+        UUID_TO_PROFILE_CACHE.clear();
+        CraftedCore.forceDeleteFile(CACHE_DIR.toFile());
+    }
 
     @Nullable
     public static PlayerProfile getCachedProfile(UUID id) {
@@ -108,7 +142,8 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
                     try {
                         skin = new URI(skinJson.get("url").getAsString()).toURL();
                     } catch (MalformedURLException | URISyntaxException e) {
-                        throw new RuntimeException(e);
+                        CraftedCore.LOGGER.error("Caught an exception.", e);
+                        return null;
                     }
                     if (skinJson.has("metadata")) {
                         JsonObject metadata = skinJson.get("metadata").getAsJsonObject();
@@ -121,12 +156,19 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
                     try {
                         cape = new URI(textures.get("CAPE").getAsJsonObject().get("url").getAsString()).toURL();
                     } catch (MalformedURLException | URISyntaxException e) {
-                        throw new RuntimeException(e);
+                        CraftedCore.LOGGER.error("Caught an exception.", e);
+                        return null;
                     }
                 }
             }
 
-            return new PlayerProfile(name, key, skin, isSlim, cape);
+            PlayerProfile playerProfile = new PlayerProfile(name, key, skin, isSlim, cape);
+            try {
+                playerProfile.save();
+            } catch (IOException e) {
+                CraftedCore.LOGGER.error("Caught an exception.", e);
+            }
+            return playerProfile;
         });
     }
 
@@ -151,6 +193,62 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
             return TextureCache.getTextureId(CraftedCore.MODID, "entity", "custom_cape_", "png", cape);
         } else {
             return null;
+        }
+    }
+
+    @ApiStatus.Internal
+    public JsonObject toJson() {
+        return GSON.toJsonTree(this).getAsJsonObject();
+    }
+
+    @ApiStatus.Internal
+    public static PlayerProfile ofJson(JsonObject json) {
+        return GSON.fromJson(json, PlayerProfile.class);
+    }
+
+    @ApiStatus.Internal
+    public void save() throws IOException {
+        mkdirs();
+        JsonObject json = this.toJson();
+        if (skin != null) {
+            Path cachedSkin = CACHE_SKINS_DIR.resolve(this.id + ".png");
+            try (InputStream is = skin.openStream()) {
+                Files.write(cachedSkin, is.readAllBytes());
+            }
+            json.addProperty("skin", cachedSkin.toFile().toURI().toURL().toString());
+        }
+        if (cape != null) {
+            Path cachedCape = CACHE_CAPES_DIR.resolve(this.id + ".png");
+            try (InputStream is = cape.openStream()) {
+                Files.write(cachedCape, is.readAllBytes());
+            }
+            json.addProperty("cape", cachedCape.toFile().toURI().toURL().toString());
+        }
+        Files.writeString(CACHE_PROFILES_DIR.resolve(this.id() + ".json"), GSON.toJson(json));
+    }
+
+    @ApiStatus.Internal
+    public static PlayerProfile load(UUID id) throws IOException {
+        mkdirs();
+        String s = Files.readString(CACHE_PROFILES_DIR.resolve(id + ".json"));
+        JsonObject json = GSON.fromJson(s, JsonObject.class);
+        return ofJson(json);
+    }
+
+    public static void loadAll() throws IOException {
+        mkdirs();
+        try (Stream<Path> stream = Files.list(CACHE_PROFILES_DIR)) {
+            for (Path path : stream.toArray(Path[]::new)) {
+                if (path.toString().endsWith(".json")) {
+                    String s = Files.readString(path);
+                    JsonObject json = GSON.fromJson(s, JsonObject.class);
+                    PlayerProfile profile = ofJson(json);
+                    NAME_TO_UUID_CACHE.put(profile.name, profile.id);
+                    UUID_TO_PROFILE_CACHE.put(profile.id, profile);
+                } else {
+                    System.out.println(path);
+                }
+            }
         }
     }
 }
