@@ -2,6 +2,7 @@ craftedcore 5.4
 ================
 
 - cache player profiles & patreons offline
+- add "invalid command perms" lang key
 
 craftedcore 5.3
 ================

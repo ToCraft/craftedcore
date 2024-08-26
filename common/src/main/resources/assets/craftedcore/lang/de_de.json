@@ -2,5 +2,6 @@
   "craftedcore.update": "Eine neue Version von %s ist verfügbar: %s",
   "craftedcore.config.set": "Config entry %s is now %s",
   "craftedcore.config.get": "Config entry %s is set to %s",
+  "craftedcore.command.invalid_perms": "Du hast nicht die richtigen Berechtigungen, um diesen Befehl aszuführen!",
   "craftedcore.command.clear_cache": "Leerte den Cache."
 }
