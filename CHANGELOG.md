@@ -1,3 +1,9 @@
+craftedcore 5.5
+================
+- merge configs to JSON5 format
+- add comments to configs
+- update to MixinExtras 0.4.1
+
 craftedcore 5.4
 ================
 

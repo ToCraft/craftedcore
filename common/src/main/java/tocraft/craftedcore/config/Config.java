@@ -6,18 +6,11 @@ import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.network.ModernNetworking;
 
 import java.nio.file.Path;
-import java.util.List;
 
 @SuppressWarnings("unused")
 public interface Config {
-    /**
-     * This should be overwritten to improve the performance and avoid errors
-     */
     @Nullable
-    default String getName() {
-        List<String> possibleNames = ConfigLoader.getConfigNames(this);
-        return !possibleNames.isEmpty() ? possibleNames.get(0) : null;
-    }
+    String getName();
 
     @Nullable
     default Path getPath() {

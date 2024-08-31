@@ -9,27 +9,31 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.config.annotions.Comment;
 import tocraft.craftedcore.config.annotions.Synchronize;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
+import tocraft.craftedcore.util.JsonUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
+// heavily based on the work of Draylar - https://github.com/Draylar/omega-config/ and therefore this class is licensed under MIT
 public class ConfigLoader {
     public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
     private static final Map<String, Config> LOADED_CONFIGS = new HashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setLenient().create();
+    private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).create();
 
     @Environment(EnvType.CLIENT)
     public static void registerConfigSyncHandler() {
@@ -61,12 +65,36 @@ public class ConfigLoader {
         });
     }
 
+    @SafeVarargs
+    public static <C extends Config> C register(String name, C... typeGetter) {
+        //noinspection unchecked
+        return read(name, (Class<C>) typeGetter.getClass().getComponentType());
+    }
+
     public static <C extends Config> C read(String configName, Class<C> configClass) {
         try {
             Path configFile = getConfigPath(configName);
 
             if (!Files.exists(configFile)) {
-                // Write & return a configuration file
+                // read old config file if exists
+                Path oldConfigFile = PlatformData.getConfigPath().resolve(configName + ".json");
+
+                if (Files.exists(oldConfigFile)) {
+                    C oldConfig = GSON.fromJson(Files.readString(oldConfigFile), configClass);
+                    // config was readable
+                    if (oldConfig != null) {
+                        // write to new config file
+                        writeConfigFile(configFile, oldConfig);
+                        // delete old config file
+                        Files.delete(oldConfigFile);
+
+                        LOADED_CONFIGS.put(configName, oldConfig);
+                        return oldConfig;
+                    }
+                }
+
+                // if this was reached, the old config couldn't be read
+                // Write & return a new configuration file
                 C config = configClass.getDeclaredConstructor().newInstance();
                 writeConfigFile(configFile, config);
 
@@ -78,7 +106,7 @@ public class ConfigLoader {
                 // some files might be malfunctions
                 if (newConfig == null) {
                     newConfig = configClass.getDeclaredConstructor().newInstance();
-                    CraftedCore.LOGGER.error("The Configuration '{}.json' is null. This isn't normal. It will overwritten be with default values.", configName);
+                    CraftedCore.LOGGER.error("The Configuration '{}.json' is null. This isn't normal. It will be overwritten with default values.", configName);
                 }
 
                 // If the configuration existed, it's read now. This overrides it again to ensure every field is represented
@@ -89,17 +117,32 @@ public class ConfigLoader {
             }
         } catch (Exception e) {
             CraftedCore.LOGGER.error("Failed reading config {}", configName, e);
+            return null;
         }
-        return null;
     }
 
     private static <C extends Config> void writeConfigFile(Path file, C config) {
+        String json = GSON.toJson(config);
+        Map<String, String> fieldToComments = new HashMap<>();
+
+        // map comments to the fields
+        for (Field field : config.getClass().getDeclaredFields()) {
+            for (Annotation annotation : field.getDeclaredAnnotations()) {
+                if (annotation instanceof Comment comment) {
+                    fieldToComments.put(field.getName(), comment.value());
+                    break;
+                }
+            }
+        }
+
+        String jsonWithComment = JsonUtils.addComments(json, fieldToComments);
+
         try {
             if (!Files.exists(file)) {
                 Files.createFile(file);
             }
 
-            Files.writeString(file, GSON.toJson(config));
+            Files.writeString(file, jsonWithComment);
         } catch (IOException e) {
             CraftedCore.LOGGER.error("Failed saving config at {}", file, e);
         }
@@ -191,16 +234,14 @@ public class ConfigLoader {
         return LOADED_CONFIGS.get(configName);
     }
 
+    @ApiStatus.Internal
     @NotNull
     public static Path getConfigPath(String configName) {
-        return Paths.get(PlatformData.getConfigPath().toString(), configName + ".json");
+        return PlatformData.getConfigPath().resolve(configName + ".json5");
     }
 
+    @ApiStatus.Internal
     public static <C extends Config> void writeConfigFile(C config) {
         writeConfigFile(getConfigPath(config.getName()), config);
-    }
-
-    public static <C extends Config> List<String> getConfigNames(C config) {
-        return LOADED_CONFIGS.entrySet().stream().filter(entry -> entry.getValue().equals(config)).map(Map.Entry::getKey).toList();
     }
 }
