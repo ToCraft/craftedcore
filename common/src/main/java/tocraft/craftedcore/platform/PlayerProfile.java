@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
+import tocraft.craftedcore.CraftedCoreConfig;
 import tocraft.craftedcore.gui.TextureCache;
 import tocraft.craftedcore.util.NetUtils;
 
@@ -17,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -78,24 +80,37 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
 
     @Nullable
     public static UUID getUUID(@NotNull final String name) {
-        return NAME_TO_UUID_CACHE.computeIfAbsent(name, key -> {
-            JsonObject lookup;
-            try {
-                JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://api.mojang.com/users/profiles/minecraft/" + key).toURL());
-                if (response == null) {
-                    return null;
-                }
-                lookup = response.getAsJsonObject();
-                return stringToUUID(lookup.get("id").getAsString());
-            } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
-                if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
-                    CraftedCore.reportMissingInternet(e);
-                } else {
-                    CraftedCore.LOGGER.error("Caught an exception.", e);
-                }
+        if (CraftedCoreConfig.INSTANCE.autoUpdateCache) {
+            UUID cached = NAME_TO_UUID_CACHE.get(name);
+            if (cached != null) {
+                // update asynchronously
+                CompletableFuture.runAsync(() -> _getUUID(name));
+                return cached;
+            }
+        }
+
+        return NAME_TO_UUID_CACHE.computeIfAbsent(name, key -> _getUUID(name));
+    }
+
+    @ApiStatus.Internal
+    @Nullable
+    private static UUID _getUUID(@NotNull final String name) {
+        JsonObject lookup;
+        try {
+            JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://api.mojang.com/users/profiles/minecraft/" + name).toURL());
+            if (response == null) {
                 return null;
             }
-        });
+            lookup = response.getAsJsonObject();
+            return stringToUUID(lookup.get("id").getAsString());
+        } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
+            if ((e instanceof UnresolvedAddressException || e instanceof SocketException || e instanceof UnknownHostException)) {
+                CraftedCore.reportMissingInternet(e);
+            } else {
+                CraftedCore.LOGGER.error("Caught an exception.", e);
+            }
+            return null;
+        }
     }
 
     @Nullable
@@ -106,70 +121,83 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
 
     @Nullable
     public static PlayerProfile ofId(@NotNull final UUID uuid) {
-        return UUID_TO_PROFILE_CACHE.computeIfAbsent(uuid, key -> {
-            JsonObject profile;
-            try {
-                JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + key.toString().replace("-", "")).toURL());
-                if (response == null) {
-                    return null;
-                }
-                profile = response.getAsJsonObject();
-            } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
-                CraftedCore.LOGGER.error("Caught an exception.", e);
+        if (CraftedCoreConfig.INSTANCE.autoUpdateCache) {
+            PlayerProfile cached = UUID_TO_PROFILE_CACHE.get(uuid);
+            if (cached != null) {
+                // update asynchronously
+                CompletableFuture.runAsync(() -> _ofId(uuid));
+                return cached;
+            }
+        }
+
+        return UUID_TO_PROFILE_CACHE.computeIfAbsent(uuid, key -> _ofId(uuid));
+    }
+
+    @ApiStatus.Internal
+    @Nullable
+    private static PlayerProfile _ofId(@NotNull final UUID uuid) {
+        JsonObject profile;
+        try {
+            JsonElement response = NetUtils.getJsonResponse(GSON, new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "")).toURL());
+            if (response == null) {
                 return null;
             }
-            JsonArray properties = profile.get("properties").getAsJsonArray();
-            JsonObject textures = null;
-            for (JsonElement property : properties) {
-                if (property.isJsonObject()) {
-                    JsonObject propertyObject = property.getAsJsonObject();
-                    if (Objects.equals(propertyObject.get("name").getAsString(), "textures")) {
-                        String decodedProperties = new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()), StandardCharsets.UTF_8);
-                        JsonObject jsonProperties = GSON.fromJson(decodedProperties, JsonElement.class).getAsJsonObject();
-                        textures = jsonProperties.get("textures").getAsJsonObject();
-                        break;
-                    }
+            profile = response.getAsJsonObject();
+        } catch (URISyntaxException | IOException | UnresolvedAddressException e) {
+            CraftedCore.LOGGER.error("Caught an exception.", e);
+            return null;
+        }
+        JsonArray properties = profile.get("properties").getAsJsonArray();
+        JsonObject textures = null;
+        for (JsonElement property : properties) {
+            if (property.isJsonObject()) {
+                JsonObject propertyObject = property.getAsJsonObject();
+                if (Objects.equals(propertyObject.get("name").getAsString(), "textures")) {
+                    String decodedProperties = new String(Base64.getDecoder().decode(propertyObject.get("value").getAsString()), StandardCharsets.UTF_8);
+                    JsonObject jsonProperties = GSON.fromJson(decodedProperties, JsonElement.class).getAsJsonObject();
+                    textures = jsonProperties.get("textures").getAsJsonObject();
+                    break;
                 }
             }
+        }
 
-            String name = profile.get("name").getAsString();
-            URL skin = null;
-            boolean isSlim = false;
-            URL cape = null;
-            if (textures != null) {
-                if (textures.has("SKIN")) {
-                    JsonObject skinJson = textures.get("SKIN").getAsJsonObject();
-                    try {
-                        skin = new URI(skinJson.get("url").getAsString()).toURL();
-                    } catch (MalformedURLException | URISyntaxException e) {
-                        CraftedCore.LOGGER.error("Caught an exception.", e);
-                        return null;
-                    }
-                    if (skinJson.has("metadata")) {
-                        JsonObject metadata = skinJson.get("metadata").getAsJsonObject();
-                        if (metadata.has("model")) {
-                            isSlim = Objects.equals(metadata.get("model").getAsString(), "slim");
-                        }
-                    }
+        String name = profile.get("name").getAsString();
+        URL skin = null;
+        boolean isSlim = false;
+        URL cape = null;
+        if (textures != null) {
+            if (textures.has("SKIN")) {
+                JsonObject skinJson = textures.get("SKIN").getAsJsonObject();
+                try {
+                    skin = new URI(skinJson.get("url").getAsString()).toURL();
+                } catch (MalformedURLException | URISyntaxException e) {
+                    CraftedCore.LOGGER.error("Caught an exception.", e);
+                    return null;
                 }
-                if (textures.has("CAPE")) {
-                    try {
-                        cape = new URI(textures.get("CAPE").getAsJsonObject().get("url").getAsString()).toURL();
-                    } catch (MalformedURLException | URISyntaxException e) {
-                        CraftedCore.LOGGER.error("Caught an exception.", e);
-                        return null;
+                if (skinJson.has("metadata")) {
+                    JsonObject metadata = skinJson.get("metadata").getAsJsonObject();
+                    if (metadata.has("model")) {
+                        isSlim = Objects.equals(metadata.get("model").getAsString(), "slim");
                     }
                 }
             }
+            if (textures.has("CAPE")) {
+                try {
+                    cape = new URI(textures.get("CAPE").getAsJsonObject().get("url").getAsString()).toURL();
+                } catch (MalformedURLException | URISyntaxException e) {
+                    CraftedCore.LOGGER.error("Caught an exception.", e);
+                    return null;
+                }
+            }
+        }
 
-            PlayerProfile playerProfile = new PlayerProfile(name, key, skin, isSlim, cape);
-            try {
-                playerProfile.save();
-            } catch (IOException e) {
-                CraftedCore.LOGGER.error("Caught an exception.", e);
-            }
-            return playerProfile;
-        });
+        PlayerProfile playerProfile = new PlayerProfile(name, uuid, skin, isSlim, cape);
+        try {
+            playerProfile.save();
+        } catch (IOException e) {
+            CraftedCore.LOGGER.error("Caught an exception.", e);
+        }
+        return playerProfile;
     }
 
     private static UUID stringToUUID(final String input) throws IllegalArgumentException {
@@ -180,6 +208,7 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
         }
     }
 
+    @Nullable
     public ResourceLocation getSkinId() {
         if (skin != null) {
             return TextureCache.getTextureId(CraftedCore.MODID, "entity", "custom_skin_", "png", skin);
@@ -188,6 +217,7 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
         }
     }
 
+    @Nullable
     public ResourceLocation getCapeId() {
         if (cape != null) {
             return TextureCache.getTextureId(CraftedCore.MODID, "entity", "custom_cape_", "png", cape);

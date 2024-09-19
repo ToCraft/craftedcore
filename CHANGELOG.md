@@ -1,3 +1,8 @@
+craftedcore 5.6
+================
+
+- auto-update player profile cache
+
 craftedcore 5.5
 ================
 - merge configs to JSON5 format
