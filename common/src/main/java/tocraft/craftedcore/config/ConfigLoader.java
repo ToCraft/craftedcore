@@ -26,11 +26,12 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 // heavily based on the work of Draylar - https://github.com/Draylar/omega-config/ and therefore this class is licensed under MIT
 public class ConfigLoader {
     public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
-    private static final Map<String, Config> LOADED_CONFIGS = new HashMap<>();
+    private static final Map<String, Config> LOADED_CONFIGS = new ConcurrentHashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setLenient().create();
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).create();

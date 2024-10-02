@@ -2,6 +2,7 @@ craftedcore 5.6
 ================
 
 - auto-update player profile cache
+- fix connection lost on first SP world join
 
 craftedcore 5.5
 ================
