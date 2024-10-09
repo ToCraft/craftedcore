@@ -47,25 +47,25 @@ public class VIPs {
     public static List<UUID> getPatreons() {
         List<UUID> patreons = new ArrayList<>();
         try {
-            // integrated patreons
-            URL localPatreons = CraftedCore.class.getResource("/patreons.txt");
-            if (localPatreons != null) {
-                for (UUID uuidOfPerson : getUUIDOfPeople(localPatreons)) {
-                    if (!patreons.contains(uuidOfPerson)) {
-                        patreons.add(uuidOfPerson);
-                    }
-                }
-            }
             // web patreons
             for (UUID uuidOfPerson : getUUIDOfPeople(new URI(patreonURL).toURL())) {
                 if (!patreons.contains(uuidOfPerson)) {
                     patreons.add(uuidOfPerson);
                 }
             }
-            // cached patreons
-            if (CACHE_FILE.toFile().exists()) {
+            // cached patreons, only if the web patreons couldn't be loaded
+            if (CACHE_FILE.toFile().exists() && patreons.isEmpty()) {
                 URL cachedPatreons = CACHE_FILE.toFile().toURI().toURL();
                 for (UUID uuidOfPerson : getUUIDOfPeople(cachedPatreons)) {
+                    if (!patreons.contains(uuidOfPerson)) {
+                        patreons.add(uuidOfPerson);
+                    }
+                }
+            }
+            // integrated patreons
+            URL localPatreons = CraftedCore.class.getResource("/patreons.txt");
+            if (localPatreons != null) {
+                for (UUID uuidOfPerson : getUUIDOfPeople(localPatreons)) {
                     if (!patreons.contains(uuidOfPerson)) {
                         patreons.add(uuidOfPerson);
                     }
