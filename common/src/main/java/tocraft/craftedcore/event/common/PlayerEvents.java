@@ -28,11 +28,17 @@ public final class PlayerEvents {
         long newNewTime = 0;
         for (SleepFinishedTime callback : callbacks) {
             long newTimeIn = callback.setTimeAddition(level, newTime);
-            if (level.getDayTime() <= newTimeIn) {
+            if (level.getDayTime() <= newTime) {
                 newNewTime = newTimeIn;
             }
         }
         return newNewTime;
+    });
+    public static final Event<DestroySpeed> DESTROY_SPEED = EventFactory.createWithCallback(callbacks -> (player, newSpeed) -> {
+        for (DestroySpeed callback : callbacks) {
+            newSpeed = callback.setDestroySpeed(player, newSpeed);
+        }
+        return newSpeed;
     });
 
     @FunctionalInterface
@@ -76,5 +82,10 @@ public final class PlayerEvents {
     @FunctionalInterface
     public interface SleepFinishedTime {
         long setTimeAddition(ServerLevel level, long newTime);
+    }
+
+    @FunctionalInterface
+    public interface DestroySpeed {
+        float setDestroySpeed(Player player, float newTime);
     }
 }

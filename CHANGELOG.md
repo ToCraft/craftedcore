@@ -2,7 +2,8 @@ craftedcore 5.6
 ================
 
 - auto-update player profile cache
-- fix connection lost on first SP world join
+- fix "connection lost" on SP world join
+- add PlayerEvents.DESTROY_SPEED
 
 craftedcore 5.5
 ================

@@ -11,6 +11,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 //#endif
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 //#if MC>1182
 import net.minecraftforge.event.level.LevelEvent;
@@ -112,4 +113,8 @@ public class CraftedCoreForgeEventHandler {
         event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
     }
     //#endif
+
+    private void destroySpeed(PlayerEvent.BreakSpeed event) {
+        PlayerEvents.DESTROY_SPEED.invoke().setDestroySpeed((Player) event.getEntity(), event.getNewSpeed());
+    }
 }

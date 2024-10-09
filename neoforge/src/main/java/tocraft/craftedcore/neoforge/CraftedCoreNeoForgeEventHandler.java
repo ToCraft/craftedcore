@@ -14,6 +14,7 @@ import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
 //#else
 //$$ import net.neoforged.neoforge.event.entity.player.SleepingTimeCheckEvent;
 //#endif
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
@@ -93,5 +94,9 @@ public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void livingBreathe(LivingBreatheEvent event) {
         event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
+    }
+
+    private void destroySpeed(PlayerEvent.BreakSpeed event) {
+        PlayerEvents.DESTROY_SPEED.invoke().setDestroySpeed(event.getEntity(), event.getNewSpeed());
     }
 }
