@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,13 +27,13 @@ import net.minecraft.client.gui.GuiGraphics;
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class CGraphics {
-    //#if MC>1194
-    public static void blit(GuiGraphics graphics, ResourceLocation texture, int i, int j, int k, int l, float f, float g, int m, int n, int o, int p) {
-        graphics.blit(texture, i, j, k, l, f, g, m, n, o, p);
+    //#if MC>=1212
+    public static void blit(GuiGraphics graphics, ResourceLocation atlasLocation, int x, int y, int width, int height, int uOffset, int vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
+        graphics.blit(RenderType::guiTextured, atlasLocation, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
     }
     
-    public static void blit(GuiGraphics graphics, int i, int j, int k, int l, int m, TextureAtlasSprite textureAtlasSprite) {
-        graphics.blit(i, j, k, l, m, textureAtlasSprite);
+    public static void blit(GuiGraphics graphics, int x, int y, int blitOffset, int width, int height, TextureAtlasSprite sprite) {
+        graphics.blitSprite(RenderType::guiTextured, sprite, x, y, blitOffset, width, height);
     }
     
     public static void fillTransparent(GuiGraphics graphics, int x1, int y1, int x2, int y2) {
@@ -46,11 +47,31 @@ public class CGraphics {
     public static void drawString(GuiGraphics context, Component text, int i, int j, int k, boolean bl) {
         context.drawString(Minecraft.getInstance().font, text, i, j, k, bl);
     }
-    
+    //#elseif MC>1194
+    //$$ public static void blit(GuiGraphics graphics, ResourceLocation atlasLocation, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
+    //$$     graphics.blit(atlasLocation, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
+    //$$ }
+    //$$
+    //$$ public static void blit(GuiGraphics graphics, int x, int y, int blitOffset, int width, int height, TextureAtlasSprite sprite) {
+    //$$     graphics.blit(x, y, blitOffset, width, height, sprite);
+    //$$ }
+    //$$
+    //$$ public static void fillTransparent(GuiGraphics graphics, int x1, int y1, int x2, int y2) {
+    //$$     fillGradient(graphics, x1, y1, x2, y2, -1072689136, -804253680);
+    //$$ }
+    //$$
+    //$$ public static void fillGradient(GuiGraphics graphics, int x1, int y1, int x2, int y2, int colorFrom, int colorTo) {
+    //$$     graphics.fillGradient(x1, y1, x2, y2, colorFrom, colorTo);
+    //$$ }
+    //$$
+    //$$ public static void drawString(GuiGraphics context, Component text, int i, int j, int k, boolean bl) {
+    //$$     context.drawString(Minecraft.getInstance().font, text, i, j, k, bl);
+    //$$ }
+    //$$
     //#else
-    //$$ public static void blit(PoseStack graphics, ResourceLocation texture, int i, int j, int k, int l, float f, float g, int m, int n, int o, int p) {
-    //$$     RenderSystem.setShaderTexture(0, texture);
-    //$$     GuiComponent.blit(graphics, i, j, k, l, f, g, m, n, o, p);
+    //$$ public static void blit(PoseStack graphics, ResourceLocation atlasLocation, int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight, int textureWidth, int textureHeight) {
+    //$$     RenderSystem.setShaderTexture(0, atlasLocation);
+    //$$     GuiComponent.blit(graphics, x, y, width, height, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight);
     //$$ }
     //$$
     //$$ public static void fillTransparent(PoseStack graphics, int x1, int y1, int x2, int y2) {
@@ -92,13 +113,13 @@ public class CGraphics {
     //$$         Minecraft.getInstance().font.drawShadow(context, text.getString(), i, j, k, bl);
     //$$     }
     //$$
-    //$$     public static void blit(PoseStack graphics, int i, int j, int k, int l, int m, TextureAtlasSprite textureAtlasSprite) {
+    //$$     public static void blit(PoseStack graphics, int x, int y, int blitOffset, int width, int height, TextureAtlasSprite sprite) {
             //#if MC>1182
-            //$$ RenderSystem.setShaderTexture(0, textureAtlasSprite.atlasLocation());
+            //$$ RenderSystem.setShaderTexture(0, sprite.atlasLocation());
             //#else
-            //$$ RenderSystem.setShaderTexture(0, textureAtlasSprite.atlas().location());
+            //$$ RenderSystem.setShaderTexture(0, sprite.atlas().location());
             //#endif
-    //$$         GuiComponent.blit(graphics, i, j, k, l, m, textureAtlasSprite);
+    //$$         GuiComponent.blit(graphics, x, y, blitOffset, width, height, sprite);
     //$$     }
     //#endif
 }

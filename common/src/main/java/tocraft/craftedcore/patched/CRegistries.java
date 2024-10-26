@@ -8,10 +8,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 @SuppressWarnings({"unused", "unchecked"})
 public class CRegistries {
-    //#if MC>1182
+    //#if MC>=1212
     public static Registry<?> getRegistry(ResourceLocation id) {
-        return BuiltInRegistries.REGISTRY.get(id);
+        return BuiltInRegistries.REGISTRY.get(id).orElseThrow().value();
     }
+    //#elseif MC>1182
+    //$$ public static Registry<?> getRegistry(ResourceLocation id) {
+    //$$     return BuiltInRegistries.REGISTRY.get(id);
+    //$$ }
     //#else
     //$$ public static Registry<?> getRegistry(ResourceLocation id) {
     //$$     return Registry.REGISTRY.get(id);

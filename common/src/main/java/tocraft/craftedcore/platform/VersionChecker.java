@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
@@ -37,7 +38,7 @@ public class VersionChecker {
     private static final Map<String, Version> CACHED_VERSION = new HashMap<>();
     private static final List<String> INVALID_VERSIONS = List.of("1.16.5", "1.18.2", "1.19.4", "1.20.1", "1.20.2", "1.20.4", "1.20.5");
 
-    private static void sendUpdateMessage(Player player, Component modName, Version newestVersion) {
+    private static void sendUpdateMessage(ServerPlayer player, Component modName, Version newestVersion) {
         CraftedCore.LOGGER.warn(TComponent.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
         //#if MC>1202
         player.sendSystemMessage(TComponent.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
