@@ -28,11 +28,16 @@ public abstract class GuiMixin {
     @Shadow
     protected abstract Player getCameraPlayer();
 
-    @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
+    //#if MC>=1212
+    @Inject(method = "renderAirBubbles", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
+    private void shouldRenderBreath(GuiGraphics guiGraphics, Player player, int i, int j, int k, CallbackInfo ci) {
+    //#else
+    //$$ @Inject(method = "renderPlayerHealth", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
     //#if MC>1194
-    private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci) {
+    //$$ private void shouldRenderBreath(GuiGraphics guiGraphics, CallbackInfo ci) {
     //#else
     //$$ private void shouldRenderBreath(PoseStack guiGraphics, CallbackInfo ci) {
+    //#endif
     //#endif
         InteractionResult result = RenderEvents.RENDER_BREATH.invoke().render(guiGraphics, this.getCameraPlayer());
         if (result == InteractionResult.FAIL) {

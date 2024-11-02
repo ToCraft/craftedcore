@@ -101,33 +101,33 @@ public abstract class SynchronizedJsonReloadListener extends
     }
 
     //#if MC>=1212
-    //$$ private void scanDirectory(ResourceManager resourceManager, Map<ResourceLocation, JsonElement> map) {
-    //$$     FileToIdConverter var4 = FileToIdConverter.json(directory);
-    //$$     Iterable<Map.Entry<ResourceLocation, Resource>> entrySet = var4.listMatchingResources(resourceManager).entrySet();
-    //$$     for(Map.Entry<ResourceLocation, Resource> entry : entrySet) {
-    //$$         ResourceLocation var7 = entry.getKey();
-    //$$         ResourceLocation var8 = var4.fileToId(var7);
-    //$$         try {
-    //$$             BufferedReader reader = entry.getValue().openAsReader();
-    //$$             try {
-    //$$                 JsonElement var10 = GsonHelper.fromJson(gson, reader, JsonElement.class);
-    //$$                 JsonElement var11 = map.put(var8, var10);
-    //$$                 if (var11 != null) {
-    //$$                     throw new IllegalStateException("Duplicate data file ignored with ID " + var8);
-    //$$                 }
-    //$$             } catch (Throwable var13) {
-    //$$                 try {
-    //$$                     reader.close();
-    //$$                 } catch (Throwable var12) {
-    //$$                     var13.addSuppressed(var12);
-    //$$                 }
-    //$$                 throw var13;
-    //$$             }
-    //$$             reader.close();
-    //$$         } catch (IllegalArgumentException | IOException | JsonParseException var14) {
-    //$$             LogUtils.getLogger().error("Couldn't parse data file {} from {}", var8, var7, var14);
-    //$$         }
-    //$$     }
-    //$$ }
+    private void scanDirectory(ResourceManager resourceManager, Map<ResourceLocation, JsonElement> map) {
+        FileToIdConverter var4 = FileToIdConverter.json(directory);
+        Iterable<Map.Entry<ResourceLocation, Resource>> entrySet = var4.listMatchingResources(resourceManager).entrySet();
+        for(Map.Entry<ResourceLocation, Resource> entry : entrySet) {
+            ResourceLocation var7 = entry.getKey();
+            ResourceLocation var8 = var4.fileToId(var7);
+            try {
+                BufferedReader reader = entry.getValue().openAsReader();
+                try {
+                    JsonElement var10 = GsonHelper.fromJson(gson, reader, JsonElement.class);
+                    JsonElement var11 = map.put(var8, var10);
+                    if (var11 != null) {
+                        throw new IllegalStateException("Duplicate data file ignored with ID " + var8);
+                    }
+                } catch (Throwable var13) {
+                    try {
+                        reader.close();
+                    } catch (Throwable var12) {
+                        var13.addSuppressed(var12);
+                    }
+                    throw var13;
+                }
+                reader.close();
+            } catch (IllegalArgumentException | IOException | JsonParseException var14) {
+                LogUtils.getLogger().error("Couldn't parse data file {} from {}", var8, var7, var14);
+            }
+        }
+    }
     //#endif
 }
