@@ -83,7 +83,10 @@ public class TimerOverlayRenderer {
             //$$ Minecraft.getInstance().getItemRenderer().renderGuiItem(stack, (int) (width * .95f), (int) (height * .92f));
             //#endif
 
-            RenderSystem.disableScissor();
+            if (cooldownScale != 1) {
+                RenderSystem.disableScissor();
+            }
+
             //#if MC>1194
             graphics.pose().popPose();
             //#else

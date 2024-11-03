@@ -86,6 +86,6 @@ public final class PlayerEvents {
 
     @FunctionalInterface
     public interface DestroySpeed {
-        float setDestroySpeed(Player player, float newTime);
+        float setDestroySpeed(Player player, float speed);
     }
 }
