@@ -21,6 +21,11 @@ loom {
     }
 }
 
+repositories {
+    maven("https://maven.terraformersmc.com/releases/")
+    maven("https://maven.shedaniel.me/")
+}
+
 dependencies {
     // mixin extras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.properties["mixinextras_version"]}")!!)

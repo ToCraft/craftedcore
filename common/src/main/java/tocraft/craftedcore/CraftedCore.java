@@ -1,6 +1,7 @@
 package tocraft.craftedcore;
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -66,6 +67,11 @@ public class CraftedCore {
         //#endif
         PlayerProfile.initialize();
         CraftedCoreCommand.initialize();
+
+        // register config screen
+        if (PlatformData.getEnv() == EnvType.CLIENT) {
+            PlatformData.registerConfigScreen(CraftedCoreConfig.INSTANCE.getName());
+        }
     }
 
     private static boolean hasReportedNoInternet = false;

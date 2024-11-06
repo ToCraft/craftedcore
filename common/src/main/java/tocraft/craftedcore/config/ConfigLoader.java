@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -69,7 +70,15 @@ public class ConfigLoader {
     @SafeVarargs
     public static <C extends Config> C register(String name, C... typeGetter) {
         //noinspection unchecked
-        return read(name, (Class<C>) typeGetter.getClass().getComponentType());
+        Class<C> clazz = (Class<C>) typeGetter.getClass().getComponentType();
+
+        C config = read(name, clazz);
+
+        if (PlatformData.getEnv() == EnvType.CLIENT) {
+            PlatformData.registerConfigScreen(name);
+        }
+
+        return config;
     }
 
     public static <C extends Config> C read(String configName, Class<C> configClass) {

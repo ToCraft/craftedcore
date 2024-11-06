@@ -5,6 +5,7 @@ craftedcore 5.6
 - fix "connection lost" on SP world join
 - add PlayerEvents.DESTROY_SPEED
 - support 1.21.2 & 1.21.3
+- add config screen (not yet supporting lists and maps, only primitives)
 
 craftedcore 5.5
 ================

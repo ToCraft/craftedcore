@@ -1,8 +1,11 @@
 package tocraft.craftedcore.platform.fabric;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.fabric.client.CraftedCoreFabricClient;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
@@ -33,5 +36,11 @@ public final class PlatformDataImpl {
 
     public static PlatformData.ModLoader getModLoaderId() {
         return PlatformData.ModLoader.FABRIC;
+    }
+
+    @ApiStatus.Internal
+    @Environment(EnvType.CLIENT)
+    public static void registerConfigScreen(String name) {
+        CraftedCoreFabricClient.CONFIGS.add(name);
     }
 }

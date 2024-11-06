@@ -4,6 +4,8 @@ import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.config.annotions.Comment;
 
+import java.util.ArrayList;
+
 @SuppressWarnings("CanBeFinal")
 public final class CraftedCoreConfig implements Config {
     public static final CraftedCoreConfig INSTANCE = ConfigLoader.register(CraftedCore.MODID);

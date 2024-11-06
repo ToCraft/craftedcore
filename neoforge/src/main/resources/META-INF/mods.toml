@@ -24,3 +24,11 @@ type = "required"
 versionRange = "[${minecraft},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.craftedcore]]
+modId = "cloth_config"
+mandatory = false
+type = "optional"
+versionRange = "[${clothConfig},)"
+ordering = "NONE"
+side = "CLIENT"

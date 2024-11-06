@@ -20,3 +20,10 @@ mandatory = true
 versionRange = "[${minecraft},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.craftedcore]]
+modId = "cloth_config"
+mandatory = false
+versionRange = "[${clothConfig},)"
+ordering = "NONE"
+side = "CLIENT"
