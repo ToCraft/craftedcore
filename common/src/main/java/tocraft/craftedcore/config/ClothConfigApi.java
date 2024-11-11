@@ -14,12 +14,10 @@ import tocraft.craftedcore.patched.TComponent;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.List;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class ClothConfigApi {
-    @SuppressWarnings("unchecked")
     public static @Nullable Screen constructConfigScreen(Config config, Screen parent) {
         try {
             Config defaultC = config.getClass().getDeclaredConstructor().newInstance();
@@ -121,75 +119,6 @@ public class ClothConfigApi {
                                     }
                                 })
                                 .build());
-                    } else if (List.class.isAssignableFrom(field.getType())) {
-                        List<?> list = (List<?>) field.get(config);
-                        if (list.isEmpty()) {
-                            list = (List<?>) field.get(defaultC);
-                        }
-
-                        if (!list.isEmpty()) {
-                            if (list.stream().allMatch(e -> e instanceof String)) {
-                                general.addEntry(entryBuilder.startStrList(TComponent.literal(name), (List<String>) field.get(config))
-                                        .setTooltip(TComponent.literal(tooltip))
-                                        .setDefaultValue((List<String>) field.get(defaultC))
-                                        .setSaveConsumer(n -> {
-                                            try {
-                                                field.set(config, n);
-                                            } catch (IllegalAccessException e) {
-                                                CraftedCore.LOGGER.error("Couldn't save config field {}", name);
-                                            }
-                                        })
-                                        .build());
-                            } else if (list.stream().allMatch(e -> e instanceof Integer)) {
-                                general.addEntry(entryBuilder.startIntList(TComponent.literal(name), (List<Integer>) field.get(config))
-                                        .setTooltip(TComponent.literal(tooltip))
-                                        .setDefaultValue((List<Integer>) field.get(defaultC))
-                                        .setSaveConsumer(n -> {
-                                            try {
-                                                field.set(config, n);
-                                            } catch (IllegalAccessException e) {
-                                                CraftedCore.LOGGER.error("Couldn't save config field {}", name);
-                                            }
-                                        })
-                                        .build());
-                            } else if (list.stream().allMatch(e -> e instanceof Float)) {
-                                general.addEntry(entryBuilder.startFloatList(TComponent.literal(name), (List<Float>) field.get(config))
-                                        .setTooltip(TComponent.literal(tooltip))
-                                        .setDefaultValue((List<Float>) field.get(defaultC))
-                                        .setSaveConsumer(n -> {
-                                            try {
-                                                field.set(config, n);
-                                            } catch (IllegalAccessException e) {
-                                                CraftedCore.LOGGER.error("Couldn't save config field {}", name);
-                                            }
-                                        })
-                                        .build());
-                            } else if (list.stream().allMatch(e -> e instanceof Double)) {
-                                general.addEntry(entryBuilder.startDoubleList(TComponent.literal(name), (List<Double>) field.get(config))
-                                        .setTooltip(TComponent.literal(tooltip))
-                                        .setDefaultValue((List<Double>) field.get(defaultC))
-                                        .setSaveConsumer(n -> {
-                                            try {
-                                                field.set(config, n);
-                                            } catch (IllegalAccessException e) {
-                                                CraftedCore.LOGGER.error("Couldn't save config field {}", name);
-                                            }
-                                        })
-                                        .build());
-                            } else if (list.stream().allMatch(e -> e instanceof Long)) {
-                                general.addEntry(entryBuilder.startLongList(TComponent.literal(name), (List<Long>) field.get(config))
-                                        .setTooltip(TComponent.literal(tooltip))
-                                        .setDefaultValue((List<Long>) field.get(defaultC))
-                                        .setSaveConsumer(n -> {
-                                            try {
-                                                field.set(config, n);
-                                            } catch (IllegalAccessException e) {
-                                                CraftedCore.LOGGER.error("Couldn't save config field {}", name);
-                                            }
-                                        })
-                                        .build());
-                            }
-                        }
                     }
                 } catch (IllegalAccessException e) {
                     CraftedCore.LOGGER.error("Couldn't create config entry {} for config {}. Caught: {}", name, config.getName(), e);
