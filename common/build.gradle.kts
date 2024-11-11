@@ -20,9 +20,8 @@ dependencies {
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.properties["mixinextras_version"]}")!!)
     // Cloth Config
     if (clothConfigVersion != null) {
-        modApi("me.shedaniel.cloth:cloth-config:${clothConfigVersion}") {
+        modCompileOnly("me.shedaniel.cloth:cloth-config:${clothConfigVersion}") {
             exclude("net.fabricmc.fabric-api")
-            isTransitive = false
         }
     }
 }

@@ -17,8 +17,11 @@ tasks.withType<ProcessResources> {
 
 val modMenuVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("modmenu_version")
 
+val clothConfigVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("cloth_config_version")
+
 repositories {
     maven("https://maven.terraformersmc.com/releases/")
+    maven("https://maven.shedaniel.me/")
 }
 
 dependencies {
@@ -30,6 +33,12 @@ dependencies {
         }
         modRuntimeOnly ("com.terraformersmc:modmenu:${modMenuVersion}") {
             isTransitive = false
+        }
+    }
+    // Cloth Config
+    if (clothConfigVersion != null) {
+        modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothConfigVersion}") {
+            exclude("net.fabricmc.fabric-api")
         }
     }
 }

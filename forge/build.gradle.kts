@@ -1,3 +1,5 @@
+import java.util.*
+
 plugins {
     id("dev.tocraft.modmaster.forge")
 }
@@ -21,6 +23,8 @@ loom {
     }
 }
 
+val clothConfigVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("cloth_config_version")
+
 repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://maven.shedaniel.me/")
@@ -30,4 +34,8 @@ dependencies {
     // mixin extras
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.properties["mixinextras_version"]}")!!)
     implementation(include("io.github.llamalad7:mixinextras-forge:${rootProject.properties["mixinextras_version"]}")!!)
+    // Cloth Config
+    if (clothConfigVersion != null) {
+        modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${clothConfigVersion}")
+    }
 }
