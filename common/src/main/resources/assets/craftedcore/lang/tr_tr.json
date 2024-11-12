@@ -1,0 +1,7 @@
+{
+  "craftedcore.update": "%s'in yeni sürümü bulunmakta: %s",
+  "craftedcore.config.set": "Yapılandırma girdisi %s şimdi %s",
+  "craftedcore.config.get": "Yapılandırma girdisi %s, %s'a çekildi",
+  "craftedcore.command.invalid_perms": "Bu komutu çalıştırmak için gerekli iznin yok!",
+  "craftedcore.command.clear_cache": "Önbellek temizlendi."
+}

@@ -6,6 +6,7 @@ craftedcore 5.6
 - add PlayerEvents.DESTROY_SPEED
 - support 1.21.2 & 1.21.3
 - add config screen (not yet supporting lists and maps, only primitives)
+- add turkish by Feitan_Portor
 
 craftedcore 5.5
 ================
