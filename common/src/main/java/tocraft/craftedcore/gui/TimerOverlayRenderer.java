@@ -1,10 +1,11 @@
 package tocraft.craftedcore.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 //#if MC>1194
 import net.minecraft.client.gui.GuiGraphics;
+//#else
+//$$ import com.mojang.blaze3d.vertex.PoseStack;
 //#endif
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.item.Item;
@@ -12,12 +13,6 @@ import net.minecraft.world.item.ItemStack;
 
 @SuppressWarnings("unused")
 public class TimerOverlayRenderer {
-
-    private static final int fadingTickRequirement = 0;
-    private static int ticksSinceUpdate = 0;
-    private static boolean isFading = false;
-    private static int fadingProgress = 0;
-
     //#if MC>1194
     public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
     //#else
@@ -32,25 +27,15 @@ public class TimerOverlayRenderer {
         double d = client.getWindow().getGuiScale();
         float cooldownScale = 1 - currentCooldown / (float) maxCooldown;
 
-        // cooldown has NOT updated since last tick. It is most likely full.
-        if (ticksSinceUpdate > fadingProgress) {
-            ticksSinceUpdate = 0;
-            isFading = false;
-        }
-
-        // Tick fading
-        if (isFading) {
-            fadingProgress = Math.min(50, fadingProgress + 1);
-        } else {
-            fadingProgress = Math.max(0, fadingProgress - 1);
-        }
-
         if (client.player != null) {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
             //#if MC>1194
             graphics.pose().pushPose();
+            //#if MC>=1212
+            graphics.flush();
+            //#endif
             //#else
             //$$ graphics.pushPose();
             //#endif
@@ -60,18 +45,6 @@ public class TimerOverlayRenderer {
                         (int) ((double) 0 * d),
                         (int) ((double) width * d),
                         (int) ((double) height * (.02 + .055 * cooldownScale) * d)); // min is 0.21, max is 0.76. dif = .55
-            }
-
-            // ending pop
-            if (isFading) {
-                float fadeScalar = fadingProgress / 50f; // 0f -> 1f, 0 is start, 1 is end
-                float scale = 1f + (float) Math.sin(fadeScalar * 1.5 * Math.PI) - .25f;
-                scale = Math.max(scale, 0);
-                //#if MC>1194
-                graphics.pose().scale(scale, scale, scale);
-                //#else
-                //$$ graphics.scale(scale, scale, scale);
-                //#endif
             }
 
             ItemStack stack = new ItemStack(item);
