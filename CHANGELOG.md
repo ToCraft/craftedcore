@@ -1,3 +1,7 @@
+craftedcore 5.7
+================
+- Fix "serverConfig" is null. Log instead
+
 craftedcore 5.6
 ================
 

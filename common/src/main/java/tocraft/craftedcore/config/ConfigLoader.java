@@ -221,7 +221,7 @@ public class ConfigLoader {
                 CLIENT_CONFIGS.add(cachedClient);
 
                 // override local fields with server ones
-                for (Field field : serverConfig.getClass().getDeclaredFields()) {
+                for (Field field : config.getClass().getDeclaredFields()) {
                     if (allSync || Arrays.stream(field.getAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
                         try {
                             field.setAccessible(true);
