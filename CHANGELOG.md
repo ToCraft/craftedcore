@@ -2,6 +2,7 @@ craftedcore 5.7
 ================
 - Fix "serverConfig" is null. Log instead
 - small logic improvement for data pack json listener
+- support 1.21.4
 
 craftedcore 5.6
 ================
