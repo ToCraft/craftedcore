@@ -84,15 +84,13 @@ public abstract class SynchronizedJsonReloadListener extends
 
     @Environment(EnvType.CLIENT)
     private void onPacketReceive(ModernNetworking.Context context, CompoundTag compound) {
-        this.map.clear();
+        Map<ResourceLocation, JsonElement> map = new HashMap<>();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {
                 this.map.put(Identifier.parse(key), JsonParser.parseString(compound.getString(key)));
             }
         }
-        if (PlatformData.getEnv() == EnvType.CLIENT) {
-            this.onApply(map);
-        }
+        this.onApply(map);
     }
 
     @Environment(EnvType.CLIENT)

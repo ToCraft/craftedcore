@@ -5,10 +5,16 @@ import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.ResourceEvents;
-import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
+
+//#if MC>=1205
+import tocraft.craftedcore.network.ModernNetworking;
+//#endif
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,8 +53,9 @@ public class SynchronizedReloadListenerRegistry {
         throw new AssertionError();
     }
 
+    @Contract(" -> new")
     @ApiStatus.Internal
-    public static List<SynchronizedJsonReloadListener> getAllListener() {
+    public static @NotNull List<SynchronizedJsonReloadListener> getAllListener() {
         return new ArrayList<>(listener.values());
     }
 

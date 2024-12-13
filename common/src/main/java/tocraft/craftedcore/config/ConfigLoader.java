@@ -227,7 +227,7 @@ public class ConfigLoader {
                             field.setAccessible(true);
                             Object serverValue = field.get(serverConfig);
                             field.set(config, serverValue);
-                        } catch (IllegalAccessException e) {
+                        } catch (IllegalAccessException | NullPointerException e) {
                             CraftedCore.LOGGER.error("Failed modifying config {}", config.getClass().getSimpleName(), e);
                         }
                     }
