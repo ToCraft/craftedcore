@@ -11,7 +11,11 @@ import org.apache.commons.lang3.ArrayUtils;
 @OnlyIn(Dist.CLIENT)
 public final class KeyBindingRegistryImpl {
     public static void register(KeyMapping keyMapping) {
-        Options options = Minecraft.getInstance().options;
-        options.keyMappings = ArrayUtils.add(options.keyMappings, keyMapping);
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc != null) {
+            Options options = mc.options;
+            options.keyMappings = ArrayUtils.add(options.keyMappings, keyMapping);
+        }
     }
 }
