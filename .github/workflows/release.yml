@@ -48,7 +48,7 @@ jobs:
           cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
 
       - name: Build + Release via Gradle
-        run: ./gradlew check build release
+        run: ./gradlew check build release -Ptestmod=false
         env:
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
