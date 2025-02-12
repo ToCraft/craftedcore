@@ -12,11 +12,6 @@ on:
       - "master"
       - "1.**"
   workflow_dispatch:
-    inputs:
-      release:
-        description: 'Release'
-        required: false
-        default: 'true'
 
 permissions:
   contents: write
@@ -27,7 +22,7 @@ jobs:
     name: "Release"
     runs-on: ubuntu-latest
     if: |
-      !contains(github.event.head_commit.message, '[no_release]') && github.event.inputs.release != 'false'
+      !contains(github.event.head_commit.message, '[no_release]')
     steps:
       - uses: actions/checkout@v4
 
