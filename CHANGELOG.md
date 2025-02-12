@@ -1,6 +1,6 @@
 craftedcore 5.8
 ================
-- fix errors in DataGen
+- fix errors when running data generation
 
 craftedcore 5.7
 ================
