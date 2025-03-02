@@ -28,10 +28,10 @@ dependencies {
     // mixin extras
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${rootProject.properties["mixinextras_version"]}")!!)!!)
     if (modMenuVersion != null) {
-        modCompileOnly ("com.terraformersmc:modmenu:${modMenuVersion}") {
+        modCompileOnly("com.terraformersmc:modmenu:${modMenuVersion}") {
             isTransitive = false
         }
-        modRuntimeOnly ("com.terraformersmc:modmenu:${modMenuVersion}") {
+        modRuntimeOnly("com.terraformersmc:modmenu:${modMenuVersion}") {
             isTransitive = false
         }
     }

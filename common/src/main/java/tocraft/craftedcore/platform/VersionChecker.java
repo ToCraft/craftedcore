@@ -5,9 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -40,13 +38,7 @@ public class VersionChecker {
 
     private static void sendUpdateMessage(ServerPlayer player, Component modName, Version newestVersion) {
         CraftedCore.LOGGER.warn(TComponent.translatable("craftedcore.update", modName.getString(), newestVersion).getString());
-        //#if MC>1202
         player.sendSystemMessage(TComponent.literal(Component.translatable("craftedcore.update", modName, newestVersion).getString()).withColor(new Color(255, 255, 0).getRGB()));
-        //#elseif MC>1182
-        //$$ player.sendSystemMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())));
-        //#else
-        //$$ player.displayClientMessage(TComponent.literal(TComponent.translatable("craftedcore.update", modName, newestVersion.toString()).getString()).withStyle(Style.EMPTY.withColor(new Color(255, 255, 0).getRGB())), false);
-        //#endif
     }
 
     public static void registerMavenChecker(String modid, URL mavenURL, Component modName) {

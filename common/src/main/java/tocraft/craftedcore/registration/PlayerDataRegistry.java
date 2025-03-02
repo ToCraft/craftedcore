@@ -3,7 +3,6 @@ package tocraft.craftedcore.registration;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.data.PlayerDataProvider;
 
 import java.util.HashMap;

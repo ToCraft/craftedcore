@@ -13,15 +13,9 @@ import tocraft.craftedcore.patched.TComponent;
 
 public class CraftedCoreCommand {
 
-    //#if MC>1182
     public static void initialize() {
         CommandEvents.REGISTRATION.register((dispatcher, ctx, selection) -> register(dispatcher));
     }
-    //#else
-    //$$ public static void initialize() {
-    //$$     CommandEvents.REGISTRATION.register((dispatcher, ctx) -> register(dispatcher));
-    //$$ }
-    //#endif
 
     private static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> craftedcore = Commands.literal(CraftedCore.MODID)

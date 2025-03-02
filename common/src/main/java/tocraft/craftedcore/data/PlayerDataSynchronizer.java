@@ -1,6 +1,9 @@
 package tocraft.craftedcore.data;
 
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,33 +25,33 @@ public class PlayerDataSynchronizer {
                 ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
                 if (list != null) {
                     for (Tag entry : list) {
-                            for (String key : ((CompoundTag) entry).getAllKeys()) {
-                                if (Objects.equals(key, "DELETED")) {
-                                    ClientNetworking.runOrQueue(context, player -> {
-                                        PlayerDataProvider playerDataProvider;
-                                        if (tag.hasUUID("uuid")) {
-                                            playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
-                                        } else {
-                                            playerDataProvider = (PlayerDataProvider) player;
-                                        }
-                                        if (playerDataProvider != null) {
-                                            playerDataProvider.craftedcore$writeTag(Objects.requireNonNull(((CompoundTag) entry).get(key)).getAsString(), null);
-                                        }
-                                    });
-                                } else {
-                                    ClientNetworking.runOrQueue(context, player -> {
-                                        PlayerDataProvider playerDataProvider;
-                                        if (tag.hasUUID("uuid")) {
-                                            playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
-                                        } else {
-                                            playerDataProvider = (PlayerDataProvider) player;
-                                        }
-                                        if (playerDataProvider != null) {
-                                            playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
-                                        }
-                                    });
-                                }
+                        for (String key : ((CompoundTag) entry).getAllKeys()) {
+                            if (Objects.equals(key, "DELETED")) {
+                                ClientNetworking.runOrQueue(context, player -> {
+                                    PlayerDataProvider playerDataProvider;
+                                    if (tag.hasUUID("uuid")) {
+                                        playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
+                                    } else {
+                                        playerDataProvider = (PlayerDataProvider) player;
+                                    }
+                                    if (playerDataProvider != null) {
+                                        playerDataProvider.craftedcore$writeTag(Objects.requireNonNull(((CompoundTag) entry).get(key)).getAsString(), null);
+                                    }
+                                });
+                            } else {
+                                ClientNetworking.runOrQueue(context, player -> {
+                                    PlayerDataProvider playerDataProvider;
+                                    if (tag.hasUUID("uuid")) {
+                                        playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(tag.getUUID("uuid"));
+                                    } else {
+                                        playerDataProvider = (PlayerDataProvider) player;
+                                    }
+                                    if (playerDataProvider != null) {
+                                        playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
+                                    }
+                                });
                             }
+                        }
                     }
                 }
             }
@@ -81,7 +84,8 @@ public class PlayerDataSynchronizer {
                 entry.put(key, value);
             } else {
                 entry.put("DELETED", StringTag.valueOf(key));
-            }            list.add(entry);
+            }
+            list.add(entry);
         }
         tag.put(PLAYER_DATA_SYNC, list);
 

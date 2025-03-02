@@ -25,10 +25,10 @@ public class TextureCache {
     /**
      * Converts a URL to a readable id
      *
-     * @param namespace the namespace in which the id should be saved
-     * @param type for the id: "textures/entity/skin_123.png", choose: "entity"
-     * @param prefix  for the id: "textures/entity/skin_123.png", choose: "skin". (some number will be auto-generated)
-     * @param fileType the file type, e.g. "png"
+     * @param namespace  the namespace in which the id should be saved
+     * @param type       for the id: "textures/entity/skin_123.png", choose: "entity"
+     * @param prefix     for the id: "textures/entity/skin_123.png", choose: "skin". (some number will be auto-generated)
+     * @param fileType   the file type, e.g. "png"
      * @param textureURL the URL where the texture is found
      * @return the id if the texture could be cached or null, if there was an exception
      */
@@ -36,7 +36,7 @@ public class TextureCache {
     public static ResourceLocation getTextureId(String namespace, String type, String prefix, String fileType, URL textureURL) {
         return TEXTURE_CACHE.computeIfAbsent(String.valueOf(textureURL), key -> {
             ResourceLocation id = Identifier.parse(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
-            try(InputStream is = textureURL.openStream()) {
+            try (InputStream is = textureURL.openStream()) {
                 NativeImage image = NativeImage.read(new ByteArrayInputStream(is.readAllBytes()));
                 DynamicTexture dynamicTexture = new DynamicTexture(image);
                 Minecraft.getInstance().getTextureManager().register(id, dynamicTexture);

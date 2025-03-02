@@ -1,6 +1,9 @@
 package tocraft.craftedcore.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class JsonUtils {
     public static String addComments(String json, Map<String, String> keyToComment) {

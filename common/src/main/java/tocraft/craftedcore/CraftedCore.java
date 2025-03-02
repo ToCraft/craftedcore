@@ -37,11 +37,9 @@ public class CraftedCore {
         // initialize MixinExtras
         MixinExtrasBootstrap.init();
 
-        //#if MC>=1205
         // register Network Types
         ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
         ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
-        //#endif
 
         // cache patreons in an extra thread to prevent longer loading times while connecting
         CompletableFuture.runAsync(VIPs::cachePatreons);
@@ -62,9 +60,7 @@ public class CraftedCore {
         // check for new version
         VersionChecker.registerModrinthChecker(MODID, "crafted-core", TComponent.literal("CraftedCore"));
 
-        //#if MC>=1205
         ModernNetworking.registerType(CLEAR_CACHE_PACKET);
-        //#endif
         PlayerProfile.initialize();
         CraftedCoreCommand.initialize();
 
@@ -75,6 +71,7 @@ public class CraftedCore {
     }
 
     private static boolean hasReportedNoInternet = false;
+
     public static void reportMissingInternet(Throwable cause) {
         if (!hasReportedNoInternet) {
             CraftedCore.LOGGER.error("No internet connection!", cause);

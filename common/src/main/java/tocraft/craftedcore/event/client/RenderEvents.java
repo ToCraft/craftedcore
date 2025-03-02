@@ -1,14 +1,9 @@
 package tocraft.craftedcore.event.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-//#if MC>=1210
 import net.minecraft.client.DeltaTracker;
-//#endif
-//#if MC>1194
 import net.minecraft.client.gui.GuiGraphics;
-//#endif
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -27,22 +22,12 @@ public final class RenderEvents {
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface HUDRendering {
-        //#if MC>=1210
         void render(GuiGraphics graphics, DeltaTracker tickCounter);
-        //#elseif MC>1194
-        //$$ void render(GuiGraphics graphics, float deltaTick);
-        //#else
-        //$$ void render(PoseStack poseStack, float tickDelta);
-        //#endif
     }
 
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface OverlayRendering {
-        //#if MC>1194
         InteractionResult render(@Nullable GuiGraphics graphics, Player player);
-        //#else
-        //$$ InteractionResult render(@Nullable PoseStack poseStack, Player player);
-        //#endif
     }
 }

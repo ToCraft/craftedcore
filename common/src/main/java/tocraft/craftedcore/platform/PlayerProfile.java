@@ -17,13 +17,17 @@ import java.nio.channels.UnresolvedAddressException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Base64;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
-public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable URL skin, boolean isSlim, @Nullable URL cape) {
+public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable URL skin, boolean isSlim,
+                            @Nullable URL cape) {
     private static final Map<String, UUID> NAME_TO_UUID_CACHE = new ConcurrentHashMap<>();
     private static final Map<UUID, PlayerProfile> UUID_TO_PROFILE_CACHE = new ConcurrentHashMap<>();
     private final static Path CACHE_DIR = CraftedCore.CACHE_DIR.resolve("player_profiles");

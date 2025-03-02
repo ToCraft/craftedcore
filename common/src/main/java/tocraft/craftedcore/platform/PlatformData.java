@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import tocraft.craftedcore.config.Config;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;

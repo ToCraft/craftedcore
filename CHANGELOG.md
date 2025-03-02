@@ -1,9 +1,11 @@
 craftedcore 5.8
 ================
+
 - fix errors when running data generation
 
 craftedcore 5.7
 ================
+
 - Fix "serverConfig" is null. Log instead
 - small logic improvement for data pack json listener
 - support 1.21.4
@@ -20,6 +22,7 @@ craftedcore 5.6
 
 craftedcore 5.5
 ================
+
 - merge configs to JSON5 format
 - add comments to configs
 - update to MixinExtras 0.4.1

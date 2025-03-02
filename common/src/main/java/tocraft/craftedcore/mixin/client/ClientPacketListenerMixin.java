@@ -3,18 +3,14 @@ package tocraft.craftedcore.mixin.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-//#if MC>1201
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.multiplayer.CommonListenerCookie;
-import net.minecraft.network.Connection;
-//#endif
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.CommonListenerCookie;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundLoginPacket;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,23 +20,14 @@ import tocraft.craftedcore.event.client.ClientPlayerEvents;
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
-//#if MC>1201
 public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl {
     protected ClientPacketListenerMixin(Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
         super(minecraft, connection, commonListenerCookie);
     }
-//#else
-//$$ public abstract class ClientPacketListenerMixin {
-//#endif
 
     @Unique
     private LocalPlayer craftedcore$oldPlayer = null;
 
-    //#if MC<=1201
-    //$$ @Shadow
-    //$$ @Final
-    //$$ private Minecraft minecraft;
-    //#endif
 
     @Inject(method = "handleLogin", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;setServerRenderDistance(I)V", shift = At.Shift.AFTER))
     private void handleLogin(ClientboundLoginPacket packet, CallbackInfo ci) {
@@ -53,11 +40,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     }
 
     @Inject(method = "handleRespawn", at = @At(value = "INVOKE",
-            //#if MC>1201
             target = "Lnet/minecraft/client/multiplayer/ClientLevel;addEntity(Lnet/minecraft/world/entity/Entity;)V"))
-            //#else
-            //$$ target = "Lnet/minecraft/client/multiplayer/ClientLevel;addPlayer(ILnet/minecraft/client/player/AbstractClientPlayer;)V"))
-    //#endif
     private void handleRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {
         ClientPlayerEvents.CLIENT_PLAYER_RESPAWN.invoke().respawn(this.craftedcore$oldPlayer, minecraft.player);
         this.craftedcore$oldPlayer = null;
