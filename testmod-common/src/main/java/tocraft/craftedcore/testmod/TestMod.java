@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
@@ -16,6 +17,7 @@ import tocraft.craftedcore.platform.PlatformData;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 public class TestMod {
     private static final Logger LOGGER = LogUtils.getLogger();
 

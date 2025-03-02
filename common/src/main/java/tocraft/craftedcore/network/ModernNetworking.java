@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -40,11 +41,11 @@ public class ModernNetworking {
         return TYPES.get(id);
     }
 
-    public static void sendToPlayer(ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
+    public static void sendToPlayer(@NotNull ServerPlayer player, ResourceLocation packetId, CompoundTag data) {
         player.connection.send(toPacket(Side.S2C, new PacketPayload(packetId, data)));
     }
 
-    public static void sendToPlayers(Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
+    public static void sendToPlayers(@NotNull Iterable<ServerPlayer> players, ResourceLocation packetId, CompoundTag data) {
         for (ServerPlayer player : players) {
             sendToPlayer(player, packetId, data);
         }
@@ -89,13 +90,13 @@ public class ModernNetworking {
     @ApiStatus.Internal
     public record PacketPayload(ResourceLocation id,
                                 CompoundTag nbt) implements CustomPacketPayload {
-        public void write(RegistryFriendlyByteBuf buf) {
+        public void write(@NotNull RegistryFriendlyByteBuf buf) {
             buf.writeResourceLocation(id);
             buf.writeNbt(nbt);
         }
 
 
-        public PacketPayload(RegistryFriendlyByteBuf buf) {
+        public PacketPayload(@NotNull RegistryFriendlyByteBuf buf) {
             this(buf.readResourceLocation(), buf.readNbt());
         }
 
@@ -104,7 +105,8 @@ public class ModernNetworking {
             return getType(id);
         }
 
-        public static StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec() {
+        @Contract(value = " -> new", pure = true)
+        public static @NotNull StreamCodec<RegistryFriendlyByteBuf, PacketPayload> streamCodec() {
             return new StreamCodec<>() {
                 @Override
                 public @NotNull PacketPayload decode(@NotNull RegistryFriendlyByteBuf buf) {

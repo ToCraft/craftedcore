@@ -5,11 +5,11 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.CCommandSourceStack;
-import tocraft.craftedcore.patched.TComponent;
 
 public class CraftedCoreCommand {
 
@@ -17,7 +17,7 @@ public class CraftedCoreCommand {
         CommandEvents.REGISTRATION.register((dispatcher, ctx, selection) -> register(dispatcher));
     }
 
-    private static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> craftedcore = Commands.literal(CraftedCore.MODID)
                 .then(Commands.literal("clear").then(Commands.literal("cache")
                         .executes(context -> {
@@ -25,7 +25,7 @@ public class CraftedCoreCommand {
                             for (ServerLevel level : context.getSource().getServer().getAllLevels()) {
                                 ModernNetworking.sendToPlayers(level.players(), CraftedCore.CLEAR_CACHE_PACKET, new CompoundTag());
                             }
-                            CCommandSourceStack.sendSuccess(context.getSource(), TComponent.translatable("craftedcore.command.clear_cache"), true);
+                            context.getSource().sendSuccess(() -> Component.translatable("craftedcore.command.clear_cache"), true);
                             return 1;
                         })))
                 .build();

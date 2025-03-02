@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 
 @SuppressWarnings("unused")
 public interface Config {
+    @SuppressWarnings("SameReturnValue")
     @Nullable
     String getName();
 
@@ -30,7 +32,7 @@ public interface Config {
         ModernNetworking.sendToPlayer(target, ConfigLoader.CONFIG_SYNC, ConfigLoader.getConfigSyncTag(this));
     }
 
-    default void sendToAllPlayers(ServerLevel serverLevel) {
+    default void sendToAllPlayers(@NotNull ServerLevel serverLevel) {
         for (ServerPlayer target : serverLevel.players()) {
             sendToPlayer(target);
         }

@@ -204,7 +204,7 @@ public record PlayerProfile(@NotNull String name, @NotNull UUID id, @Nullable UR
         return playerProfile;
     }
 
-    private static UUID stringToUUID(final String input) throws IllegalArgumentException {
+    private static @NotNull UUID stringToUUID(final String input) throws IllegalArgumentException {
         try {
             return UUID.fromString(input);
         } catch (IllegalArgumentException e) {

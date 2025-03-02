@@ -19,7 +19,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.Identifier;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -72,7 +71,7 @@ public abstract class SynchronizedJsonReloadListener extends
         Map<ResourceLocation, JsonElement> map = new HashMap<>();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {
-                this.map.put(Identifier.parse(key), JsonParser.parseString(compound.getString(key)));
+                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(compound.getString(key)));
             }
         }
         this.onApply(map);

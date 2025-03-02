@@ -28,7 +28,7 @@ public final class EventFactory {
      */
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    public static <T> @NotNull Event<T> createWithInteractionResult(T... typeGetter) {
+    public static <T> @NotNull Event<T> createWithInteractionResult(T @NotNull ... typeGetter) {
         return (Event<T>) createWithInteractionResult(typeGetter.getClass().getComponentType());
     }
 
@@ -63,7 +63,7 @@ public final class EventFactory {
      */
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    public static <T> @NotNull Event<T> createWithVoid(T... typeGetter) {
+    public static <T> @NotNull Event<T> createWithVoid(T @NotNull ... typeGetter) {
         return (Event<T>) createWithVoid(typeGetter.getClass().getComponentType());
     }
 

@@ -2,6 +2,7 @@ package tocraft.craftedcore.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.CraftedCoreConfig;
 import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.ConfigLoader;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 public class CraftedCoreModMenu implements ModMenuApi {
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {

@@ -1,19 +1,24 @@
 package tocraft.craftedcore.util;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @SuppressWarnings("unused")
 public class Maths {
-    public static Vector3f POSITIVE_X() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull Vector3f POSITIVE_X() {
         return new Vector3f(1, 0, 0);
     }
 
-    public static Vector3f POSITIVE_Y() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull Vector3f POSITIVE_Y() {
         return new Vector3f(0, 1, 0);
     }
 
-    public static Vector3f POSITIVE_Z() {
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull Vector3f POSITIVE_Z() {
         return new Vector3f(0, 0, 1);
     }
 

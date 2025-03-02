@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.CrashReport;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +18,7 @@ import java.io.File;
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Inject(method = "crash", at = @At("HEAD"))
-    private static void onCrash(Minecraft minecraft, File gameDirectory, CrashReport report, CallbackInfo ci) {
+    private static void onCrash(Minecraft minecraft, File gameDirectory, @NotNull CrashReport report, CallbackInfo ci) {
         StringBuilder crashReportBuilder = new StringBuilder();
         TraceUtils.printMixinTrace(report.getException().getStackTrace(), crashReportBuilder);
         System.out.println(crashReportBuilder);

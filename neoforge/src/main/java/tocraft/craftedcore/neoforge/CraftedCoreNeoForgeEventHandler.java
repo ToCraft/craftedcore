@@ -13,6 +13,8 @@ import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.CommandEvents;
 import tocraft.craftedcore.event.common.EntityEvents;
@@ -23,6 +25,7 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import java.util.Map;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void addReloadListenerEvent(AddServerReloadListenersEvent event) {
@@ -32,7 +35,7 @@ public class CraftedCoreNeoForgeEventHandler {
     }
 
     @SubscribeEvent
-    public void livingDeath(LivingDeathEvent event) {
+    public void livingDeath(@NotNull LivingDeathEvent event) {
         InteractionResult result = EntityEvents.LIVING_DEATH.invoke().die(event.getEntity(), event.getSource());
         if (result == InteractionResult.FAIL) {
             event.setCanceled(true);
@@ -40,7 +43,7 @@ public class CraftedCoreNeoForgeEventHandler {
     }
 
     @SubscribeEvent
-    public void allowSleepTime(CanContinueSleepingEvent event) {
+    public void allowSleepTime(@NotNull CanContinueSleepingEvent event) {
         if (event.getEntity() instanceof Player player) {
             InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, event.getEntity().getSleepingPos().orElse(null), event.getProblem() == null);
             if (result == InteractionResult.FAIL) {
@@ -53,36 +56,36 @@ public class CraftedCoreNeoForgeEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepFinishedTime(SleepFinishedTimeEvent event) {
+    public void sleepFinishedTime(@NotNull SleepFinishedTimeEvent event) {
         long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition((ServerLevel) event.getLevel(), event.getNewTime());
         event.setTimeAddition(newTimeIn);
     }
 
     @SubscribeEvent
-    public void registerCommands(RegisterCommandsEvent event) {
+    public void registerCommands(@NotNull RegisterCommandsEvent event) {
         CommandEvents.REGISTRATION.invoke().register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
     }
 
     @SubscribeEvent
-    public void serverLoad(LevelEvent.Load event) {
+    public void serverLoad(LevelEvent.@NotNull Load event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             ServerLevelEvents.LEVEL_LOAD.invoke().call(serverLevel);
         }
     }
 
     @SubscribeEvent
-    public void serverUnload(LevelEvent.Unload event) {
+    public void serverUnload(LevelEvent.@NotNull Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             ServerLevelEvents.LEVEL_UNLOAD.invoke().call(serverLevel);
         }
     }
 
     @SubscribeEvent
-    public void livingBreathe(LivingBreatheEvent event) {
+    public void livingBreathe(@NotNull LivingBreatheEvent event) {
         event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
     }
 
-    private void destroySpeed(PlayerEvent.BreakSpeed event) {
+    private void destroySpeed(PlayerEvent.@NotNull BreakSpeed event) {
         PlayerEvents.DESTROY_SPEED.invoke().setDestroySpeed(event.getEntity(), event.getNewSpeed());
     }
 }

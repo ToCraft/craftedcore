@@ -13,6 +13,7 @@ public final class KeyBindingRegistryImpl {
     public static void register(KeyMapping keyMapping) {
         Minecraft mc = Minecraft.getInstance();
 
+        //noinspection ConstantValue
         if (mc != null) {
             Options options = mc.options;
             options.keyMappings = ArrayUtils.add(options.keyMappings, keyMapping);

@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import tocraft.craftedcore.CraftedCore;
-import tocraft.craftedcore.patched.Identifier;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class TextureCache {
     @Nullable
     public static ResourceLocation getTextureId(String namespace, String type, String prefix, String fileType, URL textureURL) {
         return TEXTURE_CACHE.computeIfAbsent(String.valueOf(textureURL), key -> {
-            ResourceLocation id = Identifier.parse(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
             try (InputStream is = textureURL.openStream()) {
                 NativeImage image = NativeImage.read(new ByteArrayInputStream(is.readAllBytes()));
                 DynamicTexture dynamicTexture = new DynamicTexture(image);

@@ -1,5 +1,6 @@
 package tocraft.craftedcore.platform.neoforge;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
@@ -8,14 +9,15 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import tocraft.craftedcore.config.Config;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
-import java.util.Objects;
 
 @SuppressWarnings({"unused", "SameReturnValue"})
+@ApiStatus.Internal
 public final class PlatformDataImpl {
     public static boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
@@ -46,7 +48,11 @@ public final class PlatformDataImpl {
     @OnlyIn(Dist.CLIENT)
     public static void registerConfigScreen(String name) {
         if (ModList.get().getModContainerById("cloth_config").isPresent()) {
-            ModList.get().getModContainerById(name).ifPresent(mod -> mod.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, parent) -> Objects.requireNonNull(ConfigLoader.getConfigByName(name)).constructConfigScreen(parent)));
+            ModList.get().getModContainerById(name).ifPresent(mod -> mod.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, parent) -> {
+                Config c;
+                Screen s;
+                return (c = ConfigLoader.getConfigByName(name)) != null && ((s = c.constructConfigScreen(parent)) != null) ? s : parent;
+            }));
         }
     }
 }

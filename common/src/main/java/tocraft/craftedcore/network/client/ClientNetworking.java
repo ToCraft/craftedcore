@@ -3,13 +3,14 @@ package tocraft.craftedcore.network.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.client.CraftedCoreClient;
 import tocraft.craftedcore.network.ModernNetworking;
 
 @Environment(EnvType.CLIENT)
 public class ClientNetworking {
 
-    public static void runOrQueue(ModernNetworking.Context context, ApplicablePacket packet) {
+    public static void runOrQueue(ModernNetworking.@NotNull Context context, ApplicablePacket packet) {
         if (context.getPlayer() == null) {
             CraftedCoreClient.getSyncPacketQueue().add(packet);
         } else {

@@ -1,3 +1,10 @@
+craftedcore 6.0
+================
+
+- EoL for versions older than 1.21.2
+- optimize code
+- fix crash on NeoForge 1.21.4
+
 craftedcore 5.8
 ================
 

@@ -17,7 +17,7 @@ public class NetUtils {
         return getByteResponse(new HashMap<>(), url);
     }
 
-    public static byte @NotNull [] getByteResponse(Map<String, String> header, URL url) throws IOException {
+    public static byte @NotNull [] getByteResponse(@NotNull Map<String, String> header, @NotNull URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         for (Map.Entry<String, String> entry : header.entrySet()) {
             connection.addRequestProperty(entry.getKey(), entry.getValue());
@@ -42,7 +42,7 @@ public class NetUtils {
         return getJsonResponse(gson, new HashMap<>(), url);
     }
 
-    public static JsonElement getJsonResponse(Gson gson, Map<String, String> header, URL url) throws IOException {
+    public static JsonElement getJsonResponse(@NotNull Gson gson, Map<String, String> header, URL url) throws IOException {
         String response = getTextResponse(header, url);
         return gson.fromJson(response, JsonElement.class);
     }

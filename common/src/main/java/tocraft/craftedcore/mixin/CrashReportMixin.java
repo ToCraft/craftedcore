@@ -1,6 +1,7 @@
 package tocraft.craftedcore.mixin;
 
 import net.minecraft.CrashReport;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +16,7 @@ public abstract class CrashReportMixin {
 
     @Inject(method = "getDetails(Ljava/lang/StringBuilder;)V",
             at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
-    private void onGetDetails(StringBuilder crashReportBuilder, CallbackInfo ci) {
+    private void onGetDetails(@NotNull StringBuilder crashReportBuilder, CallbackInfo ci) {
         int trailingNewlineCount = 0;
         // Remove trailing \n
         if (crashReportBuilder.charAt(crashReportBuilder.length() - 1) == '\n') {

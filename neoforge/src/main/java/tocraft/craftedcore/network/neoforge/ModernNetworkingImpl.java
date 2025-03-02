@@ -12,6 +12,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.neoforge.CraftedCoreNeoForge;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.ModernNetworking.PacketPayload;
@@ -69,8 +71,9 @@ public class ModernNetworkingImpl {
         }
     }
 
+    @Contract("_, _ -> new")
     @ApiStatus.Internal
-    public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
+    public static @NotNull Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
         if (side == ModernNetworking.Side.C2S) {
             return new ServerboundCustomPayloadPacket(payload);
         } else {

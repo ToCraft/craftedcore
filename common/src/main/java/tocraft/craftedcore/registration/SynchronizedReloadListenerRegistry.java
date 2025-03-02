@@ -1,5 +1,6 @@
 package tocraft.craftedcore.registration;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,7 +11,6 @@ import tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import tocraft.craftedcore.event.common.ResourceEvents;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.platform.PlatformData;
-import y.architectury.injectables.annotations.ExpectPlatform;
 
 import java.util.HashMap;
 import java.util.Map;

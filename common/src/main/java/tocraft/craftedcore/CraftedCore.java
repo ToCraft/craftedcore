@@ -2,19 +2,18 @@ package tocraft.craftedcore;
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
 import net.fabricmc.api.EnvType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.data.PlayerDataSynchronizer;
 import tocraft.craftedcore.event.common.PlayerEvents;
 import tocraft.craftedcore.network.ModernNetworking;
-import tocraft.craftedcore.patched.CEntity;
-import tocraft.craftedcore.patched.Identifier;
-import tocraft.craftedcore.patched.TComponent;
 import tocraft.craftedcore.platform.PlatformData;
 import tocraft.craftedcore.platform.PlayerProfile;
 import tocraft.craftedcore.platform.VersionChecker;
@@ -49,7 +48,7 @@ public class CraftedCore {
 
         PlayerEvents.PLAYER_JOIN.register(player -> {
             //noinspection resource
-            for (ServerPlayer serverPlayer : ((ServerLevel) CEntity.level(player)).players()) {
+            for (ServerPlayer serverPlayer : player.serverLevel().players()) {
                 PlayerDataSynchronizer.sync(serverPlayer);
             }
         });
@@ -58,7 +57,7 @@ public class CraftedCore {
         SynchronizedReloadListenerRegistry.initialize();
 
         // check for new version
-        VersionChecker.registerModrinthChecker(MODID, "crafted-core", TComponent.literal("CraftedCore"));
+        VersionChecker.registerModrinthChecker(MODID, "crafted-core", Component.literal("CraftedCore"));
 
         ModernNetworking.registerType(CLEAR_CACHE_PACKET);
         PlayerProfile.initialize();
@@ -79,9 +78,10 @@ public class CraftedCore {
         }
     }
 
+    @Contract("_ -> new")
     @ApiStatus.Internal
-    public static ResourceLocation id(String name) {
-        return Identifier.parse(MODID, name);
+    public static @NotNull ResourceLocation id(String name) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, name);
     }
 
     @ApiStatus.Internal
@@ -94,7 +94,7 @@ public class CraftedCore {
     }
 
     @ApiStatus.Internal
-    public static void forceDeleteFile(File element) {
+    public static void forceDeleteFile(@NotNull File element) {
         if (element.exists()) {
             if (element.isDirectory()) {
                 File[] subFiles = element.listFiles();

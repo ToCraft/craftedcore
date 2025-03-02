@@ -12,6 +12,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 
@@ -66,8 +68,9 @@ public class ModernNetworkingImpl {
         }
     }
 
+    @Contract("_, _ -> new")
     @ApiStatus.Internal
-    public static Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
+    public static @NotNull Packet<?> toPacket(ModernNetworking.Side side, CustomPacketPayload payload) {
         if (side == ModernNetworking.Side.C2S) {
             return new ServerboundCustomPayloadPacket(payload);
         } else {

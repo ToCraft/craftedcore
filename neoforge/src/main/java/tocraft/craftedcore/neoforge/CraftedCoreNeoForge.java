@@ -5,12 +5,14 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.ApiStatus;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
 
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 @Mod(CraftedCore.MODID)
 public class CraftedCoreNeoForge {
 

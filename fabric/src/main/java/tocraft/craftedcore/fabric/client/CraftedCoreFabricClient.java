@@ -9,6 +9,7 @@ import tocraft.craftedcore.client.CraftedCoreClient;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class CraftedCoreFabricClient implements ClientModInitializer {
     @ApiStatus.Internal

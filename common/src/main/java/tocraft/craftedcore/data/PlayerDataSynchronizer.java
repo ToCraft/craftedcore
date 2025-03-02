@@ -5,12 +5,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
 import tocraft.craftedcore.network.client.ClientNetworking;
-import tocraft.craftedcore.patched.CEntity;
 import tocraft.craftedcore.registration.PlayerDataRegistry;
 
 import java.util.Objects;
@@ -92,7 +91,7 @@ public class PlayerDataSynchronizer {
         ModernNetworking.sendToPlayer(player, PLAYER_DATA_SYNC_ID, tag);
     }
 
-    private static void syncToAll(ServerPlayer player) {
+    private static void syncToAll(@NotNull ServerPlayer player) {
         CompoundTag tag = new CompoundTag();
         ListTag list = new ListTag();
 
@@ -116,6 +115,6 @@ public class PlayerDataSynchronizer {
         }
         tag.put(PLAYER_DATA_SYNC, list);
         //noinspection resource
-        ModernNetworking.sendToPlayers(((ServerLevel) CEntity.level(player)).players(), PLAYER_DATA_SYNC_ID, tag);
+        ModernNetworking.sendToPlayers(player.serverLevel().players(), PLAYER_DATA_SYNC_ID, tag);
     }
 }

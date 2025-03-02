@@ -2,6 +2,7 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.Strictness;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +34,7 @@ public class ConfigLoader {
     public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
     private static final Map<String, Config> LOADED_CONFIGS = new ConcurrentHashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setLenient().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setStrictness(Strictness.LENIENT).create();
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).create();
 
     @Environment(EnvType.CLIENT)
@@ -67,7 +68,7 @@ public class ConfigLoader {
     }
 
     @SafeVarargs
-    public static <C extends Config> C register(String name, C... typeGetter) {
+    public static <C extends Config> C register(String name, C @NotNull ... typeGetter) {
         //noinspection unchecked
         Class<C> clazz = (Class<C>) typeGetter.getClass().getComponentType();
 
@@ -80,7 +81,7 @@ public class ConfigLoader {
         return config;
     }
 
-    public static <C extends Config> C read(String configName, Class<C> configClass) {
+    public static <C extends Config> @Nullable C read(String configName, Class<C> configClass) {
         try {
             Path configFile = getConfigPath(configName);
 
@@ -157,7 +158,7 @@ public class ConfigLoader {
         }
     }
 
-    public static CompoundTag getConfigSyncTag(Config config) {
+    public static @NotNull CompoundTag getConfigSyncTag(@NotNull Config config) {
         CompoundTag configTag = new CompoundTag();
         // Synchronize whole class if triggered
         if (Arrays.stream(config.getClass().getDeclaredAnnotations()).anyMatch(annotation -> annotation instanceof Synchronize)) {
@@ -205,7 +206,7 @@ public class ConfigLoader {
 
     }
 
-    private static void handleConfigTag(CompoundTag syncedConfiguration) {
+    private static void handleConfigTag(@NotNull CompoundTag syncedConfiguration) {
         String name = syncedConfiguration.getString("ConfigName");
         String json = syncedConfiguration.getString("Serialized");
         boolean allSync = syncedConfiguration.getBoolean("AllSync");

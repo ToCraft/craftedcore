@@ -9,15 +9,18 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 import tocraft.craftedcore.event.client.ClientTickEvents;
 import tocraft.craftedcore.event.client.RenderEvents;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 @OnlyIn(Dist.CLIENT)
 public class CraftedCoreNeoForgeEventHandlerClient {
     @SubscribeEvent
-    public void event(RenderGuiEvent.Post event) {
+    public void event(RenderGuiEvent.@NotNull Post event) {
         RenderEvents.HUD_RENDERING.invoke().render(event.getGuiGraphics(), event.getPartialTick());
     }
 
@@ -32,7 +35,7 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void event(RenderGuiLayerEvent.Pre event) {
+    public void event(RenderGuiLayerEvent.@NotNull Pre event) {
         switch (event.getName().getPath()) {
             case "player_health" -> {
                 InteractionResult result = RenderEvents.RENDER_HEALTH.invoke().render(event.getGuiGraphics(), Minecraft.getInstance().player);
@@ -62,7 +65,7 @@ public class CraftedCoreNeoForgeEventHandlerClient {
     }
 
     @SubscribeEvent
-    public void event(ClientPlayerNetworkEvent.LoggingOut event) {
+    public void event(ClientPlayerNetworkEvent.@NotNull LoggingOut event) {
         ClientPlayerEvents.CLIENT_PLAYER_QUIT.invoke().quit(event.getPlayer());
     }
 }

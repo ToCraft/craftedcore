@@ -2,6 +2,7 @@ package tocraft.craftedcore.registration;
 
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.data.PlayerDataProvider;
 
@@ -76,7 +77,8 @@ public class PlayerDataRegistry {
         }
     }
 
-    public static Set<String> keySet() {
+    @Contract(pure = true)
+    public static @NotNull Set<String> keySet() {
         return CraftedTagKeys.keySet();
     }
 

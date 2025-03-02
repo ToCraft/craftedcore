@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import org.jetbrains.annotations.ApiStatus;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import tocraft.craftedcore.event.client.ClientPlayerEvents;
 
 @SuppressWarnings("unused")
+@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin {

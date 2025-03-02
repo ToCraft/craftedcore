@@ -1,7 +1,8 @@
 package tocraft.craftedcore;
 
 import net.fabricmc.api.EnvType;
-import tocraft.craftedcore.patched.client.CMinecraft;
+import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.platform.PlatformData;
 
 import java.io.BufferedReader;
@@ -44,7 +45,7 @@ public class VIPs {
         return CACHED_PATREONS;
     }
 
-    public static List<UUID> getPatreons() {
+    public static @NotNull List<UUID> getPatreons() {
         List<UUID> patreons = new ArrayList<>();
         try {
             // web patreons
@@ -77,7 +78,7 @@ public class VIPs {
         return patreons;
     }
 
-    public static List<UUID> getUUIDOfPeople(URL url) {
+    public static @NotNull List<UUID> getUUIDOfPeople(@NotNull URL url) {
         String line;
         List<UUID> people = new ArrayList<>();
         try {
@@ -93,7 +94,7 @@ public class VIPs {
                 CraftedCore.LOGGER.error("Couldn't get patreons from " + patreonURL, e);
             }
         }
-        if (PlatformData.getEnv() == EnvType.CLIENT && people.contains(CMinecraft.getLocalPlayerUUID())) {
+        if (PlatformData.getEnv() == EnvType.CLIENT && people.contains(Minecraft.getInstance().getUser().getProfileId())) {
             CraftedCore.LOGGER.info("Thank you for supporting me and my mods! ~To_Craft");
         }
 

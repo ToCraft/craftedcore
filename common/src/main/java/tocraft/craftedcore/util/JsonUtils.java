@@ -1,12 +1,14 @@
 package tocraft.craftedcore.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class JsonUtils {
-    public static String addComments(String json, Map<String, String> keyToComment) {
+    public static @NotNull String addComments(@NotNull String json, Map<String, String> keyToComment) {
         List<String> lines = new ArrayList<>(json.lines().toList());
         Map<Integer, String> insertions = new TreeMap<>();
         // write comments into new file
