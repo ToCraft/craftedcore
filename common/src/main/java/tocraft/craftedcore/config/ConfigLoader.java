@@ -2,7 +2,6 @@ package tocraft.craftedcore.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.Strictness;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
@@ -29,12 +28,20 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+//#if MC>=1214
+import com.google.gson.Strictness;
+//#endif
+
 // heavily based on the work of Draylar - https://github.com/Draylar/omega-config/ and therefore this class is licensed under MIT
 public class ConfigLoader {
     public static final ResourceLocation CONFIG_SYNC = CraftedCore.id("config_sync");
     private static final Map<String, Config> LOADED_CONFIGS = new ConcurrentHashMap<>();
     private static final List<Config> CLIENT_CONFIGS = new ArrayList<>();
+    //#if MC>=1214
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setStrictness(Strictness.LENIENT).create();
+    //#else
+    //$$ private static final Gson GSON = new GsonBuilder().setPrettyPrinting().setLenient().create();
+    //#endif
     private static final Gson SYNC_ONLY_GSON = new GsonBuilder().addSerializationExclusionStrategy(new SynchronizeStrategy()).create();
 
     @Environment(EnvType.CLIENT)
