@@ -1,3 +1,8 @@
+craftedcore 6.1
+================
+
+- support 1.21.5
+
 craftedcore 6.0
 ================
 

@@ -37,7 +37,11 @@ public class TextureCache {
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
             try (InputStream is = textureURL.openStream()) {
                 NativeImage image = NativeImage.read(new ByteArrayInputStream(is.readAllBytes()));
-                DynamicTexture dynamicTexture = new DynamicTexture(image);
+                //#if MC>=1215
+                DynamicTexture dynamicTexture = new DynamicTexture(id::toString, image);
+                //#else
+                //$$ DynamicTexture dynamicTexture = new DynamicTexture(image);
+                //#endif
                 Minecraft.getInstance().getTextureManager().register(id, dynamicTexture);
             } catch (IOException e) {
                 CraftedCore.LOGGER.error("Caught an exception while reading url: {}", textureURL, e);

@@ -214,9 +214,15 @@ public class ConfigLoader {
     }
 
     private static void handleConfigTag(@NotNull CompoundTag syncedConfiguration) {
-        String name = syncedConfiguration.getString("ConfigName");
-        String json = syncedConfiguration.getString("Serialized");
-        boolean allSync = syncedConfiguration.getBoolean("AllSync");
+        //#if MC>=1215
+        String name = syncedConfiguration.getString("ConfigName").orElseThrow();
+        String json = syncedConfiguration.getString("Serialized").orElseThrow();
+        boolean allSync = syncedConfiguration.getBoolean("AllSync").orElseThrow();
+        //#else
+        //$$ String name = syncedConfiguration.getString("ConfigName");
+        //$$ String json = syncedConfiguration.getString("Serialized");
+        //$$ boolean allSync = syncedConfiguration.getBoolean("AllSync");
+        //#endif
 
         // get all loaded configs
         for (Config config : LOADED_CONFIGS.values()) {

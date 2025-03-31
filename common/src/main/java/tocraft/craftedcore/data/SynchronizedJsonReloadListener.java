@@ -70,8 +70,14 @@ public abstract class SynchronizedJsonReloadListener extends
     private void onPacketReceive(ModernNetworking.Context context, CompoundTag compound) {
         Map<ResourceLocation, JsonElement> map = new HashMap<>();
         if (compound != null) {
-            for (String key : compound.getAllKeys()) {
-                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(compound.getString(key)));
+            //#if MC>=1215
+            for (String key : compound.keySet()) {
+                String json = compound.getString(key).orElseThrow();
+            //#else
+            //$$ for (String key : compound.getAllKeys()) {
+            //$$     String json = compound.getString(key);
+                //#endif
+                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(json));
             }
         }
         this.onApply(map);
