@@ -2,6 +2,7 @@ craftedcore 6.1
 ================
 
 - support 1.21.5
+- add LongTextWidget
 
 craftedcore 6.0
 ================
