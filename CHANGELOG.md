@@ -1,3 +1,8 @@
+craftedcore 6.2
+================
+
+- add RegistryRegistry
+
 craftedcore 6.1
 ================
 
