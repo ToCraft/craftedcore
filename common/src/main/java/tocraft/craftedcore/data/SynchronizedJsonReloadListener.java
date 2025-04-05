@@ -19,6 +19,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import tocraft.craftedcore.CraftedCore;
 import tocraft.craftedcore.network.ModernNetworking;
+import tocraft.craftedcore.platform.PlatformData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +53,9 @@ public abstract class SynchronizedJsonReloadListener extends
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         this.map.clear();
         this.map.putAll(map);
-        this.onApply(map);
+        if (PlatformData.getEnv() == EnvType.SERVER) {
+            this.onApply(this.map);
+        }
     }
 
     protected abstract void onApply(Map<ResourceLocation, JsonElement> map);
@@ -77,7 +80,7 @@ public abstract class SynchronizedJsonReloadListener extends
             //$$ for (String key : compound.getAllKeys()) {
             //$$     String json = compound.getString(key);
                 //#endif
-                this.map.put(ResourceLocation.parse(key), JsonParser.parseString(json));
+                map.put(ResourceLocation.parse(key), JsonParser.parseString(json));
             }
         }
         this.onApply(map);
