@@ -1,7 +1,8 @@
 craftedcore 6.2
 ================
 
-- add RegistryRegistry
+- add RegistryRegistry for registering simple & dynamic registries
+- FINALLY fixed SynchronizedJsonReloadListener
 
 craftedcore 6.1
 ================

@@ -10,6 +10,7 @@
     "PlayerAdvancementsMixin",
     "PlayerListMixin",
     "PlayerMixin",
+    "RegistryDataLoaderMixin",
     "ServerPlayerMixin"
   ],
   "client": [
