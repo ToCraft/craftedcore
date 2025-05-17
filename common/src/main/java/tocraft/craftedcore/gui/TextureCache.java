@@ -14,12 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class TextureCache {
-    private static final Map<String, ResourceLocation> TEXTURE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Optional<ResourceLocation>> TEXTURE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Converts a URL to a readable id
@@ -45,9 +46,9 @@ public class TextureCache {
                 Minecraft.getInstance().getTextureManager().register(id, dynamicTexture);
             } catch (IOException e) {
                 CraftedCore.LOGGER.error("Caught an exception while reading url: {}", textureURL, e);
-                return null;
+                return Optional.empty();
             }
-            return id;
-        });
+            return Optional.of(id);
+        }).orElse(null);
     }
 }

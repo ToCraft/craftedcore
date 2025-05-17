@@ -1,3 +1,8 @@
+craftedcore 6.3
+================
+
+- fix TextureCache persistent failure
+
 craftedcore 6.2
 ================
 
