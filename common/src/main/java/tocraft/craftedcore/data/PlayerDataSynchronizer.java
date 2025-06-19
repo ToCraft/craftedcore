@@ -1,7 +1,10 @@
 package tocraft.craftedcore.data;
 
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -24,19 +27,11 @@ public class PlayerDataSynchronizer {
                 ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
                 if (list != null) {
                     for (Tag entry : list) {
-                        //#if MC>=1215
                         for (String key : ((CompoundTag) entry).keySet()) {
-                        //#else
-                        //$$ for (String key : ((CompoundTag) entry).getAllKeys()) {
-                        //#endif
                             if (Objects.equals(key, "DELETED")) {
                                 ClientNetworking.runOrQueue(context, player -> {
                                     PlayerDataProvider playerDataProvider;
-                                    //#if MC>=1215
                                     Optional<int[]> uuidia = tag.getIntArray("uuid");
-                                    //#else
-                                    //$$ Optional<int[]> uuidia = tag.hasUUID("uuid") ? Optional.of(tag.getIntArray("uuid")) : Optional.empty();
-                                    //#endif
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
                                         playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(uuid);
@@ -44,22 +39,14 @@ public class PlayerDataSynchronizer {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
                                     if (playerDataProvider != null) {
-                                        //#if MC>=1215
                                         String tkey = Objects.requireNonNull(((CompoundTag) entry).get(key)).asString().orElseThrow();
-                                        //#else
-                                        //$$ String tkey = Objects.requireNonNull(((CompoundTag) entry).get(key)).getAsString();
-                                        //#endif
                                         playerDataProvider.craftedcore$writeTag(tkey, null);
                                     }
                                 });
                             } else {
                                 ClientNetworking.runOrQueue(context, player -> {
                                     PlayerDataProvider playerDataProvider;
-                                    //#if MC>=1215
                                     Optional<int[]> uuidia = tag.getIntArray("uuid");
-                                    //#else
-                                    //$$ Optional<int[]> uuidia = tag.hasUUID("uuid") ? Optional.of(tag.getIntArray("uuid")) : Optional.empty();
-                                    //#endif
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
                                         playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(uuid);

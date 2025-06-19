@@ -4,10 +4,6 @@ plugins {
     id("dev.tocraft.modmaster.common")
 }
 
-loom {
-    accessWidenerPath = file("../../../common/src/main/resources/craftedcore.accessWidener")
-}
-
 val clothConfigVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("cloth_config_version")
 
 repositories {

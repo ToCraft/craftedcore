@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingBreatheEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -23,30 +24,15 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 import java.util.Map;
 
-//#if MC>=1214
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-//#else
-//$$ import net.neoforged.neoforge.event.AddReloadListenerEvent;
-//#endif
-
 @SuppressWarnings("unused")
 @ApiStatus.Internal
 public class CraftedCoreNeoForgeEventHandler {
-    //#if MC>=1214
     @SubscribeEvent
     public void addReloadListenerEvent(AddServerReloadListenersEvent event) {
         for (Map.Entry<ResourceLocation, SynchronizedJsonReloadListener> entry : SynchronizedReloadListenerRegistry.getAllListener().entrySet()) {
             event.addListener(entry.getKey(), entry.getValue());
         }
     }
-    //#else
-    //$$ @SubscribeEvent
-    //$$ public void addReloadListenerEvent(AddReloadListenerEvent event) {
-    //$$     for (SynchronizedJsonReloadListener listener : SynchronizedReloadListenerRegistry.getAllListener().values()) {
-    //$$         event.addListener(listener);
-    //$$     }
-    //$$ }
-    //#endif
 
     @SubscribeEvent
     public void livingDeath(@NotNull LivingDeathEvent event) {
