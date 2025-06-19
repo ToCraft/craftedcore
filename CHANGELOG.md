@@ -2,6 +2,8 @@ craftedcore 6.3
 ================
 
 - fix TextureCache persistent failure
+- fix Key binding registration
+- fix config read errors crashing the game
 
 craftedcore 6.2
 ================

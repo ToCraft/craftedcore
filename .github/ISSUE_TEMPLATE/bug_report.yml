@@ -93,7 +93,7 @@ body:
     validations:
       required: true
 
-  - type: textarea
+  - type: input
     id: logs
     attributes:
       label: Logs and Crash Reports
