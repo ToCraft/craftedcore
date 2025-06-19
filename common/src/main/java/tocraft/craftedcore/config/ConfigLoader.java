@@ -23,6 +23,7 @@ import tocraft.craftedcore.util.JsonUtils;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -85,6 +86,24 @@ public class ConfigLoader {
             PlatformData.registerConfigScreen(name);
         }
 
+        if (config == null) {
+            try {
+                return instantiateNewConfig(getConfigPath(name), name, clazz);
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException e) {
+                CraftedCore.LOGGER.error("Could not recreate a new config file for {}!", name);
+            }
+        }
+
+        return config;
+    }
+
+    public static  <C extends Config> @NotNull C instantiateNewConfig(Path configFile, String configName, @NotNull Class<C> configClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // Write & return a new configuration file
+        C config = configClass.getDeclaredConstructor().newInstance();
+        writeConfigFile(configFile, config);
+
+        LOADED_CONFIGS.put(configName, config);
         return config;
     }
 
@@ -93,30 +112,7 @@ public class ConfigLoader {
             Path configFile = getConfigPath(configName);
 
             if (!Files.exists(configFile)) {
-                // read old config file if exists
-                Path oldConfigFile = PlatformData.getConfigPath().resolve(configName + ".json");
-
-                if (Files.exists(oldConfigFile)) {
-                    C oldConfig = GSON.fromJson(Files.readString(oldConfigFile), configClass);
-                    // config was readable
-                    if (oldConfig != null) {
-                        // write to new config file
-                        writeConfigFile(configFile, oldConfig);
-                        // delete old config file
-                        Files.delete(oldConfigFile);
-
-                        LOADED_CONFIGS.put(configName, oldConfig);
-                        return oldConfig;
-                    }
-                }
-
-                // if this was reached, the old config couldn't be read
-                // Write & return a new configuration file
-                C config = configClass.getDeclaredConstructor().newInstance();
-                writeConfigFile(configFile, config);
-
-                LOADED_CONFIGS.put(configName, config);
-                return config;
+                return instantiateNewConfig(configFile, configName, configClass);
             } else {
                 C newConfig = GSON.fromJson(Files.readString(configFile), configClass);
 
