@@ -21,7 +21,6 @@ import tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
 
 public class CraftedCore {
     @ApiStatus.Internal
@@ -40,15 +39,12 @@ public class CraftedCore {
         ModernNetworking.registerType(ConfigLoader.CONFIG_SYNC);
         ModernNetworking.registerType(PlayerDataSynchronizer.PLAYER_DATA_SYNC_ID);
 
-        // cache patreons in an extra thread to prevent longer loading times while connecting
-        CompletableFuture.runAsync(VIPs::cachePatreons);
-
         // send configurations to client
         PlayerEvents.PLAYER_JOIN.register(ConfigLoader::sendConfigSyncPackages);
 
         PlayerEvents.PLAYER_JOIN.register(player -> {
             //noinspection resource
-            for (ServerPlayer serverPlayer : player.serverLevel().players()) {
+            for (ServerPlayer serverPlayer : player.level().players()) {
                 PlayerDataSynchronizer.sync(serverPlayer);
             }
         });
@@ -87,10 +83,7 @@ public class CraftedCore {
     @ApiStatus.Internal
     public static void clearCache() {
         PlayerProfile.clearCache();
-        VIPs.clearCache();
         forceDeleteFile(CACHE_DIR.toFile());
-
-        CompletableFuture.runAsync(VIPs::cachePatreons);
     }
 
     @ApiStatus.Internal

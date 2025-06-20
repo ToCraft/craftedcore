@@ -1,5 +1,3 @@
-import java.util.*
-
 plugins {
     id("dev.tocraft.modmaster.fabric")
 }
@@ -15,9 +13,9 @@ tasks.withType<ProcessResources> {
     outputs.upToDateWhen { false }
 }
 
-val modMenuVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("modmenu_version")
+val modMenuVersion: String? = parent!!.properties["modmenu_version"] as String
 
-val clothConfigVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("cloth_config_version")
+val clothConfigVersion: String? = parent!!.properties["cloth_config_version"] as String
 
 repositories {
     maven("https://maven.terraformersmc.com/releases/")

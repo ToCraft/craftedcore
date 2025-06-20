@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -37,7 +38,10 @@ public class ModernNetworkingImpl {
 
                 @Override
                 public void queue(Runnable runnable) {
-                    context.player().server.execute(runnable);
+                    MinecraftServer server = context.player().getServer();
+                    if (server != null) {
+                        server.execute(runnable);
+                    }
                 }
             }, payload.nbt()));
         } else if (side == ModernNetworking.Side.S2C) {

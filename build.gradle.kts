@@ -1,14 +1,12 @@
-import java.util.*
-
 plugins {
-    id("dev.tocraft.modmaster.version")
+    id("dev.tocraft.modmaster.root") version("single-1.5")
 }
 
-val clothConfigVersion: String? = (ext.get("props") as Properties).getProperty("cloth_config_version")
+val clothConfigVersion: String? = properties["cloth_config_version"] as String
 
 ext {
     val modMeta = mutableMapOf<String, Any>()
-    modMeta["minecraft"] = project.name
+    modMeta["minecraft"] = project.properties["minecraft"] as String
     modMeta["version"] = version
     if (clothConfigVersion != null) {
         modMeta["clothConfig"] = clothConfigVersion

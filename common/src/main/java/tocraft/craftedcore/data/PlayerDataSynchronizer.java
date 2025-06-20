@@ -34,7 +34,7 @@ public class PlayerDataSynchronizer {
                                     Optional<int[]> uuidia = tag.getIntArray("uuid");
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
-                                        playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(uuid);
+                                        playerDataProvider = (PlayerDataProvider) player.level().getPlayerByUUID(uuid);
                                     } else {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
@@ -49,7 +49,7 @@ public class PlayerDataSynchronizer {
                                     Optional<int[]> uuidia = tag.getIntArray("uuid");
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
-                                        playerDataProvider = (PlayerDataProvider) player.getCommandSenderWorld().getPlayerByUUID(uuid);
+                                        playerDataProvider = (PlayerDataProvider) player.level().getPlayerByUUID(uuid);
                                     } else {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
@@ -125,6 +125,6 @@ public class PlayerDataSynchronizer {
         }
         tag.put(PLAYER_DATA_SYNC, list);
         //noinspection resource
-        ModernNetworking.sendToPlayers(player.serverLevel().players(), PLAYER_DATA_SYNC_ID, tag);
+        ModernNetworking.sendToPlayers(player.level().players(), PLAYER_DATA_SYNC_ID, tag);
     }
 }

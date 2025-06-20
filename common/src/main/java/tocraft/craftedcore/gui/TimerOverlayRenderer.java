@@ -1,6 +1,5 @@
 package tocraft.craftedcore.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -23,24 +22,23 @@ public class TimerOverlayRenderer {
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
-            graphics.pose().pushPose();
-            graphics.flush();
+            graphics.pose().pushMatrix();
             if (cooldownScale != 1) {
-                RenderSystem.enableScissor(
+                graphics.enableScissor(
                         (int) ((double) 0 * d),
                         (int) ((double) 0 * d),
                         (int) ((double) width * d),
-                        (int) ((double) height * (.02 + .055 * cooldownScale) * d)); // min is 0.21, max is 0.76. dif = .55
+                        (int) ((double) height * (.02 + .055 * cooldownScale) * d)); // min is 0.21, max is 0.76. dif = .55);
             }
 
             ItemStack stack = new ItemStack(item);
             graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
 
             if (cooldownScale != 1) {
-                RenderSystem.disableScissor();
+                graphics.disableScissor();
             }
 
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 }

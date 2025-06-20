@@ -19,7 +19,7 @@ tasks.withType<ProcessResources> {
     outputs.upToDateWhen { false }
 }
 
-val clothConfigVersion: String? = (parent!!.ext.get("props") as Properties).getProperty("cloth_config_version")
+val clothConfigVersion: String? = parent!!.properties["cloth_config_version"] as String
 
 repositories {
     maven("https://maven.terraformersmc.com/releases/")

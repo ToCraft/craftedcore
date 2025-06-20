@@ -6,11 +6,11 @@ pluginManagement {
         maven("https://maven.parchmentmc.org")
         maven("https://maven.tocraft.dev/public")
         gradlePluginPortal()
+        mavenLocal()
     }
 }
 
-plugins {
-    id("dev.tocraft.modmaster.settings") version "1.2"
-}
-
 rootProject.name = "craftedcore"
+include("common")
+include("fabric")
+include("neoforge")
