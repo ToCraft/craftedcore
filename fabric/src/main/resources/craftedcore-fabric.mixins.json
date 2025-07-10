@@ -1,16 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "tocraft.craftedcore.fabric.mixin",
+  "package": "dev.tocraft.craftedcore.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "dev.tocraft.craftedcore.fabric.mixin.LivingBreatheMixin",
-    "dev.tocraft.craftedcore.fabric.mixin.LivingDeathMixin",
-    "dev.tocraft.craftedcore.fabric.mixin.PlayerMixin"
+    "LivingBreatheMixin",
+    "LivingDeathMixin",
+    "PlayerMixin"
   ],
   "client": [
-    "dev.tocraft.craftedcore.fabric.mixin.client.GuiMixin",
-    "dev.tocraft.craftedcore.fabric.mixin.client.MinecraftClientMixin"
+    "client.GuiMixin",
+    "client.MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

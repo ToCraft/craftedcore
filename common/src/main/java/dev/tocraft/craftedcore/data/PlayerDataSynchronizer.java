@@ -1,8 +1,11 @@
 package dev.tocraft.craftedcore.data;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -25,13 +28,13 @@ public class PlayerDataSynchronizer {
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, PLAYER_DATA_SYNC_ID, (context, tag) -> {
             if (tag != null) {
                 ListTag list = (ListTag) tag.get(PLAYER_DATA_SYNC);
+                Optional<int[]> uuidia = tag.getIntArray("uuid"); // Get UUID from the main packet tag
                 if (list != null) {
                     for (Tag entry : list) {
                         for (String key : ((CompoundTag) entry).keySet()) {
                             if (Objects.equals(key, "DELETED")) {
                                 ClientNetworking.runOrQueue(context, player -> {
                                     PlayerDataProvider playerDataProvider;
-                                    Optional<int[]> uuidia = tag.getIntArray("uuid");
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
                                         playerDataProvider = (PlayerDataProvider) player.level().getPlayerByUUID(uuid);
@@ -39,14 +42,13 @@ public class PlayerDataSynchronizer {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
                                     if (playerDataProvider != null) {
-                                        String tkey = Objects.requireNonNull(((CompoundTag) entry).get(key)).asString().orElseThrow();
+                                        String tkey = Objects.requireNonNull(((CompoundTag) entry).get(key)).toString();
                                         playerDataProvider.craftedcore$writeTag(tkey, null);
                                     }
                                 });
                             } else {
                                 ClientNetworking.runOrQueue(context, player -> {
                                     PlayerDataProvider playerDataProvider;
-                                    Optional<int[]> uuidia = tag.getIntArray("uuid");
                                     if (uuidia.isPresent()) {
                                         UUID uuid = UUIDUtil.uuidFromIntArray(uuidia.get());
                                         playerDataProvider = (PlayerDataProvider) player.level().getPlayerByUUID(uuid);
@@ -54,7 +56,15 @@ public class PlayerDataSynchronizer {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
                                     if (playerDataProvider != null) {
-                                        playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).getCompoundOrEmpty(key));
+                                        // Deserialize the NBT Tag back to the original object using the codec
+                                        Tag inputTag = ((CompoundTag) entry).get(key);
+                                        // Ensure the codec is available before parsing
+                                        if (PlayerDataRegistry.getTagCodec(key) != null) {
+                                            DataResult<?> result = PlayerDataRegistry.getTagCodec(key).parse(NbtOps.INSTANCE, inputTag);
+                                            result.result().ifPresent(obj -> playerDataProvider.craftedcore$writeTag(key, obj));
+                                        } else {
+                                            CraftedCore.LOGGER.warn("Codec not registered for key: {} during client sync.", key);
+                                        }
                                     }
                                 });
                             }
@@ -79,16 +89,26 @@ public class PlayerDataSynchronizer {
 
         PlayerDataProvider playerData = ((PlayerDataProvider) player);
 
-        for (String key : ((PlayerDataProvider) player).craftedcore$keySet()) {
+        for (String key : playerData.craftedcore$keySet()) {
             // ignore key if it shouldn't be synchronized to the client
             if (!PlayerDataRegistry.shouldSyncTagToSelf(key)) {
-                return;
+                continue;
             }
 
             CompoundTag entry = new CompoundTag();
-            Tag value = playerData.craftedcore$readTag(key);
+            Object value = playerData.craftedcore$readTag(key); // Get the raw object
+
             if (value != null) {
-                entry.put(key, value);
+                // Serialize the Java object to an NBT Tag using the codec
+                @SuppressWarnings("unchecked")
+                Codec<Object> codec = (Codec<Object>) PlayerDataRegistry.getTagCodec(key);
+                if (codec != null) {
+                    codec.encodeStart(NbtOps.INSTANCE, value)
+                            .resultOrPartial(CraftedCore.LOGGER::error)
+                            .ifPresent(nbtTag -> entry.put(key, nbtTag));
+                } else {
+                    CraftedCore.LOGGER.warn("Codec not registered for key: {} during server sync (to self).", key);
+                }
             } else {
                 entry.put("DELETED", StringTag.valueOf(key));
             }
@@ -108,16 +128,26 @@ public class PlayerDataSynchronizer {
         tag.putIntArray("uuid", uuidia);
         PlayerDataProvider playerData = ((PlayerDataProvider) player);
 
-        for (String key : ((PlayerDataProvider) player).craftedcore$keySet()) {
+        for (String key : playerData.craftedcore$keySet()) {
             // ignore key if it shouldn't be synchronized to the client
             if (!PlayerDataRegistry.shouldSyncTagToAll(key)) {
-                return;
+                continue;
             }
 
             CompoundTag entry = new CompoundTag();
-            Tag value = playerData.craftedcore$readTag(key);
+            Object value = playerData.craftedcore$readTag(key); // Get the raw object
+
             if (value != null) {
-                entry.put(key, value);
+                // Serialize the Java object to an NBT Tag using the codec
+                @SuppressWarnings("unchecked")
+                Codec<Object> codec = (Codec<Object>) PlayerDataRegistry.getTagCodec(key);
+                if (codec != null) {
+                    codec.encodeStart(NbtOps.INSTANCE, value)
+                            .resultOrPartial(CraftedCore.LOGGER::error)
+                            .ifPresent(nbtTag -> entry.put(key, nbtTag));
+                } else {
+                    CraftedCore.LOGGER.warn("Codec not registered for key: " + key + " during server sync (to all).");
+                }
             } else {
                 entry.put("DELETED", StringTag.valueOf(key));
             }

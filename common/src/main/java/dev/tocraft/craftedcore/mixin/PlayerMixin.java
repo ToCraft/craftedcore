@@ -1,6 +1,5 @@
 package dev.tocraft.craftedcore.mixin;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import dev.tocraft.craftedcore.data.PlayerDataProvider;
 import dev.tocraft.craftedcore.event.common.EntityEvents;
 import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +25,12 @@ import java.util.Set;
 @Mixin(Player.class)
 public abstract class PlayerMixin implements PlayerDataProvider {
     @Unique
-    private final Map<String, CompoundTag> craftedcore$playerData = new HashMap<>();
+    private final Map<String, Object> craftedcore$playerData = new HashMap<>();
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readNbt(ValueInput in, CallbackInfo ci) {
         for (String k : PlayerDataRegistry.keySet()) {
-            craftedcore$playerData.put(k, in.read(k, CompoundTag.CODEC).orElse(new CompoundTag()));
+            craftedcore$playerData.put(k, in.read(k, PlayerDataRegistry.getTagCodec(k)).orElse(null));
         }
     }
 
@@ -38,7 +38,7 @@ public abstract class PlayerMixin implements PlayerDataProvider {
     private void writeNbt(ValueOutput out, CallbackInfo ci) {
         craftedcore$playerData.forEach((k, v) -> {
             if (v != null && PlayerDataRegistry.isKeyRegistered(k)) {
-                out.store(k, CompoundTag.CODEC, v);
+                out.store(k, PlayerDataRegistry.getTagCodec(k), v);
             }
         });
     }
@@ -62,13 +62,24 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 
     @Unique
     @Override
-    public void craftedcore$writeTag(String key, CompoundTag tag) {
+    public <O> void craftedcore$writeTag(String key, @Nullable O tag) {
         craftedcore$playerData.put(key, tag);
     }
 
     @Unique
     @Override
-    public CompoundTag craftedcore$readTag(String key) {
+    public @Nullable Object craftedcore$readTag(String key) {
         return craftedcore$playerData.get(key);
+    }
+
+    @Unique
+    @Override
+    @SuppressWarnings("unchecked")
+    public @Nullable <T> T craftedcore$readTag(String key, Class<T> type) {
+        Object obj = craftedcore$playerData.get(key);
+        if (type.isInstance(obj)) {
+            return (T) obj;
+        }
+        return null;
     }
 }

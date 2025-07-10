@@ -30,8 +30,8 @@ public class ServerPlayerMixin {
         PlayerDataProvider newDataProvider = (PlayerDataProvider) (Object) this;
 
         for (String key : oldDataProvider.craftedcore$keySet()) {
-            // is the entry persistent (will it be saved after death) ?
             if (PlayerDataRegistry.isKeyPersistent(key)) {
+                // We're now dealing with the actual Java object, so no Class argument is needed here
                 newDataProvider.craftedcore$writeTag(key, oldDataProvider.craftedcore$readTag(key));
             }
         }

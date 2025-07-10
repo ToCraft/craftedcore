@@ -1,16 +1,17 @@
 package dev.tocraft.craftedcore.data;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 @ApiStatus.Internal
 public interface PlayerDataProvider {
-    void craftedcore$writeTag(String key, CompoundTag value);
+    <O> void craftedcore$writeTag(String key, @Nullable O value);
 
     Set<String> craftedcore$keySet();
 
-    CompoundTag craftedcore$readTag(String key);
+    @Nullable <T> T craftedcore$readTag(String key, Class<T> type);
+
+    @Nullable Object craftedcore$readTag(String key);
 }
