@@ -1,3 +1,9 @@
+craftedcore 6.4
+================
+
+- port to 1.21.7
+- remove multi-version structure
+
 craftedcore 6.3
 ================
 

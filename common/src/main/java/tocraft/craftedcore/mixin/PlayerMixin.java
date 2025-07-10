@@ -1,11 +1,12 @@
 package tocraft.craftedcore.mixin;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,20 +25,20 @@ import java.util.Set;
 @Mixin(Player.class)
 public abstract class PlayerMixin implements PlayerDataProvider {
     @Unique
-    private final Map<String, Tag> craftedcore$playerData = new HashMap<>();
+    private final Map<String, CompoundTag> craftedcore$playerData = new HashMap<>();
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readNbt(CompoundTag tag, CallbackInfo info) {
+    private void readNbt(ValueInput in, CallbackInfo ci) {
         for (String k : PlayerDataRegistry.keySet()) {
-            craftedcore$playerData.put(k, tag.get(k));
+            craftedcore$playerData.put(k, in.read(k, CompoundTag.CODEC).orElse(new CompoundTag()));
         }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeNbt(CompoundTag tag, CallbackInfo info) {
+    private void writeNbt(ValueOutput out, CallbackInfo ci) {
         craftedcore$playerData.forEach((k, v) -> {
             if (v != null && PlayerDataRegistry.isKeyRegistered(k)) {
-                tag.put(k, v);
+                out.store(k, CompoundTag.CODEC, v);
             }
         });
     }
@@ -61,13 +62,13 @@ public abstract class PlayerMixin implements PlayerDataProvider {
 
     @Unique
     @Override
-    public void craftedcore$writeTag(String key, Tag tag) {
+    public void craftedcore$writeTag(String key, CompoundTag tag) {
         craftedcore$playerData.put(key, tag);
     }
 
     @Unique
     @Override
-    public Tag craftedcore$readTag(String key) {
+    public CompoundTag craftedcore$readTag(String key) {
         return craftedcore$playerData.get(key);
     }
 }

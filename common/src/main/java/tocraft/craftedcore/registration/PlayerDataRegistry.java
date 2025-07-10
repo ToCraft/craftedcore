@@ -1,6 +1,6 @@
 package tocraft.craftedcore.registration;
 
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +59,7 @@ public class PlayerDataRegistry {
         return CraftedTagKeys.containsKey(key) && CraftedTagKeys.get(key).syncToAll();
     }
 
-    public static void writeTag(Player player, String key, @NotNull Tag value) throws NotRegisteredTagKeyException {
+    public static void writeTag(Player player, String key, @NotNull CompoundTag value) throws NotRegisteredTagKeyException {
         PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
         if (isKeyRegistered(key)) {
             playerDataProvider.craftedcore$writeTag(key, value);
@@ -68,7 +68,7 @@ public class PlayerDataRegistry {
         }
     }
 
-    public static Tag readTag(Player player, String key) throws NotRegisteredTagKeyException {
+    public static CompoundTag readTag(Player player, String key) throws NotRegisteredTagKeyException {
         PlayerDataProvider playerDataProvider = (PlayerDataProvider) player;
         if (isKeyRegistered(key)) {
             return playerDataProvider.craftedcore$readTag(key);

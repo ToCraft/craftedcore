@@ -6,7 +6,6 @@ pluginManagement {
         maven("https://maven.parchmentmc.org")
         maven("https://maven.tocraft.dev/public")
         gradlePluginPortal()
-        mavenLocal()
     }
 }
 
@@ -14,3 +13,6 @@ rootProject.name = "craftedcore"
 include("common")
 include("fabric")
 include("neoforge")
+include("testmod-common")
+include("testmod-fabric")
+include("testmod-neoforge")

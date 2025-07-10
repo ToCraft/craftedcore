@@ -54,7 +54,7 @@ public class PlayerDataSynchronizer {
                                         playerDataProvider = (PlayerDataProvider) player;
                                     }
                                     if (playerDataProvider != null) {
-                                        playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).get(key));
+                                        playerDataProvider.craftedcore$writeTag(key, ((CompoundTag) entry).getCompoundOrEmpty(key));
                                     }
                                 });
                             }
