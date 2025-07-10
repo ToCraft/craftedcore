@@ -11,7 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "tocraft.craftedcore.testmod.TestMod::initialize"
+      "dev.tocraft.craftedcore.testmod.TestMod::initialize"
     ]
   }
 }

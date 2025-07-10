@@ -1,4 +1,4 @@
-craftedcore 6.4
+craftedcore 7.0
 ================
 
 - port to 1.21.7

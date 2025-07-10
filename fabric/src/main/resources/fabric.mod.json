@@ -20,13 +20,13 @@
   ],
   "entrypoints": {
     "main": [
-      "tocraft.craftedcore.fabric.CraftedCoreFabric"
+      "dev.tocraft.craftedcore.fabric.CraftedCoreFabric"
     ],
     "client": [
-      "tocraft.craftedcore.fabric.client.CraftedCoreFabricClient"
+      "dev.tocraft.craftedcore.fabric.client.CraftedCoreFabricClient"
     ],
     "modmenu": [
-      "tocraft.craftedcore.fabric.CraftedCoreModMenu"
+      "dev.tocraft.craftedcore.fabric.CraftedCoreModMenu"
     ]
   },
   "depends": {
