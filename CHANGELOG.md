@@ -1,3 +1,8 @@
+craftedcore 7.1
+================
+
+- port to 1.21.8
+
 craftedcore 7.0
 ================
 
