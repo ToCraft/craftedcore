@@ -1,5 +1,8 @@
 package dev.tocraft.craftedcore.neoforge.client;
 
+import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
+import dev.tocraft.craftedcore.event.client.ClientTickEvents;
+import dev.tocraft.craftedcore.event.client.RenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
@@ -11,9 +14,6 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
-import dev.tocraft.craftedcore.event.client.ClientTickEvents;
-import dev.tocraft.craftedcore.event.client.RenderEvents;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal

@@ -1,10 +1,10 @@
 package dev.tocraft.craftedcore.event.client;
 
+import dev.tocraft.craftedcore.event.Event;
+import dev.tocraft.craftedcore.event.EventFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.player.LocalPlayer;
-import dev.tocraft.craftedcore.event.Event;
-import dev.tocraft.craftedcore.event.EventFactory;
 
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)

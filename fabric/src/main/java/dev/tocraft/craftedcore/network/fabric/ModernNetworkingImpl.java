@@ -1,5 +1,7 @@
 package dev.tocraft.craftedcore.network.fabric;
 
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -15,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.network.ModernNetworking;
-import dev.tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 
 import static dev.tocraft.craftedcore.network.ModernNetworking.getType;
 

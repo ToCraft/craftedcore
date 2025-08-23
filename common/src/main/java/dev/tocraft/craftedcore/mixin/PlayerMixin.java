@@ -1,21 +1,21 @@
 package dev.tocraft.craftedcore.mixin;
 
+import dev.tocraft.craftedcore.data.PlayerDataProvider;
+import dev.tocraft.craftedcore.event.common.EntityEvents;
+import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import dev.tocraft.craftedcore.data.PlayerDataProvider;
-import dev.tocraft.craftedcore.event.common.EntityEvents;
-import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

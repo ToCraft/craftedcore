@@ -1,18 +1,18 @@
 package dev.tocraft.craftedcore.testmod;
 
 import com.mojang.logging.LogUtils;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.ApiStatus;
-import org.slf4j.Logger;
 import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
 import dev.tocraft.craftedcore.event.client.ClientTickEvents;
 import dev.tocraft.craftedcore.event.client.RenderEvents;
 import dev.tocraft.craftedcore.event.common.EntityEvents;
 import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import dev.tocraft.craftedcore.platform.PlatformData;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 

@@ -1,16 +1,16 @@
 package dev.tocraft.craftedcore.registration;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import dev.tocraft.craftedcore.event.common.ResourceEvents;
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.platform.PlatformData;
 import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
-import dev.tocraft.craftedcore.event.common.ResourceEvents;
-import dev.tocraft.craftedcore.network.ModernNetworking;
-import dev.tocraft.craftedcore.platform.PlatformData;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package dev.tocraft.craftedcore.registration.neoforge;
 
+import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
-import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal

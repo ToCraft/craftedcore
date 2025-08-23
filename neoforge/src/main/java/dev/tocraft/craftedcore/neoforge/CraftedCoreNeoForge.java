@@ -1,5 +1,8 @@
 package dev.tocraft.craftedcore.neoforge;
 
+import dev.tocraft.craftedcore.CraftedCore;
+import dev.tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
+import dev.tocraft.craftedcore.registration.neoforge.RegistryRegistryImpl;
 import net.minecraft.core.Registry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -9,9 +12,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.CraftedCore;
-import dev.tocraft.craftedcore.neoforge.client.CraftedCoreNeoForgeClient;
-import dev.tocraft.craftedcore.registration.neoforge.RegistryRegistryImpl;
 
 import java.util.Objects;
 

@@ -1,5 +1,6 @@
 package dev.tocraft.craftedcore.fabric.mixin;
 
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
@@ -8,7 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
 
 @ApiStatus.Internal
 @Mixin(Player.class)

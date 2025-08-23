@@ -1,12 +1,12 @@
 package dev.tocraft.craftedcore.platform.fabric;
 
+import dev.tocraft.craftedcore.fabric.client.CraftedCoreFabricClient;
+import dev.tocraft.craftedcore.platform.PlatformData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import dev.tocraft.craftedcore.fabric.client.CraftedCoreFabricClient;
-import dev.tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;

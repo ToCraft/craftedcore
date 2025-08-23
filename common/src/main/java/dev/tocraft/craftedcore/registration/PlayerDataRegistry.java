@@ -1,10 +1,10 @@
 package dev.tocraft.craftedcore.registration;
 
 import com.mojang.serialization.Codec;
+import dev.tocraft.craftedcore.data.PlayerDataProvider;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.data.PlayerDataProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

@@ -1,5 +1,5 @@
 plugins {
-    id("dev.tocraft.modmaster.root") version("single-1.7")
+    id("dev.tocraft.modmaster.root") version ("single-1.7")
 }
 
 val clothConfigVersion: String? = properties["cloth_config_version"] as String

@@ -1,6 +1,14 @@
 package dev.tocraft.craftedcore;
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import dev.tocraft.craftedcore.config.ConfigLoader;
+import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.platform.PlatformData;
+import dev.tocraft.craftedcore.platform.PlayerProfile;
+import dev.tocraft.craftedcore.platform.VersionChecker;
+import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import net.fabricmc.api.EnvType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -10,14 +18,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import dev.tocraft.craftedcore.config.ConfigLoader;
-import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
-import dev.tocraft.craftedcore.network.ModernNetworking;
-import dev.tocraft.craftedcore.platform.PlatformData;
-import dev.tocraft.craftedcore.platform.PlayerProfile;
-import dev.tocraft.craftedcore.platform.VersionChecker;
-import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 import java.io.File;
 import java.nio.file.Path;

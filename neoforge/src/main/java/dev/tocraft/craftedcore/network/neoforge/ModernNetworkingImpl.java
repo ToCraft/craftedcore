@@ -1,5 +1,8 @@
 package dev.tocraft.craftedcore.network.neoforge;
 
+import dev.tocraft.craftedcore.neoforge.CraftedCoreNeoForge;
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -14,9 +17,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.neoforge.CraftedCoreNeoForge;
-import dev.tocraft.craftedcore.network.ModernNetworking;
-import dev.tocraft.craftedcore.network.ModernNetworking.PacketPayload;
 
 import static dev.tocraft.craftedcore.network.ModernNetworking.getType;
 

@@ -1,11 +1,11 @@
 package dev.tocraft.craftedcore.fabric.client;
 
+import dev.tocraft.craftedcore.event.client.RenderEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import org.jetbrains.annotations.ApiStatus;
-import dev.tocraft.craftedcore.event.client.RenderEvents;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)

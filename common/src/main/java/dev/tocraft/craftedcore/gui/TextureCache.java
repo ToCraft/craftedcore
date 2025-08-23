@@ -1,13 +1,13 @@
 package dev.tocraft.craftedcore.gui;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import dev.tocraft.craftedcore.CraftedCore;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import dev.tocraft.craftedcore.CraftedCore;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

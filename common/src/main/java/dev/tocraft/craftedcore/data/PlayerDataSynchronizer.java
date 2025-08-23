@@ -2,19 +2,15 @@ package dev.tocraft.craftedcore.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 import dev.tocraft.craftedcore.CraftedCore;
 import dev.tocraft.craftedcore.network.ModernNetworking;
 import dev.tocraft.craftedcore.network.client.ClientNetworking;
 import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.Optional;

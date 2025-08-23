@@ -1,14 +1,14 @@
 package dev.tocraft.craftedcore.mixin;
 
+import dev.tocraft.craftedcore.data.PlayerDataProvider;
+import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import dev.tocraft.craftedcore.data.PlayerDataProvider;
-import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
-import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
 
 @SuppressWarnings({"DataFlowIssue", "unused", "RedundantCast"})
 @Mixin(ServerPlayer.class)

@@ -1,8 +1,8 @@
 package dev.tocraft.craftedcore.event.common;
 
-import net.minecraft.server.level.ServerPlayer;
 import dev.tocraft.craftedcore.event.Event;
 import dev.tocraft.craftedcore.event.EventFactory;
+import net.minecraft.server.level.ServerPlayer;
 
 @SuppressWarnings("unused")
 public final class ResourceEvents {

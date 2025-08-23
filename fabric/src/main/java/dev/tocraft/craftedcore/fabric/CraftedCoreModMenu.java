@@ -2,11 +2,11 @@ package dev.tocraft.craftedcore.fabric;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import org.jetbrains.annotations.ApiStatus;
 import dev.tocraft.craftedcore.CraftedCoreConfig;
 import dev.tocraft.craftedcore.config.Config;
 import dev.tocraft.craftedcore.config.ConfigLoader;
 import dev.tocraft.craftedcore.fabric.client.CraftedCoreFabricClient;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashMap;
 import java.util.Map;

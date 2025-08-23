@@ -1,8 +1,8 @@
 package dev.tocraft.craftedcore.fabric;
 
+import dev.tocraft.craftedcore.CraftedCore;
 import net.fabricmc.api.ModInitializer;
 import org.jetbrains.annotations.ApiStatus;
-import dev.tocraft.craftedcore.CraftedCore;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal

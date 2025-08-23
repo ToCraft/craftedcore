@@ -1,14 +1,14 @@
 package dev.tocraft.craftedcore.platform;
 
 import com.google.gson.*;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import dev.tocraft.craftedcore.CraftedCore;
 import dev.tocraft.craftedcore.CraftedCoreConfig;
 import dev.tocraft.craftedcore.gui.TextureCache;
 import dev.tocraft.craftedcore.util.NetUtils;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,5 +1,11 @@
 package dev.tocraft.craftedcore.neoforge;
 
+import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
+import dev.tocraft.craftedcore.event.common.CommandEvents;
+import dev.tocraft.craftedcore.event.common.EntityEvents;
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.event.common.ServerLevelEvents;
+import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -15,12 +21,6 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
-import dev.tocraft.craftedcore.event.common.CommandEvents;
-import dev.tocraft.craftedcore.event.common.EntityEvents;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
-import dev.tocraft.craftedcore.event.common.ServerLevelEvents;
-import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
 
 import java.util.Map;
 

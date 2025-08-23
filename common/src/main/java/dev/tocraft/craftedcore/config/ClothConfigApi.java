@@ -1,5 +1,7 @@
 package dev.tocraft.craftedcore.config;
 
+import dev.tocraft.craftedcore.CraftedCore;
+import dev.tocraft.craftedcore.config.annotions.Comment;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -9,8 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import dev.tocraft.craftedcore.CraftedCore;
-import dev.tocraft.craftedcore.config.annotions.Comment;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

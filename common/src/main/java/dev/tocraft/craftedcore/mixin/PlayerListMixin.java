@@ -1,5 +1,7 @@
 package dev.tocraft.craftedcore.mixin;
 
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
+import dev.tocraft.craftedcore.event.common.ResourceEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
@@ -9,8 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
-import dev.tocraft.craftedcore.event.common.ResourceEvents;
 
 @SuppressWarnings("unused")
 @Mixin(PlayerList.class)

@@ -1,5 +1,6 @@
 package dev.tocraft.craftedcore.mixin;
 
+import dev.tocraft.craftedcore.util.TraceUtils;
 import net.minecraft.CrashReport;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,7 +8,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import dev.tocraft.craftedcore.util.TraceUtils;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {

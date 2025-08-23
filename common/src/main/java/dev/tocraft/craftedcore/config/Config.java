@@ -1,5 +1,8 @@
 package dev.tocraft.craftedcore.config;
 
+import dev.tocraft.craftedcore.CraftedCore;
+import dev.tocraft.craftedcore.network.ModernNetworking;
+import dev.tocraft.craftedcore.platform.PlatformData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
@@ -7,9 +10,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import dev.tocraft.craftedcore.CraftedCore;
-import dev.tocraft.craftedcore.network.ModernNetworking;
-import dev.tocraft.craftedcore.platform.PlatformData;
 
 import java.nio.file.Path;
 

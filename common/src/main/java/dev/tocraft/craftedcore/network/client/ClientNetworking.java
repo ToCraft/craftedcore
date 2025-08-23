@@ -1,11 +1,11 @@
 package dev.tocraft.craftedcore.network.client;
 
+import dev.tocraft.craftedcore.client.CraftedCoreClient;
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.client.CraftedCoreClient;
-import dev.tocraft.craftedcore.network.ModernNetworking;
 
 @Environment(EnvType.CLIENT)
 public class ClientNetworking {

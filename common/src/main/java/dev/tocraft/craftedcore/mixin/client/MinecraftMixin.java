@@ -1,5 +1,6 @@
 package dev.tocraft.craftedcore.mixin.client;
 
+import dev.tocraft.craftedcore.util.TraceUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.CrashReport;
@@ -9,7 +10,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import dev.tocraft.craftedcore.util.TraceUtils;
 
 import java.io.File;
 

@@ -1,11 +1,11 @@
 package dev.tocraft.craftedcore.fabric.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import dev.tocraft.craftedcore.event.common.EntityEvents;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.ApiStatus;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import dev.tocraft.craftedcore.event.common.EntityEvents;
 
 @SuppressWarnings({"DataFlowIssue", "unused"})
 @ApiStatus.Internal

@@ -1,5 +1,6 @@
 package dev.tocraft.craftedcore.mixin;
 
+import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
@@ -8,7 +9,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import dev.tocraft.craftedcore.event.common.PlayerEvents;
 
 @Mixin(PlayerAdvancements.class)
 public class PlayerAdvancementsMixin {

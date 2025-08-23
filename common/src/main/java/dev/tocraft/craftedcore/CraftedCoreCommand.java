@@ -2,14 +2,14 @@ package dev.tocraft.craftedcore;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import dev.tocraft.craftedcore.event.common.CommandEvents;
+import dev.tocraft.craftedcore.network.ModernNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.event.common.CommandEvents;
-import dev.tocraft.craftedcore.network.ModernNetworking;
 
 public class CraftedCoreCommand {
 

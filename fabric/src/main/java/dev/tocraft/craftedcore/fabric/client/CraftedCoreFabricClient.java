@@ -1,10 +1,10 @@
 package dev.tocraft.craftedcore.fabric.client;
 
+import dev.tocraft.craftedcore.client.CraftedCoreClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
-import dev.tocraft.craftedcore.client.CraftedCoreClient;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

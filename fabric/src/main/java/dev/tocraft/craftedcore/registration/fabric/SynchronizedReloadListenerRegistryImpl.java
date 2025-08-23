@@ -1,5 +1,6 @@
 package dev.tocraft.craftedcore.registration.fabric;
 
+import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -7,7 +8,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

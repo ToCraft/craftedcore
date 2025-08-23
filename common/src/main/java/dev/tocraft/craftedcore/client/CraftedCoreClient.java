@@ -1,9 +1,5 @@
 package dev.tocraft.craftedcore.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.InteractionResult;
 import dev.tocraft.craftedcore.CraftedCore;
 import dev.tocraft.craftedcore.config.ConfigLoader;
 import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
@@ -11,6 +7,10 @@ import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
 import dev.tocraft.craftedcore.event.client.RenderEvents;
 import dev.tocraft.craftedcore.network.ModernNetworking;
 import dev.tocraft.craftedcore.network.client.ClientNetworking.ApplicablePacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.InteractionResult;
 
 import java.util.HashSet;
 import java.util.Set;

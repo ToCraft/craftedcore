@@ -1,5 +1,8 @@
 package dev.tocraft.craftedcore.platform.neoforge;
 
+import dev.tocraft.craftedcore.config.Config;
+import dev.tocraft.craftedcore.config.ConfigLoader;
+import dev.tocraft.craftedcore.platform.PlatformData;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -9,9 +12,6 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import dev.tocraft.craftedcore.config.Config;
-import dev.tocraft.craftedcore.config.ConfigLoader;
-import dev.tocraft.craftedcore.platform.PlatformData;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
