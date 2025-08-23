@@ -1,7 +1,8 @@
 craftedcore 7.1
 ================
 
-- port to 1.21.8
+- support 1.21.8
+- simplify version checking
 
 craftedcore 7.0
 ================
