@@ -21,11 +21,12 @@ public class PermissionCheckerImpl {
         try {
             if (!CRASHED.get()) {
                 Class<?> clazz = Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
-                Method method = clazz.getDeclaredMethod("check", Entity.class, String.class, Integer.class);
+                Method method = clazz.getDeclaredMethod("check", Entity.class, String.class, int.class);
                 return (boolean) method.invoke(null, player, namespace + "." + permission, 2);
             }
         } catch (Throwable e) {
             CraftedCore.LOGGER.error("Could not access Fabric-Permission-API-v0!", e);
+            CRASHED.set(true);
         }
         // Permissions API not available, fall back to OP level 2
         return player.hasPermissions(2);
