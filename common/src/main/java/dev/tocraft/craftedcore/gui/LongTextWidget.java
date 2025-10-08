@@ -78,7 +78,7 @@ public class LongTextWidget extends AbstractScrollArea {
         }
 
         guiGraphics.disableScissor();
-        renderScrollbar(guiGraphics);
+        renderScrollbar(guiGraphics, mouseX, mouseY);
 
         if (separators) {
             renderSeparators(guiGraphics);

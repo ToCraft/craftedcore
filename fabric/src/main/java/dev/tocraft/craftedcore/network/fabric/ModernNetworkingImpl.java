@@ -38,7 +38,7 @@ public class ModernNetworkingImpl {
 
                 @Override
                 public void queue(Runnable runnable) {
-                    MinecraftServer server = context.player().getServer();
+                    MinecraftServer server = context.server();
                     if (server != null) {
                         server.execute(runnable);
                     }

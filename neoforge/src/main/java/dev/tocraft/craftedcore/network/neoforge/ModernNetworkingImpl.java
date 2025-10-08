@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -64,7 +65,7 @@ public class ModernNetworkingImpl {
     }
 
     public static void registerType(ResourceLocation id) {
-        if (FMLLoader.getDist() == Dist.DEDICATED_SERVER) {
+        if (FMLEnvironment.getDist().isDedicatedServer()) {
             ModernNetworking.getType(id);
             registerReceiver(ModernNetworking.Side.S2C, id, (context, data) -> {
             });

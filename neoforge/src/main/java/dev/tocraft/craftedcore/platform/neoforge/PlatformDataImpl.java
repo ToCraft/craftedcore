@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -29,11 +30,11 @@ public final class PlatformDataImpl {
     }
 
     public static boolean isDevEnv() {
-        return !FMLLoader.isProduction();
+        return !FMLLoader.getCurrent().isProduction();
     }
 
     public static Dist getEnv() {
-        return FMLLoader.getDist();
+        return FMLEnvironment.getDist();
     }
 
     public static Path getConfigPath() {

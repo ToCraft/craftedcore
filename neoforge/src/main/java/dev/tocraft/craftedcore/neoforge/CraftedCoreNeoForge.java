@@ -21,7 +21,7 @@ import java.util.Objects;
 public class CraftedCoreNeoForge {
 
     public CraftedCoreNeoForge(IEventBus bus) {
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             new CraftedCoreNeoForgeClient(bus);
         }
         new CraftedCore().initialize();
