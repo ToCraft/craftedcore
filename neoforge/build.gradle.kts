@@ -19,7 +19,7 @@ tasks.withType<ProcessResources> {
     outputs.upToDateWhen { false }
 }
 
-val clothConfigVersion: String? = parent!!.properties["cloth_config_version"] as String
+val clothConfigVersion: String = parent!!.properties["cloth_config_version"] as String
 
 repositories {
     maven("https://maven.terraformersmc.com/releases/")
@@ -31,7 +31,5 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.properties["mixinextras_version"]}")!!)
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${rootProject.properties["mixinextras_version"]}")!!)
     // Cloth Config
-    if (clothConfigVersion != null) {
-        modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothConfigVersion}")
-    }
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-neoforge:${clothConfigVersion}")
 }

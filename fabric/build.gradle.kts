@@ -15,7 +15,7 @@ tasks.withType<ProcessResources> {
 
 val modMenuVersion: String? = parent!!.properties["modmenu_version"] as String
 
-val clothConfigVersion: String? = parent!!.properties["cloth_config_version"] as String
+val clothConfigVersion: String = parent!!.properties["cloth_config_version"] as String
 
 repositories {
     maven("https://maven.terraformersmc.com/releases/")
@@ -26,17 +26,12 @@ dependencies {
     // mixin extras
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${rootProject.properties["mixinextras_version"]}")!!)!!)
     if (modMenuVersion != null) {
-        modCompileOnly("com.terraformersmc:modmenu:${modMenuVersion}") {
-            isTransitive = false
-        }
         modRuntimeOnly("com.terraformersmc:modmenu:${modMenuVersion}") {
             isTransitive = false
         }
     }
     // Cloth Config
-    if (clothConfigVersion != null) {
-        modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothConfigVersion}") {
-            exclude("net.fabricmc.fabric-api")
-        }
+    modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${clothConfigVersion}") {
+        exclude("net.fabricmc.fabric-api")
     }
 }
