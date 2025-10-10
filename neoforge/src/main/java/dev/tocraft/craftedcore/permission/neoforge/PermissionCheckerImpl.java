@@ -22,11 +22,18 @@ public class PermissionCheckerImpl {
     public static boolean hasPermission(@NotNull ServerPlayer player, @NotNull String namespace, @NotNull String permission) {
         // Get or create permission node
         ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, permission);
-        PermissionNode<Boolean> node = PERMISSION_NODES.computeIfAbsent(id,
-                key -> new PermissionNode<>(key, PermissionTypes.BOOLEAN,
-                        (player1, playerUUID, context) -> player1 != null && player1.hasPermissions(2)));
+        PermissionNode<Boolean> node = PERMISSION_NODES.get(id);
 
         // Check permission using NeoForge PermissionAPI
-        return PermissionAPI.getPermission(player, node);
+        return node != null ? PermissionAPI.getPermission(player, node) : player.hasPermissions(2);
+    }
+
+    /**
+     * This MUST be called while registering the nodes!
+     */
+    public static PermissionNode<Boolean> createNode(@NotNull String namespace, @NotNull String permission) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, permission);
+        return PERMISSION_NODES.put(id, new PermissionNode<>(id, PermissionTypes.BOOLEAN,
+                (player, playerUUID, context) -> player != null && player.hasPermissions(2)));
     }
 }
