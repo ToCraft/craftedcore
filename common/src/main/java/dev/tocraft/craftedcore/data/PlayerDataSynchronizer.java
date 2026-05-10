@@ -8,7 +8,7 @@ import dev.tocraft.craftedcore.network.client.ClientNetworking;
 import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class PlayerDataSynchronizer {
     private static final String PLAYER_DATA_SYNC = "player_data_sync";
-    public static final ResourceLocation PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
+    public static final Identifier PLAYER_DATA_SYNC_ID = CraftedCore.id(PLAYER_DATA_SYNC);
 
     public static void registerPacketHandler() {
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, PLAYER_DATA_SYNC_ID, (context, tag) -> {

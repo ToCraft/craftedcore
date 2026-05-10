@@ -3,6 +3,7 @@ package dev.tocraft.craftedcore.platform.neoforge;
 import dev.tocraft.craftedcore.config.Config;
 import dev.tocraft.craftedcore.config.ConfigLoader;
 import dev.tocraft.craftedcore.platform.PlatformData;
+import dev.tocraft.craftedcore.platform.PlatformDataService;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -19,35 +20,42 @@ import java.nio.file.Path;
 
 @SuppressWarnings({"unused", "SameReturnValue"})
 @ApiStatus.Internal
-public final class PlatformDataImpl {
-    public static boolean isModLoaded(String modid) {
+public final class PlatformDataImpl implements PlatformDataService {
+    @Override
+    public boolean isModLoaded(String modid) {
         return ModList.get().isLoaded(modid);
     }
 
+    @Override
     @Nullable
-    public static Version getModVersion(String modid) {
+    public Version getModVersion(String modid) {
         return ModList.get().getModContainerById(modid).map(modContainer -> Version.parse(modContainer.getModInfo().getVersion().toString())).orElse(null);
     }
 
-    public static boolean isDevEnv() {
+    @Override
+    public boolean isDevEnv() {
         return !FMLLoader.getCurrent().isProduction();
     }
 
-    public static Dist getEnv() {
-        return FMLEnvironment.getDist();
+    @Override
+    public PlatformData.Env getEnv() {
+        return FMLEnvironment.getDist().isClient() ? PlatformData.Env.CLIENT : PlatformData.Env.SERVER;
     }
 
-    public static Path getConfigPath() {
+    @Override
+    public Path getConfigPath() {
         return FMLPaths.CONFIGDIR.get();
     }
 
-    public static PlatformData.ModLoader getModLoaderId() {
+    @Override
+    public PlatformData.ModLoader getModLoaderId() {
         return PlatformData.ModLoader.NEOFORGE;
     }
 
+    @Override
     @ApiStatus.Internal
     @OnlyIn(Dist.CLIENT)
-    public static void registerConfigScreen(String name) {
+    public void registerConfigScreen(String name) {
         if (ModList.get().getModContainerById("cloth_config").isPresent()) {
             ModList.get().getModContainerById(name).ifPresent(mod -> mod.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, parent) -> {
                 Config c;

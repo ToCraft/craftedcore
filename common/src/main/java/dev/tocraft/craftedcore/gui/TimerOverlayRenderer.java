@@ -1,14 +1,14 @@
 package dev.tocraft.craftedcore.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 @SuppressWarnings("unused")
 public class TimerOverlayRenderer {
-    public static void register(GuiGraphics graphics, int currentCooldown, int maxCooldown, Item item) {
+    public static void register(GuiGraphicsExtractor graphics, int currentCooldown, int maxCooldown, Item item) {
         Minecraft client = Minecraft.getInstance();
 
         if (client.screen instanceof ChatScreen || currentCooldown <= 0 || item == null) {
@@ -32,7 +32,7 @@ public class TimerOverlayRenderer {
             }
 
             ItemStack stack = new ItemStack(item);
-            graphics.renderItem(stack, (int) (width * .95f), (int) (height * .92f));
+            graphics.item(stack, (int) (width * .95f), (int) (height * .92f));
 
             if (cooldownScale != 1) {
                 graphics.disableScissor();

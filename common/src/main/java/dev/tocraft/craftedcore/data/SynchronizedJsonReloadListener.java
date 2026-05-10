@@ -10,9 +10,10 @@ import dev.tocraft.craftedcore.network.ModernNetworking;
 import dev.tocraft.craftedcore.platform.PlatformData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -31,11 +32,11 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public abstract class SynchronizedJsonReloadListener extends
-        SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> {
-    public final ResourceLocation RELOAD_SYNC;
+        SimplePreparableReloadListener<Map<Identifier, JsonElement>> {
+    public final Identifier RELOAD_SYNC;
     protected final String directory;
     protected final Gson gson;
-    private final Map<ResourceLocation, JsonElement> map = new HashMap<>();
+    private final Map<Identifier, JsonElement> map = new HashMap<>();
 
     public SynchronizedJsonReloadListener(Gson gson, String directory) {
         this.gson = gson;
@@ -43,22 +44,22 @@ public abstract class SynchronizedJsonReloadListener extends
         this.RELOAD_SYNC = CraftedCore.id("data_sync_" + directory);
     }
 
-    protected @NotNull Map<ResourceLocation, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
-        Map<ResourceLocation, JsonElement> map = new HashMap<>();
+    protected @NotNull Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+        Map<Identifier, JsonElement> map = new HashMap<>();
         scanDirectory(resourceManager, map);
         return map;
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         this.map.clear();
         this.map.putAll(map);
-        if (PlatformData.getEnv() == EnvType.SERVER) {
+        if (PlatformData.getEnv() == PlatformData.Env.SERVER) {
             this.onApply(this.map);
         }
     }
 
-    protected abstract void onApply(Map<ResourceLocation, JsonElement> map);
+    protected abstract void onApply(Map<Identifier, JsonElement> map);
 
     public void sendSyncPacket(ServerPlayer player) {
         // Serialize unlocked to tag
@@ -71,11 +72,11 @@ public abstract class SynchronizedJsonReloadListener extends
 
     @Environment(EnvType.CLIENT)
     private void onPacketReceive(ModernNetworking.Context context, CompoundTag compound) {
-        Map<ResourceLocation, JsonElement> map = new HashMap<>();
+        Map<Identifier, JsonElement> map = new HashMap<>();
         if (compound != null) {
             for (String key : compound.keySet()) {
                 String json = compound.getString(key).orElseThrow();
-                map.put(ResourceLocation.parse(key), JsonParser.parseString(json));
+                map.put(Identifier.parse(key), JsonParser.parseString(json));
             }
         }
         this.onApply(map);
@@ -86,12 +87,12 @@ public abstract class SynchronizedJsonReloadListener extends
         ModernNetworking.registerReceiver(ModernNetworking.Side.S2C, RELOAD_SYNC, this::onPacketReceive);
     }
 
-    private void scanDirectory(ResourceManager resourceManager, Map<ResourceLocation, JsonElement> map) {
+    private void scanDirectory(ResourceManager resourceManager, Map<Identifier, JsonElement> map) {
         FileToIdConverter var4 = FileToIdConverter.json(directory);
-        Iterable<Map.Entry<ResourceLocation, Resource>> entrySet = var4.listMatchingResources(resourceManager).entrySet();
-        for (Map.Entry<ResourceLocation, Resource> entry : entrySet) {
-            ResourceLocation var7 = entry.getKey();
-            ResourceLocation var8 = var4.fileToId(var7);
+        Iterable<Map.Entry<Identifier, Resource>> entrySet = var4.listMatchingResources(resourceManager).entrySet();
+        for (Map.Entry<Identifier, Resource> entry : entrySet) {
+            Identifier var7 = entry.getKey();
+            Identifier var8 = var4.fileToId(var7);
             try {
                 BufferedReader reader = entry.getValue().openAsReader();
                 try {

@@ -6,7 +6,7 @@ import dev.tocraft.craftedcore.event.common.EntityEvents;
 import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import dev.tocraft.craftedcore.event.common.ServerLevelEvents;
 import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +18,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.CanContinueSleepingEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.common.util.ClockAdjustment;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void addReloadListenerEvent(AddServerReloadListenersEvent event) {
-        for (Map.Entry<ResourceLocation, SynchronizedJsonReloadListener> entry : SynchronizedReloadListenerRegistry.getAllListener().entrySet()) {
+        for (Map.Entry<Identifier, SynchronizedJsonReloadListener> entry : SynchronizedReloadListenerRegistry.getAllListener().entrySet()) {
             event.addListener(entry.getKey(), entry.getValue());
         }
     }
@@ -57,8 +58,12 @@ public class CraftedCoreNeoForgeEventHandler {
 
     @SubscribeEvent
     public void sleepFinishedTime(@NotNull SleepFinishedTimeEvent event) {
-        long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition((ServerLevel) event.getLevel(), event.getNewTime());
-        event.setTimeAddition(newTimeIn);
+        ServerLevel level = (ServerLevel) event.getLevel();
+        long currentTime = level.getOverworldClockTime();
+        long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition(level, currentTime);
+        if (newTimeIn != currentTime) {
+            event.setAdjustment(new ClockAdjustment.Absolute(newTimeIn));
+        }
     }
 
     @SubscribeEvent
@@ -85,7 +90,9 @@ public class CraftedCoreNeoForgeEventHandler {
         event.setCanBreathe(EntityEvents.LIVING_BREATHE.invoke().breathe(event.getEntity(), event.canBreathe()));
     }
 
+    @SubscribeEvent
     private void destroySpeed(PlayerEvent.@NotNull BreakSpeed event) {
-        PlayerEvents.DESTROY_SPEED.invoke().setDestroySpeed(event.getEntity(), event.getNewSpeed());
+        float speed = PlayerEvents.DESTROY_SPEED.invoke().setDestroySpeed(event.getEntity(), event.getNewSpeed());
+        event.setNewSpeed(speed);
     }
 }

@@ -9,9 +9,8 @@ import dev.tocraft.craftedcore.platform.PlatformData;
 import dev.tocraft.craftedcore.platform.PlayerProfile;
 import dev.tocraft.craftedcore.platform.VersionChecker;
 import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistry;
-import net.fabricmc.api.EnvType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -28,7 +27,7 @@ public class CraftedCore {
     @ApiStatus.Internal
     public final static Path CACHE_DIR = PlatformData.getConfigPath().resolve(CraftedCore.MODID + File.separatorChar + "cache");
     @ApiStatus.Internal
-    public static final ResourceLocation CLEAR_CACHE_PACKET = id("clear_cache");
+    public static final Identifier CLEAR_CACHE_PACKET = id("clear_cache");
     public static final String MODID = "craftedcore";
 
     public void initialize() {
@@ -60,7 +59,7 @@ public class CraftedCore {
         CraftedCoreCommand.initialize();
 
         // register config screen
-        if (PlatformData.getEnv() == EnvType.CLIENT) {
+        if (PlatformData.getEnv() == PlatformData.Env.CLIENT) {
             PlatformData.registerConfigScreen(CraftedCoreConfig.INSTANCE.getName());
         }
     }
@@ -76,8 +75,8 @@ public class CraftedCore {
 
     @Contract("_ -> new")
     @ApiStatus.Internal
-    public static @NotNull ResourceLocation id(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, name);
+    public static @NotNull Identifier id(String name) {
+        return Identifier.fromNamespaceAndPath(MODID, name);
     }
 
     @ApiStatus.Internal

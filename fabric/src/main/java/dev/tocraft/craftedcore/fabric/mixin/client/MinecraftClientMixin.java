@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin {
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V",
+    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;ZZ)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;clear()V"))
-    private void onDisconnect(Screen screen, boolean retainDownloadedPacks, CallbackInfo ci) {
+    private void onDisconnect(Screen screen, boolean retainDownloadedPacks, boolean dropClientLevel, CallbackInfo ci) {
         ClientPlayerEvents.CLIENT_PLAYER_QUIT.invoke().quit(Minecraft.getInstance().player);
     }
 }

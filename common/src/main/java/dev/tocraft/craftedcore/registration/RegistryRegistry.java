@@ -1,14 +1,17 @@
 package dev.tocraft.craftedcore.registration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 
+import java.util.ServiceLoader;
+
 public class RegistryRegistry {
-    @ExpectPlatform
+    private static final RegistryRegistryService SERVICE =
+            ServiceLoader.load(RegistryRegistryService.class).findFirst().orElseThrow();
+
     public static <T> Registry<T> createSimpleRegistry(ResourceKey<Registry<T>> key) {
-        throw new AssertionError();
+        return SERVICE.createSimpleRegistry(key);
     }
 
     public static void registerWorldgen(RegistryDataLoader.RegistryData<?> registryData) {

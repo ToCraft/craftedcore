@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class CraftedCoreNeoForgeEventHandlerClient {
     @SubscribeEvent
     public void event(RenderGuiEvent.@NotNull Post event) {
-        RenderEvents.HUD_RENDERING.invoke().render(event.getGuiGraphics(), event.getPartialTick());
+        RenderEvents.HUD_RENDERING.invoke().extractRenderState(event.getGuiGraphics(), event.getPartialTick());
     }
 
     @SubscribeEvent

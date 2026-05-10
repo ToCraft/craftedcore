@@ -1,6 +1,5 @@
 package dev.tocraft.craftedcore.platform;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
@@ -9,51 +8,56 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.module.ModuleDescriptor.Version;
 import java.nio.file.Path;
+import java.util.ServiceLoader;
 
 @SuppressWarnings({"unused", "Contract"})
 public final class PlatformData {
-    @ExpectPlatform
+    private static final PlatformDataService SERVICE =
+            ServiceLoader.load(PlatformDataService.class).findFirst().orElseThrow();
+
     public static boolean isModLoaded(String modid) {
-        throw new AssertionError();
+        return SERVICE.isModLoaded(modid);
     }
 
-    @ExpectPlatform
     @Nullable
     public static Version getModVersion(String modid) {
-        throw new AssertionError();
+        return SERVICE.getModVersion(modid);
     }
 
-    @ExpectPlatform
     public static boolean isDevEnv() {
-        throw new AssertionError();
+        return SERVICE.isDevEnv();
     }
 
     @Contract(value = " -> !null", pure = true)
-    @ExpectPlatform
-    public static EnvType getEnv() {
-        throw new AssertionError();
+    public static Env getEnv() {
+        return SERVICE.getEnv();
     }
 
-    @ExpectPlatform
     @Contract(value = " -> !null", pure = true)
     public static Path getConfigPath() {
-        throw new AssertionError();
+        return SERVICE.getConfigPath();
     }
 
-    @ExpectPlatform
     @Contract(value = " -> !null", pure = true)
     public static ModLoader getModLoaderId() {
-        throw new AssertionError();
+        return SERVICE.getModLoaderId();
     }
 
-    @ExpectPlatform
     @ApiStatus.Internal
     @Environment(EnvType.CLIENT)
     public static void registerConfigScreen(String name) {
-        throw new AssertionError();
+        SERVICE.registerConfigScreen(name);
     }
 
     public enum ModLoader {
         FABRIC, FORGE, NEOFORGE, OTHER
+    }
+
+    public enum Env {
+        CLIENT, SERVER;
+
+        public boolean isClient() {
+            return this == CLIENT;
+        }
     }
 }

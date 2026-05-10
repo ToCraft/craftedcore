@@ -22,6 +22,8 @@ public class PlayerAdvancementsMixin {
 
     @Inject(method = "revoke", at = @At(value = "RETURN"))
     private void afterRevoke(AdvancementHolder advancement, String criterionKey, CallbackInfoReturnable<Boolean> cir) {
-        PlayerEvents.REVOKE_ADVANCEMENT.invoke().revoke(this.player, advancement, criterionKey);
+        if (cir.getReturnValue()) {
+            PlayerEvents.REVOKE_ADVANCEMENT.invoke().revoke(this.player, advancement, criterionKey);
+        }
     }
 }

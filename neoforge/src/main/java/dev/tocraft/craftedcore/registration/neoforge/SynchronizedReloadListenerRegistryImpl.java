@@ -1,13 +1,15 @@
 package dev.tocraft.craftedcore.registration.neoforge;
 
 import dev.tocraft.craftedcore.data.SynchronizedJsonReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import dev.tocraft.craftedcore.registration.SynchronizedReloadListenerRegistryService;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal
-public class SynchronizedReloadListenerRegistryImpl {
+public class SynchronizedReloadListenerRegistryImpl implements SynchronizedReloadListenerRegistryService {
+    @Override
     @SuppressWarnings("EmptyMethod")
-    public static void onRegister(SynchronizedJsonReloadListener reloadListener, ResourceLocation id) {
+    public void onRegister(SynchronizedJsonReloadListener reloadListener, Identifier id) {
     }
 }

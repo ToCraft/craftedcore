@@ -2,7 +2,7 @@ package dev.tocraft.craftedcore.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class LongTextWidget extends AbstractScrollArea {
     private final int row_width;
 
     public LongTextWidget(int x, int y, int width, int height, boolean separators, int row_width) {
-        super(x, y, width, height, Component.nullToEmpty(""));
+        super(x, y, width, height, Component.nullToEmpty(""), AbstractScrollArea.defaultSettings(SCROLLBAR_WIDTH));
         this.separators = separators;
         this.row_width = row_width;
     }
@@ -46,7 +47,8 @@ public class LongTextWidget extends AbstractScrollArea {
     }
 
     public void addText(Component text, Font font, int color) {
-        this.text.add(new MultiLineTextWidget(text, font).setColor(color));
+        Component styled = (color != -1) ? text.copy().withStyle(s -> s.withColor(TextColor.fromRgb(color & 0xFFFFFF))) : text;
+        this.text.add(new MultiLineTextWidget(styled, font));
     }
 
     protected int textWidth() {
@@ -64,7 +66,7 @@ public class LongTextWidget extends AbstractScrollArea {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
         guiGraphics.enableScissor(this.getX(), this.getY(), this.getRight(), this.getBottom());
 
         int x = this.getX() + (getWidth() - textWidth()) / 2;
@@ -72,20 +74,20 @@ public class LongTextWidget extends AbstractScrollArea {
         for (MultiLineTextWidget widget : this.text) {
             widget.setPosition(x, y);
             widget.setMaxWidth(textWidth());
-            widget.render(guiGraphics, mouseX, mouseY, delta);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, delta);
 
             y += widget.getHeight();
         }
 
         guiGraphics.disableScissor();
-        renderScrollbar(guiGraphics, mouseX, mouseY);
+        extractScrollbar(guiGraphics, mouseX, mouseY);
 
         if (separators) {
             renderSeparators(guiGraphics);
         }
     }
 
-    protected void renderSeparators(@NotNull GuiGraphics guiGraphics) {
+    protected void renderSeparators(@NotNull GuiGraphicsExtractor guiGraphics) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.INWORLD_HEADER_SEPARATOR, this.getX(), this.getY() - 2, 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.INWORLD_FOOTER_SEPARATOR, this.getX(), this.getBottom(), 0.0F, 0.0F, this.getWidth(), 2, 32, 2);
     }

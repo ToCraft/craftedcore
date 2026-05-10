@@ -5,7 +5,7 @@ import dev.tocraft.craftedcore.event.EventFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -22,12 +22,12 @@ public final class RenderEvents {
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface HUDRendering {
-        void render(GuiGraphics graphics, DeltaTracker tickCounter);
+        void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker tickCounter);
     }
 
     @Environment(EnvType.CLIENT)
     @FunctionalInterface
     public interface OverlayRendering {
-        InteractionResult render(@Nullable GuiGraphics graphics, Player player);
+        InteractionResult render(@Nullable GuiGraphicsExtractor graphics, Player player);
     }
 }

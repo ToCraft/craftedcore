@@ -1,6 +1,7 @@
 package dev.tocraft.craftedcore.registration.neoforge;
 
 import com.mojang.logging.LogUtils;
+import dev.tocraft.craftedcore.registration.KeyBindingRegistryService;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -16,12 +17,13 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 @OnlyIn(Dist.CLIENT)
-public final class KeyBindingRegistryImpl {
+public final class KeyBindingRegistryImpl implements KeyBindingRegistryService {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final List<KeyMapping> MAPPINGS = new ArrayList<>();
     private static boolean eventCalled = false;
 
-    public static void register(KeyMapping mapping) {
+    @Override
+    public void register(KeyMapping mapping) {
         if (eventCalled) {
             Options options = Minecraft.getInstance().options;
             options.keyMappings = ArrayUtils.add(options.keyMappings, mapping);

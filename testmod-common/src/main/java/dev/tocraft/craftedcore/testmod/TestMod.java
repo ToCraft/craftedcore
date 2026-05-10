@@ -26,34 +26,40 @@ public class TestMod {
     public static void initialize() {
         PlayerEvents.PLAYER_JOIN.register(player -> LOGGER.debug("player {} joined.", player != null ? player.getName().getString() : ""));
         PlayerEvents.PLAYER_QUIT.register(player -> LOGGER.debug("player {} quit.", player != null ? player.getName().getString() : ""));
-        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} unlocked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
-        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} revoked advancement {}", player != null ? player.getDisplayName() : "", criterionKey));
+        PlayerEvents.AWARD_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} unlocked advancement {}", player != null ? player.getName().getString() : "", criterionKey));
+        PlayerEvents.REVOKE_ADVANCEMENT.register((player, advancement, criterionKey) -> LOGGER.debug("{} revoked advancement {}", player != null ? player.getName().getString() : "", criterionKey));
         EntityEvents.INTERACT_WITH_PLAYER.register((player, entity, hand) -> {
-            LOGGER.debug("player {}just interacted with {}", player != null ? player.getName().getString() : "", entity.getName().getString());
+            LOGGER.debug("player {} just interacted with {}", player != null ? player.getName().getString() : "", entity.getName().getString());
             return InteractionResult.PASS;
         });
 
         EntityEvents.LIVING_DEATH.register((entity, source) -> {
-            LOGGER.debug("{}Oh, I just died in your arms tonight.", entity != null ? entity.getName().getString() : "");
+            LOGGER.debug("{} Oh, I just died in your arms tonight.", entity != null ? entity.getName().getString() : "");
             return InteractionResult.PASS;
         });
 
         EntityEvents.LIVING_BREATHE.register((entity, canBreathe) -> {
             if (entity instanceof Player) {
                 if (canBreathe) {
-                    LOGGER.debug("In and out.");
+                    LOGGER.info("In and out.");
                 } else {
-                    LOGGER.debug("I need air!");
+                    LOGGER.info("I need air!");
                 }
                 // revert value, the players will need to breathe underwater now
                 return !canBreathe;
             } else {
-                LOGGER.debug("something is breathing here...");
+                LOGGER.info("something is breathing here...");
                 return canBreathe;
             }
         });
 
-        if (PlatformData.getEnv() == EnvType.CLIENT) {
+        PlayerEvents.DESTROY_SPEED.register((player, oSpeed) -> {
+            float speed = oSpeed * 5;
+            LOGGER.debug("{} is mining with {} speed.", player.getName().getString(), speed);
+            return speed;
+        });
+
+        if (PlatformData.getEnv() == PlatformData.Env.CLIENT) {
             TestModClient.initialize();
         }
     }

@@ -1,15 +1,15 @@
 plugins {
-    id("dev.tocraft.modmaster.root") version ("single-1.10.1")
+    id("dev.tocraft.modmaster.root") version ("2.1")
 }
 
-val clothConfigVersion: String? = properties["cloth_config_version"] as String
-
-ext {
-    val modMeta = mutableMapOf<String, Any>()
-    modMeta["minecraft"] = project.properties["minecraft"] as String
-    modMeta["version"] = version
-    if (clothConfigVersion != null) {
-        modMeta["clothConfig"] = clothConfigVersion
+subprojects {
+    repositories {
+        maven("https://maven.fabricmc.net/") // fabric api
+        maven("https://maven.terraformersmc.com/releases/") // mod menu mod
+        maven("https://maven.shedaniel.me/") // cloth config
+        maven {
+            name = "Minecraft Libraries"
+            url = uri("https://libraries.minecraft.net")
+        }
     }
-    set("mod_meta", modMeta)
 }

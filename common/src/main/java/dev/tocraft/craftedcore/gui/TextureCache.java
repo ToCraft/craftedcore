@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("unused")
 @Environment(EnvType.CLIENT)
 public class TextureCache {
-    private static final Map<String, Optional<ResourceLocation>> TEXTURE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Optional<Identifier>> TEXTURE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Converts a URL to a readable id
@@ -33,9 +33,9 @@ public class TextureCache {
      * @return the id if the texture could be cached or null, if there was an exception
      */
     @Nullable
-    public static ResourceLocation getTextureId(String namespace, String type, String prefix, String fileType, URL textureURL) {
+    public static Identifier getTextureId(String namespace, String type, String prefix, String fileType, URL textureURL) {
         return TEXTURE_CACHE.computeIfAbsent(String.valueOf(textureURL), key -> {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
+            Identifier id = Identifier.fromNamespaceAndPath(namespace, "textures/" + type + "/" + prefix + key.hashCode() + "." + fileType);
             try (InputStream is = textureURL.openStream()) {
                 NativeImage image = NativeImage.read(new ByteArrayInputStream(is.readAllBytes()));
                 DynamicTexture dynamicTexture = new DynamicTexture(id::toString, image);
