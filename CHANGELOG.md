@@ -1,3 +1,8 @@
+craftedcore 8.0
+================
+
+- **port to 26.1.2** ~Thanks to tgboyles
+
 craftedcore 7.1
 ================
 
