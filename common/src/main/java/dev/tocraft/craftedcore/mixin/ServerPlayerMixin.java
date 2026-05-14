@@ -1,10 +1,12 @@
 package dev.tocraft.craftedcore.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.tocraft.craftedcore.data.PlayerDataProvider;
 import dev.tocraft.craftedcore.data.PlayerDataSynchronizer;
 import dev.tocraft.craftedcore.event.common.PlayerEvents;
 import dev.tocraft.craftedcore.registration.PlayerDataRegistry;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,5 +37,18 @@ public class ServerPlayerMixin {
                 newDataProvider.craftedcore$writeTag(key, oldDataProvider.craftedcore$readTag(key));
             }
         }
+    }
+
+    @ModifyExpressionValue(method = "startSleepInBed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/attribute/BedRule;canSleep(Lnet/minecraft/world/level/Level;)Z"))
+    private boolean fixSleep(boolean original) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, player.getSleepingPos().orElse(null), original);
+        if (result == InteractionResult.FAIL) {
+            return false;
+        }
+        if (result == InteractionResult.SUCCESS) {
+            return true;
+        }
+        return original;
     }
 }

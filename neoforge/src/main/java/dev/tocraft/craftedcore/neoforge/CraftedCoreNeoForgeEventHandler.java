@@ -46,7 +46,7 @@ public class CraftedCoreNeoForgeEventHandler {
     @SubscribeEvent
     public void allowSleepTime(@NotNull CanContinueSleepingEvent event) {
         if (event.getEntity() instanceof Player player) {
-            InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, event.getEntity().getSleepingPos().orElse(null), event.getProblem() == null);
+            InteractionResult result = PlayerEvents.ALLOW_SLEEP_TIME.invoke().allowSleepTime(player, player.getSleepingPos().orElse(null), event.getProblem() == null);
             if (result == InteractionResult.FAIL) {
                 event.setContinueSleeping(false);
             }
