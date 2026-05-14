@@ -4,9 +4,9 @@ import dev.tocraft.craftedcore.config.Config;
 import dev.tocraft.craftedcore.config.ConfigLoader;
 import dev.tocraft.craftedcore.platform.PlatformData;
 import dev.tocraft.craftedcore.platform.PlatformDataService;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
@@ -54,7 +54,7 @@ public final class PlatformDataImpl implements PlatformDataService {
 
     @Override
     @ApiStatus.Internal
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void registerConfigScreen(String name) {
         if (ModList.get().getModContainerById("cloth_config").isPresent()) {
             ModList.get().getModContainerById(name).ifPresent(mod -> mod.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, parent) -> {

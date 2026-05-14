@@ -2,12 +2,12 @@ package dev.tocraft.craftedcore.neoforge.client;
 
 import dev.tocraft.craftedcore.client.CraftedCoreClient;
 import dev.tocraft.craftedcore.registration.neoforge.KeyBindingRegistryImpl;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class CraftedCoreNeoForgeClient {
     public CraftedCoreNeoForgeClient(IEventBus bus) {
         NeoForge.EVENT_BUS.register(new CraftedCoreNeoForgeEventHandlerClient());

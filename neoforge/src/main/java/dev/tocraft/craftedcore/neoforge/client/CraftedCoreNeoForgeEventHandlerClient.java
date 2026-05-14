@@ -3,10 +3,10 @@ package dev.tocraft.craftedcore.neoforge.client;
 import dev.tocraft.craftedcore.event.client.ClientPlayerEvents;
 import dev.tocraft.craftedcore.event.client.ClientTickEvents;
 import dev.tocraft.craftedcore.event.client.RenderEvents;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class CraftedCoreNeoForgeEventHandlerClient {
     @SubscribeEvent
     public void event(RenderGuiEvent.@NotNull Post event) {

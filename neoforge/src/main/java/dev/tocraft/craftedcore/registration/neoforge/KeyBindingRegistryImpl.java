@@ -2,11 +2,11 @@ package dev.tocraft.craftedcore.registration.neoforge;
 
 import com.mojang.logging.LogUtils;
 import dev.tocraft.craftedcore.registration.KeyBindingRegistryService;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public final class KeyBindingRegistryImpl implements KeyBindingRegistryService {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final List<KeyMapping> MAPPINGS = new ArrayList<>();
