@@ -70,6 +70,11 @@ public class TestMod {
             }
         });
 
+        PlayerEvents.ALLOW_MONSTERS_NEARBY.register(((player, sleepingPos, vanillaResult) -> {
+            LOGGER.info("there are {}monsters nearby", vanillaResult ? "no " : "");
+            return vanillaResult ? InteractionResult.FAIL : InteractionResult.SUCCESS;
+        }));
+
         if (PlatformData.getEnv() == PlatformData.Env.CLIENT) {
             TestModClient.initialize();
         }

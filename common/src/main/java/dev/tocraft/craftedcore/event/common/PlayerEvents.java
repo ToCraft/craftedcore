@@ -23,6 +23,7 @@ public final class PlayerEvents {
     public static final Event<AwardAdvancement> AWARD_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<RevokeAdvancement> REVOKE_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<AllowSleepTime> ALLOW_SLEEP_TIME = EventFactory.createWithInteractionResult();
+    public static final Event<AllowMonstersNearby> ALLOW_MONSTERS_NEARBY = EventFactory.createWithInteractionResult();
     public static final Event<SleepFinishedTime> SLEEP_FINISHED_TIME = EventFactory.createWithCallback(callbacks -> (level, currentTime, timeAdjustment) -> {
         Optional<Long> result = Optional.empty();
         for (SleepFinishedTime callback : callbacks) {
@@ -68,6 +69,11 @@ public final class PlayerEvents {
     @FunctionalInterface
     public interface AllowSleepTime {
         InteractionResult allowSleepTime(Player player, @Nullable BlockPos sleepingPos, boolean vanillaResult);
+    }
+
+    @FunctionalInterface
+    public interface AllowMonstersNearby {
+        InteractionResult allowMonstersNearby(Player player, @Nullable BlockPos sleepingPos, boolean vanillaResult);
     }
 
     @FunctionalInterface

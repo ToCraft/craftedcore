@@ -2,6 +2,8 @@ craftedcore 8.0
 ================
 
 - **port to 26.1.2** ~Thanks to tgboyles
+- fix sleep events
+- add PlayerEvents.ALLOW_MONSTERS_NEARBY
 
 craftedcore 7.1
 ================

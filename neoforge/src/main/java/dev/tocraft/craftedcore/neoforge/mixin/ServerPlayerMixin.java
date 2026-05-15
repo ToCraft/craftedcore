@@ -28,4 +28,23 @@ public class ServerPlayerMixin {
         }
         return original;
     }
+
+    @ModifyExpressionValue(
+            method = "lambda$startSleepInBed$0",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/List;isEmpty()Z"
+            )
+    )
+    private boolean fixMonstersNearby(boolean original) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        InteractionResult result = PlayerEvents.ALLOW_MONSTERS_NEARBY.invoke().allowMonstersNearby(player, player.getSleepingPos().orElse(null), original);
+        if (result == InteractionResult.FAIL) {
+            return false;
+        }
+        if (result == InteractionResult.SUCCESS) {
+            return true;
+        }
+        return original;
+    }
 }
