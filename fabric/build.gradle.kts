@@ -3,12 +3,7 @@ plugins {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${property("minecraft")}")
-    implementation("net.fabricmc:fabric-loader:${property("fabric_loader")}")
     implementation("net.fabricmc.fabric-api:fabric-api:${property("fabric")}")
-
-    commonJava(project(":common", "commonJava"))
-    commonResources(project(":common", "commonResources"))
 
     // MixinExtras bundled with the mod
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${property("mixinextras_version")}")!!)!!)
@@ -30,7 +25,6 @@ dependencies {
 }
 
 tasks.processResources {
-    from("commonResources")
     val mcVersion = project.property("minecraft")
     val clothVersion = project.property("cloth_config_version")
     filesMatching("fabric.mod.json") {
@@ -40,5 +34,4 @@ tasks.processResources {
             "clothConfig" to clothVersion
         ))
     }
-    outputs.upToDateWhen { false }
 }

@@ -16,7 +16,6 @@ dependencies {
 }
 
 tasks.processResources {
-    from("commonResources")
     val mcVersion = project.property("minecraft")
     val clothVersion = project.property("cloth_config_version")
     filesMatching(listOf("META-INF/neoforge.mods.toml", "META-INF/mods.toml")) {
@@ -26,5 +25,4 @@ tasks.processResources {
             "clothConfig" to clothVersion
         ))
     }
-    outputs.upToDateWhen { false }
 }
