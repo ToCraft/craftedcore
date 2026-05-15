@@ -15,6 +15,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal
@@ -41,14 +42,14 @@ public class TestMod {
         EntityEvents.LIVING_BREATHE.register((entity, canBreathe) -> {
             if (entity instanceof Player) {
                 if (canBreathe) {
-                    LOGGER.info("In and out.");
+                    LOGGER.debug("In and out.");
                 } else {
-                    LOGGER.info("I need air!");
+                    LOGGER.debug("I need air!");
                 }
                 // revert value, the players will need to breathe underwater now
                 return !canBreathe;
             } else {
-                LOGGER.info("something is breathing here...");
+                LOGGER.debug("something is breathing here...");
                 return canBreathe;
             }
         });
@@ -57,6 +58,16 @@ public class TestMod {
             float speed = oSpeed * 5;
             LOGGER.debug("{} is mining with {} speed.", player.getName().getString(), speed);
             return speed;
+        });
+
+        PlayerEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> player.level().isBrightOutside() ? InteractionResult.SUCCESS : InteractionResult.FAIL);
+
+        PlayerEvents.SLEEP_FINISHED_TIME.register((level, currentTime, newTime) -> {
+            if (level.isBrightOutside() && newTime == -1) {
+                return Optional.of(13000L);
+            } else {
+                return Optional.empty();
+            }
         });
 
         if (PlatformData.getEnv() == PlatformData.Env.CLIENT) {

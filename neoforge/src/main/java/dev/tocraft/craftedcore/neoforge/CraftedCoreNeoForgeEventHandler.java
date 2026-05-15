@@ -24,6 +24,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 @ApiStatus.Internal
@@ -60,10 +61,8 @@ public class CraftedCoreNeoForgeEventHandler {
     public void sleepFinishedTime(@NotNull SleepFinishedTimeEvent event) {
         ServerLevel level = (ServerLevel) event.getLevel();
         long currentTime = level.getOverworldClockTime();
-        long newTimeIn = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setTimeAddition(level, currentTime);
-        if (newTimeIn != currentTime) {
-            event.setAdjustment(new ClockAdjustment.Absolute(newTimeIn));
-        }
+        Optional<Long> newTime = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setWakeUpTime(level, currentTime, -1);
+        newTime.ifPresent(aLong -> event.setAdjustment(new ClockAdjustment.Absolute(aLong)));
     }
 
     @SubscribeEvent

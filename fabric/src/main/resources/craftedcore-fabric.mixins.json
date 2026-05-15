@@ -6,7 +6,9 @@
   "mixins": [
     "LivingBreatheMixin",
     "LivingDeathMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "ServerLevelMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
     "client.GuiMixin",

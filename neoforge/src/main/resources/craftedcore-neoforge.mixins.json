@@ -4,7 +4,8 @@
   "package": "dev.tocraft.craftedcore.neoforge.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "LivingBreatheMixin"
+    "LivingBreatheMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
   ],

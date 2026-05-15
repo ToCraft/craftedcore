@@ -10,6 +10,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 @SuppressWarnings("unused")
 public final class PlayerEvents {
     public static final Event<PlayerJoin> PLAYER_JOIN = EventFactory.createWithVoid();
@@ -21,15 +23,15 @@ public final class PlayerEvents {
     public static final Event<AwardAdvancement> AWARD_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<RevokeAdvancement> REVOKE_ADVANCEMENT = EventFactory.createWithVoid();
     public static final Event<AllowSleepTime> ALLOW_SLEEP_TIME = EventFactory.createWithInteractionResult();
-    public static final Event<SleepFinishedTime> SLEEP_FINISHED_TIME = EventFactory.createWithCallback(callbacks -> (level, newTime) -> {
-        long newNewTime = 0;
+    public static final Event<SleepFinishedTime> SLEEP_FINISHED_TIME = EventFactory.createWithCallback(callbacks -> (level, currentTime, timeAdjustment) -> {
+        Optional<Long> result = Optional.empty();
         for (SleepFinishedTime callback : callbacks) {
-            long newTimeIn = callback.setTimeAddition(level, newTime);
-            if (level.getOverworldClockTime() <= newTime) {
-                newNewTime = newTimeIn;
+            Optional<Long> r1 = callback.setWakeUpTime(level, currentTime, timeAdjustment);
+            if (r1.isPresent()) {
+                result = r1;
             }
         }
-        return newNewTime;
+        return result;
     });
     public static final Event<DestroySpeed> DESTROY_SPEED = EventFactory.createWithCallback(callbacks -> (player, newSpeed) -> {
         for (DestroySpeed callback : callbacks) {
@@ -70,7 +72,7 @@ public final class PlayerEvents {
 
     @FunctionalInterface
     public interface SleepFinishedTime {
-        long setTimeAddition(ServerLevel level, long newTime);
+        Optional<Long> setWakeUpTime(ServerLevel level, long currentTime, long timeAdjustment);
     }
 
     @FunctionalInterface
