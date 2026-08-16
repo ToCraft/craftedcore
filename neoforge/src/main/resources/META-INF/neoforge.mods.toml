@@ -17,7 +17,7 @@ authors = "To_Craft"
 description = '''
 My libary mod to make mods more compatible with modloaders
 '''
-logoFile = "pack.png"
+iconFile = "pack.png"
 
 [[dependencies.craftedcore]]
 modId = "minecraft"

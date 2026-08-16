@@ -1,3 +1,7 @@
+craftedcore 8.2.1
+================
+- fix crash due to mixin errors
+
 craftedcore 8.2
 ================
 - **port to 26.2**

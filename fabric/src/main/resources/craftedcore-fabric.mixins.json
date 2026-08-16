@@ -11,7 +11,7 @@
     "ServerPlayerMixin"
   ],
   "client": [
-    "client.GuiMixin",
+    "client.HudMixin",
     "client.MinecraftClientMixin"
   ],
   "injectors": {
