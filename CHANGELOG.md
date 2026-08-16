@@ -1,3 +1,7 @@
+craftedcore 8.2
+================
+- **port to 26.2**
+
 craftedcore 8.1
 ================
 - fix living breathe event
