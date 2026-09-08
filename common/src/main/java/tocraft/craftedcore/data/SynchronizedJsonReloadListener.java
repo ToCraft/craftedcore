@@ -87,7 +87,7 @@ public abstract class SynchronizedJsonReloadListener extends
         Map<ResourceLocation, JsonElement> map = new HashMap<>();
         if (compound != null) {
             for (String key : compound.getAllKeys()) {
-                this.map.put(Identifier.parse(key), JsonParser.parseString(compound.getString(key)));
+                map.put(Identifier.parse(key), JsonParser.parseString(compound.getString(key)));
             }
         }
         this.onApply(map);
