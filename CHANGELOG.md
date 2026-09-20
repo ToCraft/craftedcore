@@ -1,3 +1,7 @@
+craftedcore 5.8.3
+================
+- fix data pack loading ~by ordzai
+
 craftedcore 5.8.2
 ================
 - remove data files for versions before 1.20.1
