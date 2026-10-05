@@ -1,3 +1,7 @@
+craftedcore 8.3.1
+================
+crash fix 1
+
 craftedcore 8.3.0
 ================
 - **port to 26.3**

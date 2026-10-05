@@ -17,13 +17,13 @@ import java.util.Optional;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin {
-    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/clock/ServerClockManager;moveToTimeMarker(Lnet/minecraft/core/Holder;Lnet/minecraft/resources/ResourceKey;)Z"))
-    private boolean fixStartSleep(ServerClockManager instance, Holder<@NotNull WorldClock> clock, ResourceKey<@NotNull ClockTimeMarker> timeMarkerId, Operation<Boolean> original) {
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/clock/ServerClockManager;moveToTimeMarker(Lnet/minecraft/core/Holder;Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/clock/ServerClockManager$MoveResult;"))
+    private ServerClockManager.MoveResult fixStartSleep(ServerClockManager instance, Holder<@NotNull WorldClock> clock, ResourceKey<@NotNull ClockTimeMarker> timeMarkerId, Operation<ServerClockManager.MoveResult> original) {
         ServerLevel level = (ServerLevel) (Object) this;
         Optional<Long> result = PlayerEvents.SLEEP_FINISHED_TIME.invoke().setWakeUpTime(level, level.getDefaultClockTime(), -1);
         if (result.isPresent()) {
             level.clockManager().setTotalTicks(clock, result.get());
-            return true;
+            return ServerClockManager.MoveResult.MOVED;
         }
         return original.call(instance, clock, timeMarkerId);
     }
