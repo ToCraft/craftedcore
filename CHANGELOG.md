@@ -1,3 +1,7 @@
+craftedcore 8.3.2
+================
+crash fix 2 - NeoForge
+
 craftedcore 8.3.1
 ================
 crash fix 1

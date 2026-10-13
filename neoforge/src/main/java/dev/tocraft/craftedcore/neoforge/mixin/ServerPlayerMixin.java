@@ -13,7 +13,7 @@ import net.minecraft.world.InteractionResult;
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
     @ModifyExpressionValue(
-            method = "startSleepInBed",
+            method = "lambda$startSleepInBed$0",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/attribute/BedRule;canSleep(Lnet/minecraft/world/level/Level;)Z"
@@ -32,7 +32,7 @@ public class ServerPlayerMixin {
     }
 
     @ModifyExpressionValue(
-            method = "startSleepInBed",
+            method = "lambda$startSleepInBed$0",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/List;isEmpty()Z"
