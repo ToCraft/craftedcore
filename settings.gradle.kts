@@ -10,7 +10,7 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.tocraft.modmaster.settings") version "0.8"
+    id("dev.tocraft.modmaster.settings") version "1.3.3"
 }
 
 rootProject.name = "craftedcore"

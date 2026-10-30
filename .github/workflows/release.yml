@@ -18,56 +18,15 @@ permissions:
   actions: write
 
 jobs:
-  release:
-    name: "Release"
+  build:
     runs-on: ubuntu-latest
     if: |
-      !contains(github.event.head_commit.message, '[no_release]')
+      !contains(github.event.head_commit.message, '[ci skip]')
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 22
-        uses: actions/setup-java@v4
+      - uses: ToCraft/modmaster-release-action@v2
         with:
-          java-version: 22
-          distribution: "temurin"
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Extract Artifact Data
-        run: |
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^artifact_type= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^archives_base_name= >> $GITHUB_ENV
-          cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version= >> $GITHUB_ENV
-
-      - name: Build + Release via Gradle
-        run: ./gradlew check build release -Ptestmod=false
-        env:
-          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          DISCORD_WEB_HOOK: ${{ secrets.DISCORD_WEB_HOOK }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "${{ env.archives_base_name }}-${{ env.mod_version }}"
-          path: |
-            build/**/**/libs/
-            !build/*/libs/
-            !build/**/craftedcore/libs/
-            !build/libs/
-            !**/*-dev.jar
-            !**/*-shadow.jar
-            !**/*-transformProduction*.jar
-            !**/testmod*/
-
-      - name: Create GitHub Release
-        if: |
-          ${{ env.artifact_type }} == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: "${{ env.mod_version }}"
-          files: |
-            build/${{ env.archives_base_name }}-${{ env.mod_version }}.zip
-          body_path: ${{ github.workspace }}/extracted.CHANGELOG.md
+          java-version: '25'
+          maven-pass: ${{ secrets.MAVEN_PASS }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          webhook: ${{ secrets.DISCORD_WEB_HOOK }}
